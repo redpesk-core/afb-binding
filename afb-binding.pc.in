@@ -1,0 +1,15 @@
+# Copyright (C) 2015-2020 IoT.bzh Company
+# Author: José Bollo <jose.bollo@iot.bzh>
+#
+# SPDX-License-Identifier: LGPL-3.0-only
+
+Name: @PROJECT_PRETTY_NAME@
+Description: @PROJECT_DESCRIPTION@
+Version: @PROJECT_VERSION@
+URL: @PROJECT_URL@
+
+incdir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb
+version_script=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb/afb-export.map
+
+Requires: json-c
+Cflags: -I${incdir}
