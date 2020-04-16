@@ -19,7 +19,11 @@ Using cmake:
         mkdir build
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
-        make install
+        make -j install
+
+or use mkbuild:
+
+        ./mkbuild.sh -p /usr/local install
 
 ## Usage with pkg-config
 
