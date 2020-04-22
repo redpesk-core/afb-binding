@@ -48,7 +48,7 @@ version=${va:-$(versofcmake "${base}/CMakeLists.txt")}
 
 # get the prefix and the name of the tar output
 prefix=${pa:-${name}-${version}}
-output=$(realpath ${oa:-${prefix}.tgz})
+output=$(realpath ${oa:-${prefix}.tar.gz})
 
 # get the commit to archive
 head=${ha:-HEAD}

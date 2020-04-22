@@ -8,12 +8,10 @@ License:        LGPLv3
 Summary:        Binding headers for Application Framework Binder
 Group:          Development/Libraries/C and C++
 Url:            https://github.com/redpesk/afb-binding
-Source:         afb-binding-%{version}.tgz
+Source:         afb-binding-%{version}.tar.gz
 BuildRequires:  make
 BuildRequires:  cmake
 Requires:       %{name}-devel = %{version}
-
-# no debug symbols
 %global debug_package %{nil} 
 
 %description
@@ -65,24 +63,19 @@ Some documentation on how to write application framework bindings
 #---------------------------------------------
 %files devel
 %defattr(-,root,root)
-%dir %{_includedir}
 %dir %{_includedir}/afb
 %{_includedir}/afb/*
-%dir %{_libdir}
-%dir %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*.pc
 
 #---------------------------------------------
 %files doc
 %defattr(-,root,root)
-%dir %{_datadir}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/docs
 
 #---------------------------------------------
 %files tutorial
 %defattr(-,root,root)
-%dir %{_datadir}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/tutorials
 
