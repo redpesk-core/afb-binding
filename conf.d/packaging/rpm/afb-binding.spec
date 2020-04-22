@@ -3,7 +3,7 @@
 #---------------------------------------------
 Name:           afb-binding
 Version:        1.2
-Release:        0
+Release:        2%{?dist}
 License:        LGPLv3
 Summary:        Binding headers for Application Framework Binder
 Group:          Development/Libraries/C and C++
