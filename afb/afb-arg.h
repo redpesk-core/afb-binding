@@ -24,5 +24,7 @@ struct afb_arg
 				/**< when the request is finalized this file is removed */
 };
 
+typedef struct afb_arg                  afb_arg_t;
+
 
 /** @} */

@@ -7,17 +7,39 @@
 
 #pragma once
 
+/******************************************************************************/
+/* predefines */
+#if AFB_BINDING_VERSION == 3
+
+#define afb_req   			afb_req_x2
+typedef struct afb_req_x2              *afb_req_t;
+
+#endif
+/******************************************************************************/
 /* defined here */
 struct afb_req_x2;
 struct afb_req_x2_itf;
 
 /* referenced here */
+struct json_object;
 #include "afb-arg.h"
-struct afb_req_x1;
-struct afb_event_x1;
-struct afb_event_x2;
-struct afb_api_x3;
+#include "afb-req-subcall-flags.h"
+#include "afb-event-x2.h"
+#include "afb-api-x3.h"
+/******************************************************************************/
+/* compatibility with legacy  */
 struct afb_stored_req;
+struct afb_req_x1
+{
+	const struct afb_req_x2_itf *itf;	/**< the interface to use */
+	struct afb_req_x2 *closure;		/**< the closure argument for functions of 'itf' */
+};
+struct afb_event_x1
+{
+	const struct afb_event_x2_itf *itf;	/**< the interface to use */
+	struct afb_event_x2 *closure;		/**< the closure argument for functions of 'itf' */
+};
+/******************************************************************************/
 
 /** @addtogroup AFB_REQ
  *  @{ */
@@ -52,47 +74,6 @@ struct afb_req_x2
 	 * the name of the called verb
 	 */
 	const char *called_verb;
-};
-
-/**
- * subcall flags
- *
- * When making subcalls, it is now possible to explicitely set the subcall
- * mode to a combination of the following flags using binary OR.
- *
- * In particular, the following combination of flags are to be known:
- *
- *  - for **subcall** having a similar behaviour to the subcalls of bindings
- *    version 1 and 2: afb_req_x2_subcall_pass_events|afb_req_x2_subcall_on_behalf
- * 
- *  - for **subcall** having the behaviour of the **call**:
- *    afb_req_x2_subcall_catch_events|afb_req_x2_subcall_api_session
- *
- * Be aware that if none of mode  afb_req_x2_subcall_catch_events or
- * afb_req_x2_subcall_pass_events is set, subscrption to events will be ignored.
- */
-enum afb_req_x2_subcall_flags
-{
-	/**
-	 * the calling API wants to receive the events from subscription
-	 */
-	afb_req_x2_subcall_catch_events = 1,
-
-	/**
-	 * the original request will receive the events from subscription
-	 */
-	afb_req_x2_subcall_pass_events = 2,
-
-	/**
-	 * the calling API wants to use the credentials of the original request
-	 */
-	afb_req_x2_subcall_on_behalf = 4,
-
-	/**
-	 * the calling API wants to use its session instead of the one of the
-	 * original request
-	 */
-	afb_req_x2_subcall_api_session = 8,
 };
 
 /**

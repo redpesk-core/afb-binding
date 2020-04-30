@@ -7,6 +7,49 @@
 
 #pragma once
 
+/******************************************************************************/
+/* predefines */
+#if AFB_BINDING_VERSION == 3
+
+#define afb_api_name			afb_api_x3_name
+#define afb_api_get_userdata		afb_api_x3_get_userdata
+#define afb_api_set_userdata		afb_api_x3_set_userdata
+#define afb_api_wants_log_level 	afb_api_x3_wants_log_level
+
+#define afb_api_vverbose		afb_api_x3_vverbose
+#define afb_api_verbose			afb_api_x3_verbose
+#define afb_api_get_event_loop		afb_api_x3_get_event_loop
+#define afb_api_get_user_bus		afb_api_x3_get_user_bus
+#define afb_api_get_system_bus		afb_api_x3_get_system_bus
+#define afb_api_rootdir_get_fd		afb_api_x3_rootdir_get_fd
+#define afb_api_rootdir_open_locale	afb_api_x3_rootdir_open_locale
+#define afb_api_queue_job		afb_api_x3_queue_job
+#define afb_api_require_api		afb_api_x3_require_api
+#define afb_api_broadcast_event		afb_api_x3_broadcast_event
+#define afb_api_make_event		afb_api_x3_make_event_x2
+#define afb_api_call			afb_api_x3_call
+#define afb_api_call_sync		afb_api_x3_call_sync
+#define afb_api_call_legacy		afb_api_x3_call_legacy
+#define afb_api_call_sync_legacy	afb_api_x3_call_sync_legacy
+#define afb_api_new_api			afb_api_x3_new_api
+#define afb_api_delete_api		afb_api_x3_delete_api
+#define afb_api_set_verbs_v2		afb_api_x3_set_verbs_v2
+#define afb_api_set_verbs_v3		afb_api_x3_set_verbs_v3
+#define afb_api_add_verb		afb_api_x3_add_verb
+#define afb_api_del_verb		afb_api_x3_del_verb
+#define afb_api_on_event		afb_api_x3_on_event
+#define afb_api_on_init			afb_api_x3_on_init
+#define afb_api_seal			afb_api_x3_seal
+#define afb_api_add_alias		afb_api_x3_add_alias
+#define afb_api_event_handler_add	afb_api_x3_event_handler_add
+#define afb_api_event_handler_del	afb_api_x3_event_handler_del
+#define afb_api_require_class		afb_api_x3_require_class
+#define afb_api_provide_class		afb_api_x3_provide_class
+#define afb_api_settings		afb_api_x3_settings
+
+#endif
+/******************************************************************************/
+
 #include "afb-verbosity.h"
 #include "afb-api-x3-itf.h"
 
@@ -555,28 +598,6 @@ struct afb_api_x3 *afb_api_x3_new_api(
 			void *closure)
 {
 	return api->itf->api_new_api(api, apiname, info, noconcurrency, preinit, closure);
-}
-
-/**
- * @deprecated use @ref afb_api_x3_set_verbs_v3 instead
- *
- * Set the verbs of the 'api' using description of verbs of the api v2
- *
- * @param api the api that will get the verbs
- * @param verbs the array of verbs to add terminated with an item with name=NULL
- *
- * @return 0 in case of success or -1 on failure with errno set
- *
- * @see afb_verb_v2
- * @see afb_api_x3_add_verb
- * @see afb_api_x3_set_verbs_v3
- */
-static inline
-int afb_api_x3_set_verbs_v2(
-			struct afb_api_x3 *api,
-			const struct afb_verb_v2 *verbs)
-{
-	return api->itf->api_set_verbs_v2(api, verbs);
 }
 
 /**

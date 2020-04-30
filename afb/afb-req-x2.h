@@ -10,6 +10,60 @@
 #include "afb-req-x2-itf.h"
 #include "afb-api-x3.h"
 
+/******************************************************************************/
+/* predefines */
+#if AFB_BINDING_VERSION == 3
+
+#define afb_req_is_valid		afb_req_x2_is_valid
+#define afb_req_get_api			afb_req_x2_get_api
+#define afb_req_get_vcbdata		afb_req_x2_get_vcbdata
+#define afb_req_get_called_api		afb_req_x2_get_called_api
+#define afb_req_get_called_verb		afb_req_x2_get_called_verb
+#define afb_req_wants_log_level		afb_req_x2_wants_log_level
+
+#define afb_req_get			afb_req_x2_get
+#define afb_req_value			afb_req_x2_value
+#define afb_req_path			afb_req_x2_path
+#define afb_req_json			afb_req_x2_json
+#define afb_req_reply			afb_req_x2_reply
+#define afb_req_reply_f			afb_req_x2_reply_f
+#define afb_req_reply_v			afb_req_x2_reply_v
+#define afb_req_context_get		afb_req_x2_context_get
+#define afb_req_context_set		afb_req_x2_context_set
+#define afb_req_context			afb_req_x2_context
+#define afb_req_context_make		afb_req_x2_context_make
+#define afb_req_context_clear		afb_req_x2_context_clear
+#define afb_req_addref			afb_req_x2_addref
+#define afb_req_unref			afb_req_x2_unref
+#define afb_req_session_close		afb_req_x2_session_close
+#define afb_req_session_set_LOA		afb_req_x2_session_set_LOA
+#define afb_req_subscribe		afb_req_x2_subscribe
+#define afb_req_unsubscribe		afb_req_x2_unsubscribe
+#define afb_req_subcall			afb_req_x2_subcall
+#define afb_req_subcall_legacy		afb_req_x2_subcall_legacy
+#define afb_req_subcall_req		afb_req_x2_subcall_req
+#define afb_req_subcall_sync_legacy	afb_req_x2_subcall_sync_legacy
+#define afb_req_subcall_sync		afb_req_x2_subcall_sync
+#define afb_req_verbose			afb_req_x2_verbose
+#define afb_req_has_permission		afb_req_x2_has_permission
+#define afb_req_check_permission	afb_req_x2_check_permission
+#define afb_req_get_application_id	afb_req_x2_get_application_id
+#define afb_req_get_uid			afb_req_x2_get_uid
+#define afb_req_get_client_info		afb_req_x2_get_client_info
+
+#define afb_req_success(r,o,i)		afb_req_reply(r,o,0,i)
+#define afb_req_success_f(r,o,...)	afb_req_reply_f(r,o,0,__VA_ARGS__)
+#define afb_req_success_v(r,o,f,v)	afb_req_reply_v(r,o,0,f,v)
+#define afb_req_fail(r,e,i)		afb_req_reply(r,0,e,i)
+#define afb_req_fail_f(r,e,...)		afb_req_reply_f(r,0,e,__VA_ARGS__)
+#define afb_req_fail_v(r,e,f,v)		afb_req_reply_v(r,0,e,f,v)
+#define afb_stored_req 			afb_req_x2
+#define afb_req_store(x) 		afb_req_x2_addref(x)
+#define afb_req_unstore(x) 		(x)
+
+#endif
+/******************************************************************************/
+
 /** @defgroup AFB_REQ
  *  @{ */
 

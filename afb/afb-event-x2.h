@@ -9,6 +9,20 @@
 
 #include "afb-event-x2-itf.h"
 
+/******************************************************************************/
+/* predefines */
+#if AFB_BINDING_VERSION == 3
+
+#define afb_event_is_valid		afb_event_x2_is_valid
+#define afb_event_broadcast		afb_event_x2_broadcast
+#define afb_event_push			afb_event_x2_push
+#define afb_event_name			afb_event_x2_name
+#define afb_event_unref			afb_event_x2_unref
+#define afb_event_addref		afb_event_x2_addref
+
+#endif
+/******************************************************************************/
+
 /** @defgroup AFB_EVENT
  *  @{ */
 

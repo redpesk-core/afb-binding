@@ -7,6 +7,17 @@
 
 #pragma once
 
+/******************************************************************************/
+/* predefines */
+#if AFB_BINDING_VERSION == 3
+
+#define afb_event			afb_event_x2
+typedef struct afb_event_x2            *afb_event_t;
+
+#endif
+/******************************************************************************/
+
+struct json_object;
 struct afb_event_x2;
 struct afb_event_x2_itf;
 

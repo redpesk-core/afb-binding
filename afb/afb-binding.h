@@ -27,9 +27,9 @@
  * @file afb/afb-binding.h
  */
 
+#include <stdlib.h>
 #include <stdarg.h>
 #include <stdint.h>
-#include <json-c/json.h>
 
 /**
  * @def AFB_BINDING_INTERFACE_VERSION
@@ -95,6 +95,4 @@
 #endif
 
 /***************************************************************************************************/
-#include "afb-binding-predefs.h"
 #include "afb-binding-v3.h"
-#include "afb-binding-postdefs.h"

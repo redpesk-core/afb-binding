@@ -7,6 +7,16 @@
 
 #pragma once
 
+/******************************************************************************/
+/* predefines */
+#if AFB_BINDING_VERSION == 3
+
+#define afb_api   			afb_api_x3
+typedef struct afb_api_x3              *afb_api_t;
+
+#endif
+/******************************************************************************/
+
 /* declared here */
 struct afb_api_x3;
 struct afb_api_x3_itf;

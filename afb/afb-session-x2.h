@@ -7,6 +7,26 @@
 
 #pragma once
 
+/******************************************************************************/
+/* predefines */
+#if AFB_BINDING_VERSION == 3
+
+#define AFB_SESSION_NONE		AFB_SESSION_NONE_X2
+#define AFB_SESSION_CLOSE		AFB_SESSION_CLOSE_X2
+#define AFB_SESSION_RENEW		AFB_SESSION_REFRESH_X2
+#define AFB_SESSION_REFRESH		AFB_SESSION_REFRESH_X2
+#define AFB_SESSION_CHECK		AFB_SESSION_CHECK_X2
+
+#define AFB_SESSION_LOA_MASK	AFB_SESSION_LOA_MASK_X2
+
+#define AFB_SESSION_LOA_0		AFB_SESSION_LOA_0_X2
+#define AFB_SESSION_LOA_1		AFB_SESSION_LOA_1_X2
+#define AFB_SESSION_LOA_2		AFB_SESSION_LOA_2_X2
+#define AFB_SESSION_LOA_3		AFB_SESSION_LOA_3_X2
+
+#endif
+/******************************************************************************/
+
 /**
  * Enum for Session/Token/Assurance middleware of bindings version 2 and 3.
  */

@@ -26,6 +26,7 @@
 /* get C definitions of bindings */
 extern "C" {
 #include <afb/afb-binding.h>
+#include <json-c/json.h>
 }
 
 namespace afb {
@@ -146,7 +147,6 @@ public:
 	/* Dynamic api functions */
 	api new_api(const char *apiname, const char *info, int noconcurrency, preinit_cb preinit, void *closure) const;
 	api new_api(const std::string &apiname, const std::string &info, int noconcurrency, preinit_cb preinit, void *closure) const;
-	int set_verbs(const struct afb_verb_v2 *verbs) const;
 	int set_verbs(const struct afb_verb_v3 *verbs) const;
 	int add_verb(const char *verb, const char *info, verb_cb callback, void *vcbdata, const struct afb_auth *auth, uint32_t session, int glob) const;
 	int add_verb(const std::string &verb, const std::string &info, verb_cb callback, void *vcbdata, const struct afb_auth *auth, uint32_t session, int glob) const;
@@ -409,7 +409,6 @@ inline struct sd_bus *api::get_user_bus() const { return afb_api_get_user_bus(ap
 inline struct sd_bus *api::get_system_bus() const { return afb_api_get_system_bus(api_); }
 inline api api::new_api(const char *apiname, const char *info, int noconcurrency, preinit_cb preinit, void *closure) const { return api(afb_api_new_api(api_, apiname, info, noconcurrency, preinit, closure)); }
 inline api api::new_api(const std::string &apiname, const std::string &info, int noconcurrency, preinit_cb preinit, void *closure) const { return api(afb_api_new_api(api_, apiname.c_str(), info.c_str(), noconcurrency, preinit, closure)); }
-inline int api::set_verbs(const struct afb_verb_v2 *verbs) const { return afb_api_set_verbs_v2(api_, verbs); }
 inline int api::set_verbs(const struct afb_verb_v3 *verbs) const { return afb_api_set_verbs_v3(api_, verbs); }
 inline int api::add_verb(const char *verb, const char *info, verb_cb callback, void *vcbdata, const struct afb_auth *auth, uint32_t session, int glob) const { return afb_api_add_verb(api_, verb, info, callback, vcbdata, auth, session, glob); }
 inline int api::add_verb(const std::string &verb, const std::string &info, verb_cb callback, void *vcbdata, const struct afb_auth *auth, uint32_t session, int glob) const { return afb_api_add_verb(api_, verb.c_str(), info.c_str(), callback, vcbdata, auth, session, glob); }

@@ -43,6 +43,8 @@ enum afb_auth_type
 	afb_auth_Yes
 };
 
+typedef enum   afb_auth_type            afb_auth_type_t;
+
 /**
  * Definition of an authorization entry
  */
@@ -65,5 +67,7 @@ struct afb_auth
 	/** second child when @ref type in { @ref afb_auth_Or, @ref afb_auth_And } */
 	const struct afb_auth *next;
 };
+
+typedef struct afb_auth                 afb_auth_t;
 
 /** @} */
