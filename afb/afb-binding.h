@@ -41,7 +41,7 @@
  *
  * @see AFB_BINDING_UPPER_VERSION that should match MAJOR
  */
-#define AFB_BINDING_INTERFACE_VERSION 3000
+#define AFB_BINDING_INTERFACE_VERSION 4000
 
 /**
  * @def AFB_BINDING_LOWER_VERSION
@@ -61,7 +61,7 @@
  * @see AFB_BINDING_VERSION
  * @see AFB_BINDING_LOWER_VERSION
  */
-#define AFB_BINDING_UPPER_VERSION     3
+#define AFB_BINDING_UPPER_VERSION     4
 
 /**
  * @def AFB_BINDING_VERSION
@@ -71,7 +71,6 @@
  *
  * The value of 0 is valid. It removes any version specific defines.
  */
-
 #ifndef AFB_BINDING_VERSION
 /* undefined version */
 #error "\
@@ -109,3 +108,4 @@
 
 /***************************************************************************************************/
 #include "afb-binding-v3.h"
+#include "afb-binding-v4.h"

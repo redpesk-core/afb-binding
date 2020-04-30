@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: LGPL-3.0-only
  */
 
-#include <afb/c++/binding-wrap.hpp>
+#include "binding-wrap-v3.hpp"
 #include <cassert>
 #include <string>
 
@@ -223,7 +223,7 @@ namespace afb
 		 * @return Zero if success, non-zero otherwise.
 		 */
 		template <typename TTraits::TVerbCallback Callback>
-		int add_verb(const std::string& verb, const std::string& info, void* vcbdata = nullptr, const struct afb_auth* auth = nullptr, uint32_t session = AFB_SESSION_NONE_X2, int glob = 0)
+		int add_verb(const std::string& verb, const std::string& info, void* vcbdata = nullptr, const struct afb_auth* auth = nullptr, uint32_t session = AFB_SESSION_NONE, int glob = 0)
 		{
 			return afb_api_add_verb(
 				api_,
@@ -248,7 +248,7 @@ namespace afb
 		 * @return Zero if success, non-zero otherwise.
 		 */
 		template <typename TTraits::TVerbCallbackConst Callback>
-		int add_verb(const std::string& verb, const std::string& info, void* vcbdata = nullptr, const struct afb_auth* auth = nullptr, uint32_t session = AFB_SESSION_NONE_X2, int glob = 0)
+		int add_verb(const std::string& verb, const std::string& info, void* vcbdata = nullptr, const struct afb_auth* auth = nullptr, uint32_t session = AFB_SESSION_NONE, int glob = 0)
 		{
 			return afb_api_add_verb(
 				api_,

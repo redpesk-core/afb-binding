@@ -20,7 +20,7 @@
  *
  *  - for **subcall** having a similar behaviour to the subcalls of bindings
  *    version 1 and 2: afb_req_x2_subcall_pass_events|afb_req_x2_subcall_on_behalf
- * 
+ *
  *  - for **subcall** having the behaviour of the **call**:
  *    afb_req_x2_subcall_catch_events|afb_req_x2_subcall_api_session
  *

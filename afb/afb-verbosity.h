@@ -10,15 +10,34 @@
 /** @defgroup AFB_LOGGING
  *  @{ */
 
-#define AFB_SYSLOG_LEVEL_EMERGENCY	0
-#define AFB_SYSLOG_LEVEL_ALERT		1
-#define AFB_SYSLOG_LEVEL_CRITICAL	2
-#define AFB_SYSLOG_LEVEL_ERROR		3
-#define AFB_SYSLOG_LEVEL_WARNING	4
-#define AFB_SYSLOG_LEVEL_NOTICE		5
-#define AFB_SYSLOG_LEVEL_INFO		6
-#define AFB_SYSLOG_LEVEL_DEBUG		7
+/**
+ * Definition of verbosity levels.
+ * This definition is directly inspired by the unix function syslog.
+ */
+enum afb_syslog_levels {
+	AFB_SYSLOG_LEVEL_EMERGENCY	= 0,    /* system is unusable */
+	AFB_SYSLOG_LEVEL_ALERT		= 1,    /* action must be taken immediately */
+	AFB_SYSLOG_LEVEL_CRITICAL	= 2,    /* critical conditions */
+	AFB_SYSLOG_LEVEL_ERROR		= 3,    /* error conditions */
+	AFB_SYSLOG_LEVEL_WARNING	= 4,    /* warning conditions */
+	AFB_SYSLOG_LEVEL_NOTICE		= 5,    /* normal but significant condition */
+	AFB_SYSLOG_LEVEL_INFO		= 6,    /* informational */
+	AFB_SYSLOG_LEVEL_DEBUG		= 7     /* debug-level messages */
+};
 
+/**
+ * Expected levels are managed using a bit mask value.
+ * This macro checks whether the given level is required to log.
+ *
+ * This is useful for avoiding the call to the logging function
+ * and the evaluation of its parameters.
+ * However, prefer to use the predefined dedicated macros that already include
+ * the necessary logic to avoid unnecessarily calls.
+ *
+ *  AFB_API_ERROR, AFB_API_WARNING, AFB_API_NOTICE, AFB_API_INFO and AFB_API_DEBUG
+ *  AFB_REQ_ERROR, AFB_REQ_WARNING, AFB_REQ_NOTICE, AFB_REQ_INFO and AFB_REQ_DEBUG
+ *  AFB_ERROR, AFB_WARNING, AFB_NOTICE, AFB_INFO and AFB_DEBUG
+ */
 #define AFB_SYSLOG_MASK_WANT(verbomask,level)	((verbomask) & (1 << (level)))
 
 #define AFB_SYSLOG_MASK_WANT_EMERGENCY(x)	AFB_SYSLOG_MASK_WANT(x,AFB_SYSLOG_LEVEL_EMERGENCY)
@@ -31,38 +50,42 @@
 #define AFB_SYSLOG_MASK_WANT_DEBUG(x)		AFB_SYSLOG_MASK_WANT(x,AFB_SYSLOG_LEVEL_DEBUG)
 
 /**
- * Transform a mask of verbosity to its significant level of verbosity.
- * 
- * @param verbomask the mask
- * 
- * @return the upper level that is not null, truncated to AFB_SYSLOG_LEVEL_DEBUG
- * 
- * @example _afb_verbomask_to_upper_level_(5) -> 2
- * @example _afb_verbomask_to_upper_level_(16) -> 4
+ * The output of the filenames by logging subsystem can be controlled by the
+ * the macro AFB_BINDING_PRAGMA_SHORT_FILENAME. If that macro is defined,
+ * the filenames will be shortened to its base name. Otherwise, the full
+ * path of the file is used accordingly to option -fdebug-prefix-map.
  */
-static inline int _afb_verbomask_to_upper_level_(int verbomask)
-{
-	int result = 0;
-	while ((verbomask >>= 1) && result < AFB_SYSLOG_LEVEL_DEBUG)
-		result++;
-	return result;
-}
+#if defined(AFB_BINDING_PRAGMA_SHORT_FILENAME)
+#  include <string.h>
+#  define __file__   (1 + (strrchr(__FILE__,'/') ?: " "__FILE__))
+#else
+#  define __file__   __FILE__
+#endif
 
 /*
- * Macros for logging messages
+ * Effective verbosity of compiled binding depends on the compilation variables below:
+ *  - AFB_BINDING_PRAGMA_NO_VERBOSE_DATA
+ *  - AFB_BINDING_PRAGMA_NO_VERBOSE_DETAILS
+ *
+ * If AFB_BINDING_PRAGMA_NO_VERBOSE_DATA is defined then only the filename and the line
+ * of the message is reported for any message that is not an error. This mode is intended
+ * to lower footprint of bindings by removing function names, text messages and companion data.
+ *
+ * If AFB_BINDING_PRAGMA_NO_VERBOSE_DETAILS is defined but not AFB_BINDING_PRAGMA_NO_VERBOSE_DATA
+ * then no detail is given, no file name, no function name, no line of occurence. But
+ * the message and its companion data is prompted.
  */
-
 #if defined(AFB_BINDING_PRAGMA_NO_VERBOSE_DATA)
 
 # define AFB_API_VERBOSE(api,level,...) \
-		do { if(level <= AFB_VERBOSITY_LEVEL_ERROR) \
-			afb_api_verbose(api,level,__FILE__,__LINE__,NULL,__VA_ARGS__); \
-		else afb_api_verbose(api,level,__FILE__,__LINE__,NULL); } while(0)
+		do { if(level <= AFB_SYSLOG_LEVEL_ERROR) \
+			afb_api_verbose(api,level,__file__,__LINE__,NULL,__VA_ARGS__); \
+		else afb_api_verbose(api,level,__file__,__LINE__,NULL,NULL); } while(0)
 
 # define AFB_REQ_VERBOSE(req,level,...) \
-		do { if(level <= AFB_VERBOSITY_LEVEL_ERROR) \
-			afb_req_verbose(req,level,__FILE__,__LINE__,NULL,__VA_ARGS__); \
-		else afb_req_verbose(req,level,__FILE__,__LINE__,NULL); } while(0)
+		do { if(level <= AFB_SYSLOG_LEVEL_ERROR) \
+			afb_req_verbose(req,level,__file__,__LINE__,NULL,__VA_ARGS__); \
+		else afb_req_verbose(req,level,__file__,__LINE__,NULL,NULL); } while(0)
 
 #elif defined(AFB_BINDING_PRAGMA_NO_VERBOSE_DETAILS)
 
@@ -75,34 +98,50 @@ static inline int _afb_verbomask_to_upper_level_(int verbomask)
 #else
 
 # define AFB_API_VERBOSE(api,level,...) \
-	afb_api_verbose(api,level,__FILE__,__LINE__,__func__,__VA_ARGS__)
+	afb_api_verbose(api,level,__file__,__LINE__,__func__,__VA_ARGS__)
 
 # define AFB_REQ_VERBOSE(req,level,...) \
-	afb_req_verbose(req,level,__FILE__,__LINE__,__func__,__VA_ARGS__)
+	afb_req_verbose(req,level,__file__,__LINE__,__func__,__VA_ARGS__)
 
 #endif
 
-#define _AFB_API_LOGGING_(api,llevel,...) \
+/**
+ * These macro test if loging is required for the given syslog level.
+ * If the level of log is required then calls the macro that invoke
+ * the logging function.
+ */
+#define AFB_API_SYSLOG(api,llevel,...) \
         do{ if(afb_api_wants_log_level((api),(llevel))) AFB_API_VERBOSE((api),(llevel),__VA_ARGS__); }while(0)
-#define _AFB_REQ_LOGGING_(req,llevel,...) \
+#define AFB_REQ_SYSLOG(req,llevel,...) \
         do{ if(afb_req_wants_log_level((req),(llevel))) AFB_REQ_VERBOSE((req),(llevel),__VA_ARGS__); }while(0)
 
-#define AFB_API_ERROR(api,...)		_AFB_API_LOGGING_(api,AFB_SYSLOG_LEVEL_ERROR,__VA_ARGS__)
-#define AFB_API_WARNING(api,...)	_AFB_API_LOGGING_(api,AFB_SYSLOG_LEVEL_WARNING,__VA_ARGS__)
-#define AFB_API_NOTICE(api,...)		_AFB_API_LOGGING_(api,AFB_SYSLOG_LEVEL_NOTICE,__VA_ARGS__)
-#define AFB_API_INFO(api,...)		_AFB_API_LOGGING_(api,AFB_SYSLOG_LEVEL_INFO,__VA_ARGS__)
-#define AFB_API_DEBUG(api,...)		_AFB_API_LOGGING_(api,AFB_SYSLOG_LEVEL_DEBUG,__VA_ARGS__)
+/**
+ * predefined logging facility for API
+ */
+#define AFB_API_ERROR(api,...)		AFB_API_SYSLOG(api,AFB_SYSLOG_LEVEL_ERROR,__VA_ARGS__)
+#define AFB_API_WARNING(api,...)	AFB_API_SYSLOG(api,AFB_SYSLOG_LEVEL_WARNING,__VA_ARGS__)
+#define AFB_API_NOTICE(api,...)		AFB_API_SYSLOG(api,AFB_SYSLOG_LEVEL_NOTICE,__VA_ARGS__)
+#define AFB_API_INFO(api,...)		AFB_API_SYSLOG(api,AFB_SYSLOG_LEVEL_INFO,__VA_ARGS__)
+#define AFB_API_DEBUG(api,...)		AFB_API_SYSLOG(api,AFB_SYSLOG_LEVEL_DEBUG,__VA_ARGS__)
 
-#define AFB_REQ_ERROR(req,...)		_AFB_REQ_LOGGING_(req,AFB_SYSLOG_LEVEL_ERROR,__VA_ARGS__)
-#define AFB_REQ_WARNING(req,...)	_AFB_REQ_LOGGING_(req,AFB_SYSLOG_LEVEL_WARNING,__VA_ARGS__)
-#define AFB_REQ_NOTICE(req,...)		_AFB_REQ_LOGGING_(req,AFB_SYSLOG_LEVEL_NOTICE,__VA_ARGS__)
-#define AFB_REQ_INFO(req,...)		_AFB_REQ_LOGGING_(req,AFB_SYSLOG_LEVEL_INFO,__VA_ARGS__)
-#define AFB_REQ_DEBUG(req,...)		_AFB_REQ_LOGGING_(req,AFB_SYSLOG_LEVEL_DEBUG,__VA_ARGS__)
+/**
+ * predefined logging facility for REQ
+ */
+#define AFB_REQ_ERROR(req,...)		AFB_REQ_SYSLOG(req,AFB_SYSLOG_LEVEL_ERROR,__VA_ARGS__)
+#define AFB_REQ_WARNING(req,...)	AFB_REQ_SYSLOG(req,AFB_SYSLOG_LEVEL_WARNING,__VA_ARGS__)
+#define AFB_REQ_NOTICE(req,...)		AFB_REQ_SYSLOG(req,AFB_SYSLOG_LEVEL_NOTICE,__VA_ARGS__)
+#define AFB_REQ_INFO(req,...)		AFB_REQ_SYSLOG(req,AFB_SYSLOG_LEVEL_INFO,__VA_ARGS__)
+#define AFB_REQ_DEBUG(req,...)		AFB_REQ_SYSLOG(req,AFB_SYSLOG_LEVEL_DEBUG,__VA_ARGS__)
 
-#define AFB_ERROR(...)			AFB_API_ERROR(afb_get_root_api(),__VA_ARGS__)
-#define AFB_WARNING(...)		AFB_API_WARNING(afb_get_root_api(),__VA_ARGS__)
-#define AFB_NOTICE(...)			AFB_API_NOTICE(afb_get_root_api(),__VA_ARGS__)
-#define AFB_INFO(...)			AFB_API_INFO(afb_get_root_api(),__VA_ARGS__)
-#define AFB_DEBUG(...)			AFB_API_DEBUG(afb_get_root_api(),__VA_ARGS__)
+/**
+ * predefined logging facility for implicit root API
+ */
+#if !defined(AFB_BINDING_NO_ROOT)
+#define AFB_ERROR(...)			AFB_API_ERROR(afbBindingRoot,__VA_ARGS__)
+#define AFB_WARNING(...)		AFB_API_WARNING(afbBindingRoot,__VA_ARGS__)
+#define AFB_NOTICE(...)			AFB_API_NOTICE(afbBindingRoot,__VA_ARGS__)
+#define AFB_INFO(...)			AFB_API_INFO(afbBindingRoot,__VA_ARGS__)
+#define AFB_DEBUG(...)			AFB_API_DEBUG(afbBindingRoot,__VA_ARGS__)
+#endif
 
 /** @} */

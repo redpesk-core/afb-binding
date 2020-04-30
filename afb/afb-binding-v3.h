@@ -11,10 +11,11 @@
 
 /******************************************************************************/
 
+#include "afb-verbosity.h"
 #include "afb-auth.h"
 #include "afb-event-x2.h"
 #include "afb-req-x2.h"
-#include "afb-session-x2.h"
+#include "afb-session.h"
 #include "afb-api-x3.h"
 
 /******************************************************************************/
@@ -167,14 +168,6 @@ extern int afbBindingV3entry(struct afb_api_x3 *rootapi);
  */
 extern const struct afb_binding_v3 afbBindingV3;
 
-#include "afb-auth.h"
-#include "afb-session-x2.h"
-#include "afb-verbosity.h"
-
-#include "afb-event-x2.h"
-#include "afb-req-x2.h"
-#include "afb-api-x3.h"
-
 /******************************************************************************/
 #if AFB_BINDING_VERSION == 3
 
@@ -189,7 +182,15 @@ typedef struct afb_binding_v3			afb_binding_t;
 #define afb_get_daemon()			afb_get_root_api()
 #define afb_get_service()			afb_get_root_api()
 #define afb_get_logmask()			(afb_get_root_api()->logmask)
-#define afb_get_verbosity()			AFB_SYSLOG_LEVEL_TO_VERBOSITY(_afb_verbomask_to_upper_level_(afb_get_logmask()))
+
+static inline int _afb_get_verbosity_(int verbomask)
+{
+	int result = AFB_SYSLOG_LEVEL_ERROR;
+	while ((verbomask >>= result) && result < AFB_SYSLOG_LEVEL_DEBUG)
+		result++;
+	return result - AFB_SYSLOG_LEVEL_ERROR;
+}
+#define afb_get_verbosity()			_afb_get_verbosity_(afb_get_logmask())
 
 #define afb_daemon_get_event_loop()		afb_api_get_event_loop(afbBindingV3root)
 #define afb_daemon_get_user_bus()		afb_api_get_user_bus(afbBindingV3root)

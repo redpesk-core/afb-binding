@@ -2,6 +2,9 @@
 // Author: José Bollo <jose.bollo@iot.bzh>
 //
 // SPDX-License-Identifier: LGPL-3.0-only
+
+#define AFB_BINDING_VERSION 3
+
 #include <afb/c++/binding>
 #include <json-c/json.h>
 #include <string.h>

@@ -12,7 +12,7 @@ Source:         afb-binding-%{version}.tar.gz
 BuildRequires:  make
 BuildRequires:  cmake
 Requires:       %{name}-devel = %{version}
-%global debug_package %{nil} 
+%global debug_package %{nil}
 
 %description
 Development files for creating application framework bindings

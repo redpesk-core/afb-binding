@@ -25,4 +25,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/afb-binding.pc
 # install documentation and tutorials
 install(DIRECTORY docs tutorials
         DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/afb-binding
-        PATTERN *.odg EXCLUDE)
+        PATTERN *.odg  EXCLUDE
+        PATTERN *.so   EXCLUDE
+        PATTERN .*.swp EXCLUDE
+        PATTERN .sed   EXCLUDE
+)

@@ -13,14 +13,9 @@
 #include <functional>
 #include <string>
 
-/* ensure version */
-#ifndef AFB_BINDING_VERSION
-# define AFB_BINDING_VERSION   3
-#endif
-
 /* check the version */
-#if AFB_BINDING_VERSION < 3
-# error "AFB_BINDING_VERSION must be at least 3"
+#if AFB_BINDING_VERSION != 3
+# error "AFB_BINDING_VERSION must be 3"
 #endif
 
 /* get C definitions of bindings */

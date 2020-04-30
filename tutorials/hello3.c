@@ -328,7 +328,7 @@ static void pingJson (afb_req_t request) {
 static int get_call_args(afb_req_t request, const char **api, const char **verb, json_object **args)
 {
 	json_object *o, *json;
-	
+
 	json = afb_req_json(request);
 
 	if (!json_object_object_get_ex(json, "api", &o) || !json_object_is_type(o, json_type_string)) {
@@ -359,7 +359,7 @@ static void subcall (afb_req_t request)
 {
 	json_object *args;
 	const char *api, *verb;
-	
+
 	if (get_call_args(request, &api, &verb, &args))
 		afb_req_subcall(request, api, verb, json_object_get(args), 0, subcallcb, NULL);
 }
@@ -369,7 +369,7 @@ static void subcallsync (afb_req_t request)
 	json_object *args, *result;
 	const char *api, *verb;
 	char *error, *info;
-	
+
 	if (get_call_args(request, &api, &verb, &args)) {
 		afb_req_subcall_sync(request, api, verb, json_object_get(args), 0, &result, &error, &info);
 		afb_req_reply(request, result, error, info);
@@ -569,7 +569,7 @@ static void hasperm (afb_req_t request)
 {
 	const char *perm;
 	json_object *json, *o;
-	
+
 	json = afb_req_json(request);
 	if (!json_object_object_get_ex(json, "perm", &o) || !json_object_is_type(o, json_type_string))
 		afb_req_fail(request, "bad-perm", NULL);
