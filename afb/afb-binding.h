@@ -51,7 +51,7 @@
  * @see AFB_BINDING_VERSION
  * @see AFB_BINDING_UPPER_VERSION
  */
-#define AFB_BINDING_LOWER_VERSION     1
+#define AFB_BINDING_LOWER_VERSION     3
 
 /**
  * @def AFB_BINDING_UPPER_VERSION
@@ -68,9 +68,12 @@
  *
  * This macro must be defined before including <afb/afb-binding.h> to set
  * the required binding API.
+ *
+ * The value of 0 is valid. It removes any version specific defines.
  */
 
 #ifndef AFB_BINDING_VERSION
+/* undefined version */
 #error "\
 \n\
 \n\
@@ -82,16 +85,26 @@
     #define AFB_BINDING_VERSION 3\n\
 \n\
 "
-#elif AFB_BINDING_VERSION == 1
-#  error "Support of binding version 1 is removed! Please switch to version 3."
-#elif AFB_BINDING_VERSION == 2
-#  error "Support of binding version 2 is removed! Please switch to version 3."
-#endif
 
-#if AFB_BINDING_VERSION != 0
-# if AFB_BINDING_VERSION < AFB_BINDING_LOWER_VERSION || AFB_BINDING_VERSION > AFB_BINDING_UPPER_VERSION
-#  error "Unsupported binding version AFB_BINDING_VERSION"
-# endif
+#elif AFB_BINDING_VERSION == 0
+/*
+ * Use of AFB_BINDING_VERSION==0 is valid.
+ * It avoids to define unversionned symbols.
+ * It that case, removes definition of the root.
+ */
+#  define AFB_BINDING_NO_ROOT 1
+
+#elif AFB_BINDING_VERSION < AFB_BINDING_LOWER_VERSION
+/* removed versions */
+#  error "\
+\n\
+\n\
+  Support of binding version this version is removed!\n\
+  Please switch to binding version 3:\n\
+\n\
+    #define AFB_BINDING_VERSION 3\n\
+\n\
+"
 #endif
 
 /***************************************************************************************************/
