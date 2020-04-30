@@ -13,7 +13,7 @@ CXXFLAGS += ${FLAGS}
 
 .PHONY: all clean
 
-all: tuto-1.so tuto-2.so tuto-3.so tuto-4.so tuto-5.so tuto-app1.so
+all: tuto-1.so tuto-2.so tuto-3.so tuto-4.so tuto-5.so tuto-app1.so hello3.so
 
 clean:
 	rm *.so 2>/dev/null || true
