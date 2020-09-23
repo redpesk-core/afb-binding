@@ -58,11 +58,19 @@ enum afb_ctlid
 union afb_ctlarg
 {
 	/**
+	 * structure for message afb_ctlid_Root_Entry
+	 */
+	struct {
+		const char *path;
+	} root_entry;
+
+	/**
 	 * structure for message afb_ctlid_Pre_Init
 	 */
 	struct {
 		/** closure of the pre-init */
 		void *closure;
+		const char *path;
 	} pre_init;
 
 	/**
