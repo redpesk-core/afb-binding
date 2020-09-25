@@ -71,17 +71,17 @@
  *
  * The value of 0 is valid. It removes any version specific defines.
  */
-#ifndef AFB_BINDING_VERSION
+#if !defined(AFB_BINDING_VERSION)
 /* undefined version */
 #error "\
 \n\
 \n\
   AFB_BINDING_VERSION should be defined before including <afb/afb-binding.h>\n\
   AFB_BINDING_VERSION defines the version of binding that you use.\n\
-  Currently the version to use is 3 (older versions: 1 and 2 are obsolete).\n\
+  Currently the version to use is 4 (older versions: 1 and 2 are obsolete, 3 is legacy).\n\
   Consider to add one of the following define before including <afb/afb-binding.h>:\n\
 \n\
-    #define AFB_BINDING_VERSION 3\n\
+    #define AFB_BINDING_VERSION  4\n\
 \n\
 "
 
@@ -99,9 +99,9 @@
 \n\
 \n\
   Support of binding version this version is removed!\n\
-  Please switch to binding version 3:\n\
+  Please switch to binding version 4:\n\
 \n\
-    #define AFB_BINDING_VERSION 3\n\
+    #define AFB_BINDING_VERSION  4\n\
 \n\
 "
 #endif
