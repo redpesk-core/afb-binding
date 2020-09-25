@@ -554,6 +554,15 @@ struct api_context {
 	}
 };
 
+template < class _T_ >
+struct vcb_context {
+
+	inline _T_ *get(afb_req_t req) const {
+		void *ptr = afb_req_get_vcbdata(req);
+		return reinterpret_cast<_T_*>(ptr);
+	}
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -598,6 +607,20 @@ template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
 void verbcb_api(afb_req_t req, unsigned nparams, afb_data_t const params[])
 {
 	api_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
+void verbcb_vcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	vcb_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
+void verbcb_vcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	vcb_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -648,16 +671,16 @@ void callcb(void *closure, int status, unsigned nreplies, afb_data_t const repli
 	reinterpret_cast<_C_*>(closure)->_F_(status, afb::received_data(nreplies, replies), api);
 }
 
-template <class _C_, void (_C_::*_F_)(int,afb::received_data)>
-void callcb(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_api_t api)
-{
-	reinterpret_cast<_C_*>(closure)->_F_(status, afb::received_data(nreplies, replies));
-}
-
 template <class _C_, void (_C_::*_F_)(int,afb::received_data,afb::api) const>
 void callcb(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_api_t api)
 {
 	reinterpret_cast<_C_*>(closure)->_F_(status, afb::received_data(nreplies, replies), api);
+}
+
+template <class _C_, void (_C_::*_F_)(int,afb::received_data)>
+void callcb(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_api_t api)
+{
+	reinterpret_cast<_C_*>(closure)->_F_(status, afb::received_data(nreplies, replies));
 }
 
 template <class _C_, void (_C_::*_F_)(int,afb::received_data) const>
@@ -1028,6 +1051,58 @@ constexpr afb_verb_t verb(
 )
 {
 	return { name, verbcb<_F_>, auth, info, vcbdata, session, glob };
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
+constexpr afb_verb_t verb_client(
+	const char *name,
+	const char *info = nullptr,
+	uint16_t session = 0,
+	const afb_auth *auth = nullptr,
+	bool glob = false,
+	void *vcbdata = nullptr
+)
+{
+	return { name, verbcb_client<_C_, _F_>, auth, info, vcbdata, session, glob };
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
+constexpr afb_verb_t verb_client(
+	const char *name,
+	const char *info = nullptr,
+	uint16_t session = 0,
+	const afb_auth *auth = nullptr,
+	bool glob = false,
+	void *vcbdata = nullptr
+)
+{
+	return { name, verbcb_client<_C_, _F_>, auth, info, vcbdata, session, glob };
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
+constexpr afb_verb_t verb_api(
+	const char *name,
+	const char *info = nullptr,
+	uint16_t session = 0,
+	const afb_auth *auth = nullptr,
+	bool glob = false,
+	void *vcbdata = nullptr
+)
+{
+	return { name, verbcb_api<_C_, _F_>, auth, info, vcbdata, session, glob };
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
+constexpr afb_verb_t verb_api(
+	const char *name,
+	const char *info = nullptr,
+	uint16_t session = 0,
+	const afb_auth *auth = nullptr,
+	bool glob = false,
+	void *vcbdata = nullptr
+)
+{
+	return { name, verbcb_api<_C_, _F_>, auth, info, vcbdata, session, glob };
 }
 
 constexpr afb_verb_t verbend()
