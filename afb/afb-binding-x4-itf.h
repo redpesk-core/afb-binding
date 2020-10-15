@@ -16,7 +16,6 @@
 /******************************************************************************/
 /* declaration of types */
 
-struct afb_binding_x4_itf;
 struct afb_verb_v4;
 
 struct afb_api_x4;
@@ -218,10 +217,8 @@ typedef int (*afb_type_updater_x4_t)(
 /**
  * Definition of the function's interface for the APIv3
  */
-struct afb_binding_x4_itf
+struct afb_binding_x4r1_itf
 {
-	/* CAUTION: respect the order, add at the end, see AFTERWARD... */
-
 /*-- DATA ------------------------------------------*/
 
 	/** create a new data from raw values */

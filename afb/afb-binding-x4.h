@@ -56,10 +56,10 @@ struct afb_api_x4 *afbBindingV4root __attribute__((weak));
  * Instanciation of the interface to the binder
  */
 #if defined(AFB_BINDING_INDIRECT_CALLS)
-const struct afb_binding_x4_itf *afbBindingV4itfptr __attribute__((weak));
-#define afbBindingV4itf (*afbBindingV4itfptr)
+const struct afb_binding_x4r1_itf *afbBindingV4r1_itfptr __attribute__((weak));
+#define afbBindingV4r1_itf (*afbBindingV4r1_itfptr)
 #else
-struct afb_binding_x4_itf afbBindingV4itf __attribute__((weak)); /* can not be const */
+struct afb_binding_x4r1_itf afbBindingV4r1_itf __attribute__((weak)); /* can not be const */
 #endif
 
 /** DATA ***********************************************************/
@@ -112,7 +112,7 @@ int afb_create_data_raw(
 	void (*dispose)(void*),
 	void *closure
 ) {
-	return afbBindingV4itf.create_data_raw(data, type, buffer, size, dispose, closure);
+	return afbBindingV4r1_itf.create_data_raw(data, type, buffer, size, dispose, closure);
 }
 
 /**
@@ -135,7 +135,7 @@ int afb_create_data_copy(
 	const void *buffer,
 	size_t size
 ) {
-	return afbBindingV4itf.create_data_copy(data, type, buffer, size);
+	return afbBindingV4r1_itf.create_data_copy(data, type, buffer, size);
 }
 
 /**
@@ -163,7 +163,7 @@ int afb_create_data_alloc(
 	size_t size,
 	int zeroes
 ) {
-	return afbBindingV4itf.create_data_alloc(data, type, pointer, size, zeroes);
+	return afbBindingV4r1_itf.create_data_alloc(data, type, pointer, size, zeroes);
 }
 
 /**
@@ -178,7 +178,7 @@ afb_data_t
 afb_data_addref(
 	afb_data_t data
 ) {
-	return afbBindingV4itf.data_addref(data);
+	return afbBindingV4r1_itf.data_addref(data);
 }
 
 /**
@@ -193,7 +193,7 @@ void
 afb_data_unref(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_unref(data);
+	afbBindingV4r1_itf.data_unref(data);
 }
 
 /**
@@ -218,7 +218,7 @@ afb_data_convert(
 	afb_type_x4_t type,
 	afb_data_t *result
 ) {
-	return afbBindingV4itf.data_convert(data, type, result);
+	return afbBindingV4r1_itf.data_convert(data, type, result);
 }
 
 /**
@@ -231,7 +231,7 @@ afb_type_x4_t
 afb_data_type(
 	afb_data_t data
 ) {
-	return afbBindingV4itf.data_type(data);
+	return afbBindingV4r1_itf.data_type(data);
 }
 
 /**
@@ -250,7 +250,7 @@ afb_data_get_mutable(
 	void **pointer,
 	size_t *size
 ) {
-	return afbBindingV4itf.data_get_mutable(data, pointer, size);
+	return afbBindingV4r1_itf.data_get_mutable(data, pointer, size);
 }
 
 /**
@@ -269,7 +269,7 @@ afb_data_get_constant(
 	const void **pointer,
 	size_t *size
 ) {
-	return afbBindingV4itf.data_get_constant(data, pointer, size);
+	return afbBindingV4r1_itf.data_get_constant(data, pointer, size);
 }
 
 /**
@@ -330,7 +330,7 @@ void
 afb_data_notify_changed(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Notify_Changed);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Notify_Changed);
 }
 
 /**
@@ -340,7 +340,7 @@ int
 afb_data_is_volatile(
 	afb_data_t data
 ) {
-	return afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Is_Volatile);
+	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Is_Volatile);
 }
 
 /**
@@ -350,7 +350,7 @@ void
 afb_data_set_volatile(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Set_Volatile);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Volatile);
 }
 
 /**
@@ -360,7 +360,7 @@ void
 afb_data_set_not_volatile(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Set_Not_Volatile);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Not_Volatile);
 }
 
 /**
@@ -370,7 +370,7 @@ int
 afb_data_is_constant(
 	afb_data_t data
 ) {
-	return afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Is_Constant);
+	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Is_Constant);
 }
 
 /**
@@ -380,7 +380,7 @@ void
 afb_data_set_constant(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Set_Constant);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Constant);
 }
 
 /**
@@ -390,7 +390,7 @@ void
 afb_data_set_not_constant(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Set_Not_Constant);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Not_Constant);
 }
 
 /**
@@ -400,7 +400,7 @@ void
 afb_data_lock_read(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Lock_Read);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Lock_Read);
 }
 
 /**
@@ -410,7 +410,7 @@ int
 afb_data_try_lock_read(
 	afb_data_t data
 ) {
-	return afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Try_Lock_Read);
+	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Try_Lock_Read);
 }
 
 /**
@@ -420,7 +420,7 @@ void
 afb_data_lock_write(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Lock_Write);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Lock_Write);
 }
 
 /**
@@ -430,7 +430,7 @@ int
 afb_data_try_lock_write(
 	afb_data_t data
 ) {
-	return afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Try_Lock_Write);
+	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Try_Lock_Write);
 }
 
 /**
@@ -440,7 +440,7 @@ void
 afb_data_unlock(
 	afb_data_t data
 ) {
-	afbBindingV4itf.data_control(data, Afb_Data_Action_x4_Unlock);
+	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Unlock);
 }
 
 /**
@@ -451,7 +451,7 @@ afb_data_update(
 	afb_data_t data,
 	afb_data_t value
 ) {
-	return afbBindingV4itf.data_update(data, value);
+	return afbBindingV4r1_itf.data_update(data, value);
 }
 
 /**
@@ -565,7 +565,7 @@ static inline
 int afb_req_logmask(
 	afb_req_t req)
 {
-	return afbBindingV4itf.req_logmask(req);
+	return afbBindingV4r1_itf.req_logmask(req);
 }
 
 /**
@@ -624,7 +624,7 @@ afb_api_t
 afb_req_get_api(
 	afb_req_t req
 ) {
-	return afbBindingV4itf.req_api(req);
+	return afbBindingV4r1_itf.req_api(req);
 }
 
 /**
@@ -640,7 +640,7 @@ void *
 afb_req_get_vcbdata(
 	afb_req_t req
 ) {
-	return afbBindingV4itf.req_vcbdata(req);
+	return afbBindingV4r1_itf.req_vcbdata(req);
 }
 
 /**
@@ -657,7 +657,7 @@ const char *
 afb_req_get_called_api(
 	afb_req_t req
 ) {
-	return afbBindingV4itf.req_called_api(req);
+	return afbBindingV4r1_itf.req_called_api(req);
 }
 
 /**
@@ -672,7 +672,7 @@ const char *
 afb_req_get_called_verb(
 	afb_req_t req
 ) {
-	return afbBindingV4itf.req_called_verb(req);
+	return afbBindingV4r1_itf.req_called_verb(req);
 }
 
 /**
@@ -687,7 +687,7 @@ afb_req_t
 afb_req_addref(
 	afb_req_t req
 ) {
-	return afbBindingV4itf.req_addref(req);
+	return afbBindingV4r1_itf.req_addref(req);
 }
 
 /**
@@ -700,7 +700,7 @@ void
 afb_req_unref(
 	afb_req_t req
 ) {
-	afbBindingV4itf.req_unref(req);
+	afbBindingV4r1_itf.req_unref(req);
 }
 
 /**
@@ -741,7 +741,7 @@ afb_req_vverbose(
 	const char *fmt,
 	va_list args
 ) {
-	afbBindingV4itf.req_vverbose(req, level, file, line, func, fmt, args);
+	afbBindingV4r1_itf.req_vverbose(req, level, file, line, func, fmt, args);
 }
 
 /**
@@ -819,7 +819,7 @@ afb_req_context(
 	void (*free_context)(void*),
 	void *closure
 ) {
-	return afbBindingV4itf.req_cookie(req, replace, create_context, free_context, closure);
+	return afbBindingV4r1_itf.req_cookie(req, replace, create_context, free_context, closure);
 }
 
 /**
@@ -889,7 +889,7 @@ void
 afb_req_session_close(
 	afb_req_t req
 ) {
-	afbBindingV4itf.req_session_close(req);
+	afbBindingV4r1_itf.req_session_close(req);
 }
 
 /**
@@ -908,7 +908,7 @@ afb_req_session_set_LOA(
 	afb_req_t req,
 	unsigned level
 ) {
-	return afbBindingV4itf.req_session_set_LOA(req, level);
+	return afbBindingV4r1_itf.req_session_set_LOA(req, level);
 }
 
 /**
@@ -928,7 +928,7 @@ afb_req_subscribe(
 	afb_req_t req,
 	afb_event_t event
 ) {
-	return afbBindingV4itf.req_subscribe(req, event);
+	return afbBindingV4r1_itf.req_subscribe(req, event);
 }
 
 /**
@@ -949,7 +949,7 @@ afb_req_unsubscribe(
 	afb_req_t req,
 	afb_event_t event
 ) {
-	return afbBindingV4itf.req_unsubscribe(req, event);
+	return afbBindingV4r1_itf.req_unsubscribe(req, event);
 }
 
 /**
@@ -969,7 +969,7 @@ afb_req_check_permission(
 	void (*callback)(void *closure, int status, afb_req_t req),
 	void *closure
 ) {
-	afbBindingV4itf.req_check_permission(req, permission, callback, closure);
+	afbBindingV4r1_itf.req_check_permission(req, permission, callback, closure);
 }
 
 /**
@@ -995,7 +995,7 @@ struct json_object *
 afb_req_get_client_info(
 	afb_req_t req
 ) {
-	return afbBindingV4itf.req_get_client_info(req);
+	return afbBindingV4r1_itf.req_get_client_info(req);
 }
 
 /**
@@ -1013,7 +1013,7 @@ afb_req_parameters(
 	afb_req_t req,
 	afb_data_t const **params
 ) {
-	return afbBindingV4itf.req_parameters(req, params);
+	return afbBindingV4r1_itf.req_parameters(req, params);
 }
 
 /**
@@ -1037,7 +1037,7 @@ afb_req_reply(
 	unsigned nreplies,
 	afb_data_t const *replies
 ) {
-	afbBindingV4itf.req_reply(req, status, nreplies, replies);
+	afbBindingV4r1_itf.req_reply(req, status, nreplies, replies);
 }
 
 /**
@@ -1090,7 +1090,7 @@ afb_req_subcall(
 		afb_req_t req),
 	void *closure
 ) {
-	afbBindingV4itf.req_subcall(req, apiname, verbname, nparams, params, flags, callback, closure);
+	afbBindingV4r1_itf.req_subcall(req, apiname, verbname, nparams, params, flags, callback, closure);
 }
 
 /**
@@ -1143,7 +1143,7 @@ afb_req_subcall_sync(
 	unsigned *nreplies,
 	afb_data_t replies[]
 ) {
-	return afbBindingV4itf.req_subcall_sync(req, apiname, verbname, nparams, params, flags, status, nreplies, replies);
+	return afbBindingV4r1_itf.req_subcall_sync(req, apiname, verbname, nparams, params, flags, status, nreplies, replies);
 }
 
 /** @} */
@@ -1179,7 +1179,7 @@ afb_event_t
 afb_event_addref(
 	afb_event_t event
 ) {
-	return afbBindingV4itf.event_addref(event);
+	return afbBindingV4r1_itf.event_addref(event);
 }
 
 /**
@@ -1194,7 +1194,7 @@ void
 afb_event_unref(
 	afb_event_t event
 ) {
-	afbBindingV4itf.event_unref(event);
+	afbBindingV4r1_itf.event_unref(event);
 }
 
 /**
@@ -1212,7 +1212,7 @@ const char *
 afb_event_name(
 	afb_event_t event
 ) {
-	return afbBindingV4itf.event_name(event);
+	return afbBindingV4r1_itf.event_name(event);
 }
 
 /**
@@ -1239,7 +1239,7 @@ afb_event_push(
 	unsigned nparams,
 	afb_data_t const params[]
 ) {
-	return afbBindingV4itf.event_push(event, nparams, params);
+	return afbBindingV4r1_itf.event_push(event, nparams, params);
 }
 
 /**
@@ -1263,7 +1263,7 @@ afb_event_broadcast(
 	unsigned nparams,
 	afb_data_t const params[]
 ) {
-	return afbBindingV4itf.event_broadcast(event, nparams, params);
+	return afbBindingV4r1_itf.event_broadcast(event, nparams, params);
 }
 
 /** @} */
@@ -1283,7 +1283,7 @@ int afb_type_lookup(
 	afb_type_x4_t *type,
 	const char *name
 ) {
-	return afbBindingV4itf.type_lookup(type, name);
+	return afbBindingV4r1_itf.type_lookup(type, name);
 }
 
 /**
@@ -1298,7 +1298,7 @@ int afb_type_register(
 	const char *name,
 	afb_type_flags_t flags
 ) {
-	return afbBindingV4itf.type_register(type, name, flags);
+	return afbBindingV4r1_itf.type_register(type, name, flags);
 }
 
 /**  */
@@ -1307,7 +1307,7 @@ const char *
 afb_type_name(
 	afb_type_x4_t type
 ) {
-	return afbBindingV4itf.type_name(type);
+	return afbBindingV4r1_itf.type_name(type);
 }
 
 /**  */
@@ -1317,7 +1317,7 @@ afb_type_set_family(
 	afb_type_t type,
 	afb_type_x4_t family
 ) {
-	return afbBindingV4itf.type_set_family(type, family);
+	return afbBindingV4r1_itf.type_set_family(type, family);
 }
 
 /** add convert to */
@@ -1329,7 +1329,7 @@ afb_type_add_convert_to(
 	afb_type_converter_t converter,
 	void *closure
 ) {
-	return afbBindingV4itf.type_add_converter(type, to_type, converter, closure);
+	return afbBindingV4r1_itf.type_add_converter(type, to_type, converter, closure);
 }
 
 /** add convert from */
@@ -1341,7 +1341,7 @@ afb_type_add_convert_from(
 	afb_type_converter_t converter,
 	void *closure
 ) {
-	return afbBindingV4itf.type_add_converter(from_type, type, converter, closure);
+	return afbBindingV4r1_itf.type_add_converter(from_type, type, converter, closure);
 }
 
 /** add update to */
@@ -1353,7 +1353,7 @@ afb_type_add_update_to(
 	afb_type_updater_t updater,
 	void *closure
 ) {
-	return afbBindingV4itf.type_add_updater(type, to_type, updater, closure);
+	return afbBindingV4r1_itf.type_add_updater(type, to_type, updater, closure);
 }
 
 /** add update from */
@@ -1365,7 +1365,7 @@ afb_type_add_update_from(
 	afb_type_updater_t updater,
 	void *closure
 ) {
-	return afbBindingV4itf.type_add_updater(from_type, type, updater, closure);
+	return afbBindingV4r1_itf.type_add_updater(from_type, type, updater, closure);
 }
 
 /** @} */
@@ -1384,7 +1384,7 @@ static inline
 int afb_api_logmask(
 	afb_api_t api)
 {
-	return afbBindingV4itf.api_logmask(api);
+	return afbBindingV4r1_itf.api_logmask(api);
 }
 
 /**
@@ -1400,7 +1400,7 @@ static inline
 const char *afb_api_name(
 	afb_api_t api)
 {
-	return afbBindingV4itf.api_name(api);
+	return afbBindingV4r1_itf.api_name(api);
 }
 
 /**
@@ -1416,7 +1416,7 @@ static inline
 void *afb_api_get_userdata(
 	afb_api_t api)
 {
-	return afbBindingV4itf.api_get_userdata(api);
+	return afbBindingV4r1_itf.api_get_userdata(api);
 }
 
 /**
@@ -1434,7 +1434,7 @@ void *afb_api_set_userdata(
 	afb_api_t api,
 	void *value)
 {
-	return afbBindingV4itf.api_set_userdata(api, value);
+	return afbBindingV4r1_itf.api_set_userdata(api, value);
 }
 
 /**
@@ -1503,7 +1503,7 @@ void afb_api_vverbose(
 	const char *fmt,
 	va_list args)
 {
-	afbBindingV4itf.api_vverbose(api, level, file, line, func, fmt, args);
+	afbBindingV4r1_itf.api_vverbose(api, level, file, line, func, fmt, args);
 }
 
 /**
@@ -1547,7 +1547,7 @@ void afb_api_verbose(
 {
 	va_list args;
 	va_start(args, fmt);
-	afbBindingV4itf.api_vverbose(api, level, file, line, func, fmt, args);
+	afbBindingV4r1_itf.api_vverbose(api, level, file, line, func, fmt, args);
 	va_end(args);
 }
 
@@ -1578,7 +1578,7 @@ int afb_api_broadcast_event(
 	unsigned nparams,
 	afb_data_t const params[])
 {
-	return afbBindingV4itf.api_event_broadcast(api, name, nparams, params);
+	return afbBindingV4r1_itf.api_event_broadcast(api, name, nparams, params);
 }
 
 /**
@@ -1604,7 +1604,7 @@ int afb_api_require_api(
 	const char *name,
 	int initialized)
 {
-	return afbBindingV4itf.api_require_api(api, name, initialized);
+	return afbBindingV4r1_itf.api_require_api(api, name, initialized);
 }
 
 /**
@@ -1631,7 +1631,7 @@ int afb_api_new_event(
 	const char *name,
 	afb_event_t *event)
 {
-	return afbBindingV4itf.api_new_event(api, name, event);
+	return afbBindingV4r1_itf.api_new_event(api, name, event);
 }
 
 /**
@@ -1664,7 +1664,7 @@ int afb_api_add_verb(
 	uint32_t session,
 	int glob)
 {
-	return afbBindingV4itf.api_add_verb(api, verb, info, callback, vcbdata, auth, session, glob);
+	return afbBindingV4r1_itf.api_add_verb(api, verb, info, callback, vcbdata, auth, session, glob);
 }
 
 /**
@@ -1684,7 +1684,7 @@ int afb_api_del_verb(
 	const char *verb,
 	void **vcbdata)
 {
-	return afbBindingV4itf.api_del_verb(api, verb, vcbdata);
+	return afbBindingV4r1_itf.api_del_verb(api, verb, vcbdata);
 }
 
 /**
@@ -1697,7 +1697,7 @@ static inline
 void afb_api_seal(
 	afb_api_t api)
 {
-	afbBindingV4itf.api_seal(api);
+	afbBindingV4r1_itf.api_seal(api);
 }
 
 /**
@@ -1717,7 +1717,7 @@ int afb_api_set_verbs(
 	afb_api_t api,
 	const struct afb_verb_v4 *verbs)
 {
-	return afbBindingV4itf.api_set_verbs(api, verbs);
+	return afbBindingV4r1_itf.api_set_verbs(api, verbs);
 }
 
 /**
@@ -1756,7 +1756,7 @@ int afb_api_event_handler_add(
 		afb_api_t),
 	void *closure)
 {
-	return afbBindingV4itf.api_event_handler_add(api, pattern, callback, closure);
+	return afbBindingV4r1_itf.api_event_handler_add(api, pattern, callback, closure);
 }
 
 /**
@@ -1777,7 +1777,7 @@ int afb_api_event_handler_del(
 	const char *pattern,
 	void **closure)
 {
-	return afbBindingV4itf.api_event_handler_del(api, pattern, closure);
+	return afbBindingV4r1_itf.api_event_handler_del(api, pattern, closure);
 }
 
 /**
@@ -1829,7 +1829,7 @@ void afb_api_call(
 		afb_api_t api),
 	void *closure)
 {
-	afbBindingV4itf.api_call(api, apiname, verbname, nparams, params, callback, closure);
+	afbBindingV4r1_itf.api_call(api, apiname, verbname, nparams, params, callback, closure);
 }
 
 /**
@@ -1881,7 +1881,7 @@ int afb_api_call_sync(
 	unsigned *nreplies,
 	afb_data_t replies[])
 {
-	return afbBindingV4itf.api_call_sync(api,
+	return afbBindingV4r1_itf.api_call_sync(api,
 			apiname, verbname, nparams, params,
 			status, nreplies, replies);
 }
@@ -1905,7 +1905,7 @@ int afb_api_provide_class(
 	afb_api_t api,
 	const char *name)
 {
-	return afbBindingV4itf.api_class_provide(api, name);
+	return afbBindingV4r1_itf.api_class_provide(api, name);
 }
 
 /**
@@ -1927,7 +1927,7 @@ int afb_api_require_class(
 	afb_api_t api,
 	const char *name)
 {
-	return afbBindingV4itf.api_class_require(api, name);
+	return afbBindingV4r1_itf.api_class_require(api, name);
 }
 
 /**
@@ -1946,7 +1946,7 @@ static inline
 int afb_api_delete(
 	afb_api_t api)
 {
-	return afbBindingV4itf.api_delete(api);
+	return afbBindingV4r1_itf.api_delete(api);
 }
 
 /**
@@ -1964,7 +1964,7 @@ static inline
 struct json_object *afb_api_settings(
 	afb_api_t api)
 {
-	return afbBindingV4itf.api_settings(api);
+	return afbBindingV4r1_itf.api_settings(api);
 }
 
 
@@ -2006,7 +2006,7 @@ int afb_create_api(
 	int (*mainctl)(afb_api_t, afb_ctlid_t, afb_ctlarg_t),
 	void *closure)
 {
-	return afbBindingV4itf.create_api(afbBindingV4root, newapi, apiname, info, noconcurrency, mainctl, closure);
+	return afbBindingV4r1_itf.create_api(afbBindingV4root, newapi, apiname, info, noconcurrency, mainctl, closure);
 }
 
 /**
@@ -2056,7 +2056,7 @@ int afb_job_queue(
 	void *group,
 	int timeout)
 {
-	return afbBindingV4itf.job_queue(afbBindingV4root, callback, argument, group, timeout);
+	return afbBindingV4r1_itf.job_queue(afbBindingV4root, callback, argument, group, timeout);
 }
 
 /**
@@ -2074,7 +2074,7 @@ int afb_alias_api(
 	const char *name,
 	const char *as_name)
 {
-	return afbBindingV4itf.alias_api(afbBindingV4root, name, as_name);
+	return afbBindingV4r1_itf.alias_api(afbBindingV4root, name, as_name);
 }
 
 /** @} */
@@ -2082,10 +2082,10 @@ int afb_alias_api(
 /** @defgroup AFB_PREDEFINED_TYPE
  *  @{ */
 
-#define AFB_PREDEFINED_TYPE_OPAQUE  (afbBindingV4itf.type_opaque)
-#define AFB_PREDEFINED_TYPE_STRINGZ (afbBindingV4itf.type_stringz)
-#define AFB_PREDEFINED_TYPE_JSON    (afbBindingV4itf.type_json)
-#define AFB_PREDEFINED_TYPE_JSON_C  (afbBindingV4itf.type_json_c)
+#define AFB_PREDEFINED_TYPE_OPAQUE  (afbBindingV4r1_itf.type_opaque)
+#define AFB_PREDEFINED_TYPE_STRINGZ (afbBindingV4r1_itf.type_stringz)
+#define AFB_PREDEFINED_TYPE_JSON    (afbBindingV4r1_itf.type_json)
+#define AFB_PREDEFINED_TYPE_JSON_C  (afbBindingV4r1_itf.type_json_c)
 
 /** @} */
 /** MISC ***********************************************************/
