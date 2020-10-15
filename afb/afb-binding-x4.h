@@ -55,7 +55,7 @@ struct afb_api_x4 *afbBindingV4root __attribute__((weak));
 /**
  * Instanciation of the interface to the binder
  */
-#if defined(AFB_BINDING_INDIRECT_CALLS)
+#if !defined(AFB_BINDING_NO_INDIRECT_CALLS)
 const struct afb_binding_x4r1_itf *afbBindingV4r1_itfptr __attribute__((weak));
 #define afbBindingV4r1_itf (*afbBindingV4r1_itfptr)
 #else
