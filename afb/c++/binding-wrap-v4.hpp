@@ -331,11 +331,11 @@ class api
 protected:
 	afb_api_t api_;
 public:
-	using call_cb = void (*)(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_api_t api);
+	using call_cb = afb_call_callback_t;
+	using event_cb = afb_event_handler_t;
+	using verb_cb = afb_req_callback_t;
+	using mainctl_cb = afb_api_callback_t;
 	using queue_cb = void (*)(int signum, void *arg);
-	using event_cb = void (*)(void *closure, const char *event, unsigned nparams, afb_data_t const params[], afb_api_t api);
-	using verb_cb = void (*)(afb_req_t req, unsigned nparams, afb_data_t const params[]);
-	using mainctl_cb = int (*)(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg);
 
 	api();
 	api(afb_api_t a);
@@ -868,7 +868,7 @@ inline void req::subcall(const char *api, const char *verb, unsigned nparams, af
 template <class T>
 inline void req::subcall(const char *api, const char *verb, unsigned nparams, afb_data_t const params[], int flags, void (*callback)(T *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_req_t req), T *closure) const
 {
-	subcall(api, verb, nparams, params, flags, reinterpret_cast<void(*)(void*,int,unsigned,afb_data_t const[],afb_req_t)>(callback), reinterpret_cast<void*>(closure));
+	subcall(api, verb, nparams, params, flags, reinterpret_cast<afb_subcall_callback_t>(callback), reinterpret_cast<void*>(closure));
 }
 
 inline int req::subcallsync(const char *api, const char *verb, unsigned nparams, afb_data_t const params[], int flags, int &status, unsigned &nreplies, afb_data_t replies[]) const
@@ -937,7 +937,7 @@ inline void call(const char *api, const char *verb, unsigned nparams, afb_data_t
 template <class T>
 inline void call(const char *api, const char *verb, unsigned nparams, afb_data_t const params[], void (*callback)(T*closure, int status, unsigned nreplies, afb_data_t const replies[], afb_api_t api), T *closure)
 {
-	root().call(api, verb, nparams, params, reinterpret_cast<void(*)(void*,int,unsigned,afb_data_t const[],afb_api_t)>(callback), reinterpret_cast<void*>(closure));
+	root().call(api, verb, nparams, params, reinterpret_cast<afb_call_callback_t>(callback), reinterpret_cast<void*>(closure));
 }
 
 inline int callsync(const char *api, const char *verb, unsigned nparams, afb_data_t const params[], int &status, unsigned &nreplies, afb_data_t replies[])
@@ -1029,7 +1029,7 @@ constexpr afb_auth auth_and(const afb_auth &first, const afb_auth &next)
 
 constexpr afb_verb_t verb(
 	const char *name,
-	void (*callback)(afb_req_t, unsigned nparams, afb_data_t const params[]),
+	afb_req_callback_t callback,
 	const char *info = nullptr,
 	uint16_t session = 0,
 	const afb_auth *auth = nullptr,
@@ -1114,7 +1114,7 @@ constexpr afb_binding_t binding(
 	const char *name,
 	const afb_verb_t *verbs,
 	const char *info = nullptr,
-	int (*mainctl)(afb_api_t, afb_ctlid_t, afb_ctlarg_t) = nullptr,
+	afb_api_callback_t mainctl = nullptr,
 	const char *specification = nullptr,
 	bool noconcurrency = false,
 	void *userdata = nullptr

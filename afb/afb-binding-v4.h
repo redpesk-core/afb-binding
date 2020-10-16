@@ -137,7 +137,7 @@ typedef struct afb_binding_v4			afb_binding_t;
  * @see afbBindingV4
  * @see @ref validity-v4
  */
-extern int afbBindingV4entry(afb_api_x4_t rootapi, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg);
+extern int afbBindingV4entry(afb_api_x4_t rootapi, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata);
 
 /**
  * Static definition of the root api of the binding.

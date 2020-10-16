@@ -118,7 +118,7 @@ void logout(afb::req req, afb::received_data params)
 	req.reply();
 }
 
-int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg)
+int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
 {
 	afb::api a(api);
 

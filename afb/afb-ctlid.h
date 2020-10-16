@@ -61,6 +61,7 @@ union afb_ctlarg
 	 * structure for message afb_ctlid_Root_Entry
 	 */
 	struct {
+		/** path of the binding */
 		const char *path;
 	} root_entry;
 
@@ -68,8 +69,7 @@ union afb_ctlarg
 	 * structure for message afb_ctlid_Pre_Init
 	 */
 	struct {
-		/** closure of the pre-init */
-		void *closure;
+		/** path of the binding */
 		const char *path;
 	} pre_init;
 

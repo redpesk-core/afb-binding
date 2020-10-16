@@ -1034,7 +1034,7 @@ static const afb_verb_t verbs[] = {
 };
 
 
-static int apimainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg)
+static int apimainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
 {
 	if (ctlid == afb_ctlid_Pre_Init)
 		afb::api(api).set_verbs(verbs);
@@ -1178,7 +1178,7 @@ end:
 
 /*************************************************************/
 
-static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg)
+static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
 {
 	switch (ctlid) {
 	case afb_ctlid_Root_Entry:

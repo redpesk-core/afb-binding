@@ -1120,7 +1120,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb=NULL}
 };
 
-static int apimainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg)
+static int apimainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
 {
 	if (ctlid == afb_ctlid_Pre_Init)
 		afb_api_set_verbs(api, verbs);
@@ -1263,7 +1263,7 @@ end:
 
 /*************************************************************/
 
-static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg)
+static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
 {
 	switch (ctlid) {
 	case afb_ctlid_Root_Entry:

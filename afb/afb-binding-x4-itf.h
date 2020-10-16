@@ -126,13 +126,44 @@ typedef
 /******************************************************************************/
 
 /**
+ * Main api callback function.
+ *
+ * @param api       the api that receive the callback
+ * @param ctlid     identifier of the reason of the call (@see afb_ctlid)
+ * @param ctlarg    data associated to the call
+ * @param userdata  the userdata of the api (@see afb_api_get_userdata)
+ *
+ * @return a value that must be negative if an error occured. The
+ *         return value is important when ctlid relates to an initialisation
+ *         step, i.e. when it has one of the following predefined values:
+ *         afb_ctlid_Root_Entry, afb_ctlid_Pre_Init, afb_ctlid_Init.
  */
 typedef int (*afb_api_callback_x4_t)(
 		afb_api_x4_t api,
 		afb_ctlid_t ctlid,
-		afb_ctlarg_t ctlarg);
+		afb_ctlarg_t ctlarg,
+		void *userdata);
 
 /**
+ * Request handling callback used for verbs.
+ *
+ * @param req      the request to process
+ * @param nparams  the count of parameter data of the request
+ * @param params   the array of parameter data of the request
+ */
+typedef void (*afb_req_callback_x4_t)(
+		afb_req_x4_t req,
+		unsigned nparams,
+		afb_data_x4_t const params[]);
+
+/**
+ * Callback for receiving asynchronous results of a call.
+ *
+ * @param closure  the closure value given at call
+ * @param status   the status of the call, negative on error
+ * @param nreplies the count of replied data
+ * @param replies  the array of replied data
+ * @param api      the api that made the call
  */
 typedef void (*afb_call_callback_x4_t)(
 		void *closure,
@@ -142,13 +173,13 @@ typedef void (*afb_call_callback_x4_t)(
 		afb_api_x4_t api);
 
 /**
- */
-typedef void (*afb_req_callback_x4_t)(
-		afb_req_x4_t req,
-		unsigned nparams,
-		afb_data_x4_t const params[]);
-
-/**
+ * Callback for receiving asynchronous results of a subcall.
+ *
+ * @param closure  the closure value given at subcall
+ * @param status   the status of the subcall, negative on error
+ * @param nreplies the count of replied data
+ * @param replies  the array of replied data
+ * @param req      the req that made the subcall
  */
 typedef void (*afb_subcall_callback_x4_t)(
 		void *closure,
@@ -158,6 +189,11 @@ typedef void (*afb_subcall_callback_x4_t)(
 		afb_req_x4_t req);
 
 /**
+ * Callback for receiving result of checking of permissions.
+ *
+ * @param closure  the closure value given at check
+ * @param status   the status of the check, negative when rejected
+ * @param req      the req that made the check
  */
 typedef void (*afb_check_callback_x4_t)(
 		void *closure,
@@ -165,6 +201,13 @@ typedef void (*afb_check_callback_x4_t)(
 		afb_req_x4_t req);
 
 /**
+ * Callback for handling events.
+ *
+ * @param closure  the closure value given at creation of the handler
+ * @param event_name name of the event
+ * @param nparams  the count of parameter data of the event
+ * @param params   the array of parameter data of the event
+ * @param api      the api that holds the handler
  */
 typedef void (*afb_event_handler_x4_t)(
 		void *closure,
@@ -178,19 +221,19 @@ typedef void (*afb_event_handler_x4_t)(
  *
  * A conversion callback receives 4 parameters:
  *
- *  - void *          closure   A closure defined when converter is declared
- *  - afb_data_x4_t   from      The data to convert
- *  - afb_type_x4_t   type      The type to convert to
- *  - afb_data_x4_t * to        Where to store the result of the conversion
+ * @param closure   A closure defined when converter is declared
+ * @param from      The data to convert
+ * @param type      The type to convert to
+ * @param to        Where to store the result of the conversion
  *
- * It should return an integer status of 0 in case of success or a negative value
- * indicating the error.
+ * @return It should return an integer status of 0 in case of success
+ *         or a negative value indicating the error.
  */
 typedef int (*afb_type_converter_x4_t)(
-			void *closure,
-			afb_data_x4_t from,
-			afb_type_x4_t type,
-			afb_data_x4_t *to);
+		void *closure,
+		afb_data_x4_t from,
+		afb_type_x4_t type,
+		afb_data_x4_t *to);
 
 /**
  * The type afb_type_updater_x4_t denote a conversion callback that is able
@@ -198,19 +241,19 @@ typedef int (*afb_type_converter_x4_t)(
  *
  * A conversion callback receives 4 parameters:
  *
- *  - void *          closure   A closure defined when converter is declared
- *  - afb_data_x4_t   from      The data of reference
- *  - afb_type_x4_t   type      The type of the data to update
- *  - afb_data_x4_t   to        the existing data to update from the given reference
+ * @param  closure   A closure defined when converter is declared
+ * @param  from      The data of reference
+ * @param  type      The type of the data to update
+ * @param  to        the existing data to update from the given reference
  *
- * It should return an integer status of 0 in case of success or a negative value
- * indicating the error.
+ * @return It should return an integer status of 0 in case of success
+ *         or a negative value indicating the error.
  */
 typedef int (*afb_type_updater_x4_t)(
-			void *closure,
-			afb_data_x4_t from,
-			afb_type_x4_t type,
-			afb_data_x4_t to);
+		void *closure,
+		afb_data_x4_t from,
+		afb_type_x4_t type,
+		afb_data_x4_t to);
 
 /******************************************************************************/
 
@@ -600,7 +643,7 @@ struct afb_binding_x4r1_itf
 		const char *info,
 		int noconcurrency,
 		afb_api_callback_x4_t mainctl,
-		void *closure);
+		void *userdata);
 
 	/** queue a job */
 	int (*job_queue)(

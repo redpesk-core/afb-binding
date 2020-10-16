@@ -21,10 +21,20 @@ typedef afb_event_x4_t   afb_event_t;
 typedef afb_data_x4_t    afb_data_t;
 typedef afb_type_x4_t    afb_type_t;
 
-typedef afb_data_action_x4_t   afb_data_action_t;
-typedef afb_type_flags_x4_t    afb_type_flags_t;
+typedef afb_data_action_x4_t    afb_data_action_t;
+typedef afb_type_flags_x4_t     afb_type_flags_t;
 typedef afb_type_converter_x4_t afb_type_converter_t;
-typedef afb_type_updater_x4_t afb_type_updater_t;
+typedef afb_type_updater_x4_t   afb_type_updater_t;
+
+
+typedef afb_api_callback_x4_t     afb_api_callback_t;
+typedef afb_req_callback_x4_t     afb_req_callback_t;
+typedef afb_call_callback_x4_t    afb_call_callback_t;
+typedef afb_subcall_callback_x4_t afb_subcall_callback_t;
+typedef afb_check_callback_x4_t   afb_check_callback_t;
+typedef afb_event_handler_x4_t    afb_event_handler_t;
+typedef afb_type_converter_x4_t   afb_type_converter_t;
+typedef afb_type_updater_x4_t     afb_type_updater_t;
 
 /** constants ***********************************************************/
 
@@ -966,7 +976,7 @@ void
 afb_req_check_permission(
 	afb_req_t req,
 	const char *permission,
-	void (*callback)(void *closure, int status, afb_req_t req),
+	afb_check_callback_t callback,
 	void *closure
 ) {
 	afbBindingV4r1_itf.req_check_permission(req, permission, callback, closure);
@@ -1082,12 +1092,7 @@ afb_req_subcall(
 	unsigned nparams,
 	afb_data_t const params[],
 	int flags,
-	void (*callback)(
-		void *closure,
-		int status,
-		unsigned nreplies,
-		afb_data_t const replies[],
-		afb_req_t req),
+	afb_subcall_callback_t callback,
 	void *closure
 ) {
 	afbBindingV4r1_itf.req_subcall(req, apiname, verbname, nparams, params, flags, callback, closure);
@@ -1658,7 +1663,7 @@ int afb_api_add_verb(
 	afb_api_t api,
 	const char *verb,
 	const char *info,
-	void (*callback)(afb_req_t req, unsigned nparams, afb_data_t const params[]),
+	afb_req_callback_t callback,
 	void *vcbdata,
 	const struct afb_auth *auth,
 	uint32_t session,
@@ -1748,12 +1753,7 @@ static inline
 int afb_api_event_handler_add(
 	afb_api_t api,
 	const char *pattern,
-	void (*callback)(
-		void *,
-		const char*,
-		unsigned,
-		afb_data_t const[],
-		afb_api_t),
+	afb_event_handler_t callback,
 	void *closure)
 {
 	return afbBindingV4r1_itf.api_event_handler_add(api, pattern, callback, closure);
@@ -1821,12 +1821,7 @@ void afb_api_call(
 	const char *verbname,
 	unsigned nparams,
 	afb_data_t const params[],
-	void (*callback)(
-		void *closure,
-		int status,
-		unsigned nreplies,
-		afb_data_t const replies[],
-		afb_api_t api),
+	afb_call_callback_t callback,
 	void *closure)
 {
 	afbBindingV4r1_itf.api_call(api, apiname, verbname, nparams, params, callback, closure);
@@ -1990,8 +1985,8 @@ struct json_object *afb_api_settings(
  * @param apiname the name of the new api
  * @param info the brief description of the new api (can be NULL)
  * @param noconcurrency zero or not zero whether the new api is reentrant or not
- * @param preinit the pre-initialization function if any (can be NULL)
- * @param closure the closure for the pre-initialization preinit
+ * @param mainctl the main api callback (if any, can be NULL)
+ * @param userdata the initial value of userdata
  *
  * @return the created api in case of success or NULL on error
  *
@@ -2003,10 +1998,10 @@ int afb_create_api(
 	const char *apiname,
 	const char *info,
 	int noconcurrency,
-	int (*mainctl)(afb_api_t, afb_ctlid_t, afb_ctlarg_t),
-	void *closure)
+	afb_api_callback_t mainctl,
+	void *userdata)
 {
-	return afbBindingV4r1_itf.create_api(afbBindingV4root, newapi, apiname, info, noconcurrency, mainctl, closure);
+	return afbBindingV4r1_itf.create_api(afbBindingV4root, newapi, apiname, info, noconcurrency, mainctl, userdata);
 }
 
 /**
