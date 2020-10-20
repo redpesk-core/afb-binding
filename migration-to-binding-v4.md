@@ -20,19 +20,15 @@ The main reason for shifting is the poor performances
 measured in bindings v3 when using the JSON encoding
 format and the library json-c.
 
-These poor performances can be fight by using an other
+These poor performances can be fighten by using an other
 library for JSON, a library that would enforce the serialisation
 instead of the internal data manipulation. A quick study
 showed that the main cause would remain and that JSON encoding
-is somtime a flaw.
+is a flaw.
 
 A change of serialisation format, for a more efficient one, like CBOR,
 could also lead to the same situation.
 
-Even more, switching from format A to format B would let aside the
-case of formats C, D, E, ...
-
-**** REFORMULER CIDESSOUS
 Solving any of the above issues with the API version 3 of bindings
 is not wanted because after that the programming model would not be
 clear.
@@ -44,10 +40,6 @@ The constraints are:
 
 * No more link to JSON serialisation or internal representation
   but be open to any internal representation or serialisation.
-
-* The migration from existing bindings V3 to V4 should be as easy
-  as possible. The coexisting and interoperability of V3 and V4
-  must be possible with automatic conversion.
 
 * It is accepted that existing V3/JSON client would not be fully
   able to interact with new bindings. It is also accepted that clients
@@ -175,11 +167,11 @@ Comparisons between V3 and V4
 | api           | api           | unchanged |
 | specification | specification | unchanged |
 | info          | info          | unchanged |
-| verbs         | verbs         | unchanged |
-| preinit       | preinit       | unchanged |
-| init          | init          | unchanged |
-| -             | ready         | called when required classes are initialized |
-| onevent       | onevent       | signature changed |
+| verbs         | verbs         | signature changed |
+| preinit       | -             | removed   |
+| init          | -             | removed   |
+| -             | mainctl       | main callback |
+| onevent       | onevent       | removed   |
 | userdata      | userdata      | unchanged |
 | provide_class | provide_class | unchanged |
 | require_class | require_class | unchanged |
@@ -192,7 +184,7 @@ Comparisons between V3 and V4
 | v3       | V4       | comment   |
 |:--------:|:--------:|:----------|
 | verb     | verb     | unchanged |
-| callback | callback | unchanged |
+| callback | callback | signature changed |
 | auth     | auth     | unchanged |
 | info     | info     | unchanged |
 | vcbdata  | vcbdata  | unchanged |
@@ -221,9 +213,10 @@ Are the same, that's all.
 
 | v3 | V4 | comment |
 |:---------------------------:|:-------------------------:|:----------|
-| afb_api_name                | afb_api_name              | unchanged |
-| afb_api_get_userdata        | afb_api_get_userdata      | unchanged |
-| afb_api_set_userdata        | afb_api_set_userdata      | kept but not more a macro |
+| afb_api_name                | afb_api_name              | kept, but not more a macro |
+| afb_api_get_userdata        | afb_api_get_userdata      | kept, but not more a macro |
+| afb_api_set_userdata        | afb_api_set_userdata      | kept, but not more a macro |
+| afb_api_logmask             | afb_api_logmask           | kept, but not more a macro |
 | afb_api_wants_log_level     | afb_api_wants_log_level   | unchanged |
 | afb_api_vverbose            | afb_api_vverbose          | unchanged |
 | afb_api_verbose             | afb_api_verbose           | unchanged |
@@ -232,26 +225,28 @@ Are the same, that's all.
 | afb_api_get_system_bus      | -                         | removed   |
 | afb_api_rootdir_get_fd      | -                         | removed   |
 | afb_api_rootdir_open_locale | -                         | removed   |
-| afb_api_queue_job           | afb_api_queue_job         | unchanged |
+| afb_api_queue_job           | -                         | replaced by afb_job_queue |
 | afb_api_require_api         | afb_api_require_api       | unchanged |
 | afb_api_broadcast_event     | afb_api_broadcast_event   | signature changed |
-| afb_api_make_event          | afb_api_make_event        | unchanged |
+| afb_api_make_event          | -                         | replaced by afb_api_new_event |
+| -                           | afb_api_new_event         | new       |
 | afb_api_call                | afb_api_call              | signature changed |
 | afb_api_call_sync           | afb_api_call_sync         | signature changed |
 | afb_api_call_legacy         | -                         | removed   |
 | afb_api_call_sync_legacy    | -                         | removed   |
-| afb_api_new_api             | afb_api_new_api           | unchanged |
-| afb_api_delete_api          | afb_api_delete_api        | unchanged |
+| afb_api_new_api             | -                         | replaced by afb_create_api |
+| afb_api_delete_api          | -                         | replaced by afb_api_delete |
+| -                           | afb_api_delete            | new       |
 | afb_api_set_verbs_v2        | -                         | removed   |
 | afb_api_set_verbs_v3        | -                         | removed   |
-| -                           | afb_api_set_verbs         | only current version |
+| -                           | afb_api_set_verbs         | new       |
 | afb_api_add_verb            | afb_api_add_verb          | signature changed |
 | afb_api_del_verb            | afb_api_del_verb          | unchanged |
 | afb_api_on_event            | afb_api_on_event          | signature changed |
 | afb_api_on_init             | afb_api_on_init           | unchanged |
 | afb_api_seal                | afb_api_seal              | unchanged |
 | afb_api_add_alias           | afb_api_add_alias         | unchanged |
-| afb_api_event_handler_add   | afb_api_event_handler_add | unchanged |
+| afb_api_event_handler_add   | afb_api_event_handler_add | signature changed |
 | afb_api_event_handler_del   | afb_api_event_handler_del | unchanged |
 | afb_api_require_class       | afb_api_require_class     | unchanged |
 | afb_api_provide_class       | afb_api_provide_class     | unchanged |
@@ -317,3 +312,10 @@ Are the same, that's all.
 | afb_req_store               | -                        | removed   |
 | afb_req_unstore             | -                        | removed   |
 
+
+### new features
+
+| V4                       | comment   |
+|:------------------------:|:----------|
+| afb_create_api           | replaces afb_api_new_api |
+| afb_job_queue            | replaces afb_api_queue_job |

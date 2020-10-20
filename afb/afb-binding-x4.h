@@ -1713,7 +1713,7 @@ void afb_api_seal(
  *
  * @return 0 in case of success or -1 on failure with errno set
  *
- * @see afb_verb_v3
+ * @see afb_verb_v4
  * @see afb_api_add_verb
  * @see afb_api_del_verb
  */

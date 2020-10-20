@@ -5,8 +5,8 @@
 
 Name: @PROJECT_NAME@
 Description: @PROJECT_DESCRIPTION@
-Version: @PROJECT_VERSION@
 URL: @PROJECT_URL@
+Version: @PROJECT_VERSION@
 
 incdir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb
 version_script=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb/afb-export.map
