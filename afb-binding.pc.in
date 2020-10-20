@@ -11,5 +11,4 @@ URL: @PROJECT_URL@
 incdir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb
 version_script=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb/afb-export.map
 
-Requires: json-c
 Cflags: -I${incdir} -I@CMAKE_INSTALL_FULL_INCLUDEDIR@

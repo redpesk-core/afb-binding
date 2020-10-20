@@ -24,7 +24,6 @@
 /* get C definitions of bindings */
 extern "C" {
 #include <afb/afb-binding.h>
-#include <json-c/json.h>
 }
 
 namespace afb {
@@ -43,7 +42,7 @@ class type;
 /* declaration of functions                                              */
 /*************************************************************************/
 #if 0
-int broadcast_event(const char *name, json_object *object = nullptr);
+int broadcast_event(const char *name, struct json_object *object = nullptr);
 
 event new_event(const char *name);
 
@@ -195,10 +194,10 @@ protected:
 	/** wrapped data */
 	afb_data_t data_;
 public:
-	data();
-	data(afb_data_t d);
-	data(const data &other);
-	data(data &&other);
+	data() noexcept;
+	data(afb_data_t d) noexcept;
+	data(const data &other) noexcept;
+	data(data &&other) noexcept;
 	data(afb::type type, const data &other);
 	data(afb::type type, const void *pointer, size_t size, void (*dispose)(void*), void *closure);
 	data(afb::type type, const void *pointer, size_t size);
@@ -470,7 +469,7 @@ public:
 
 	void verbose(int level, const char *file, int line, const char * func, const char *fmt, ...) const;
 
-	json_object *get_client_info() const;
+	struct json_object *get_client_info() const;
 
 	template < class T = void >
 	class contextclass {
@@ -702,10 +701,10 @@ inline type type_json_c() { return type(AFB_PREDEFINED_TYPE_JSON_C); }
 /* effective members of class afb::data                                  */
 /*************************************************************************/
 
-inline data::data() : data_{nullptr} { }
-inline data::data(afb_data_t d) : data_{d} { }
-inline data::data(data &&other) : data_{std::exchange(other.data_, nullptr)} {}
-inline data::data(const data &other) : data_{other.data_} {}
+inline data::data()  noexcept : data_{nullptr} { }
+inline data::data(afb_data_t d) noexcept : data_{d} { }
+inline data::data(data &&other) noexcept : data_{std::exchange(other.data_, nullptr)} {}
+inline data::data(const data &other) noexcept : data_{other.data_} {}
 inline data::data(afb::type type, const data &other) { afb_data_convert(other, type, &data_); }
 inline data::data(afb::type type, const void *pointer, size_t size, void (*dispose)(void*), void *closure)
 	{ afb_create_data_raw(&data_, type, pointer, size, dispose, closure); }
@@ -889,7 +888,7 @@ inline void req::verbose(int level, const char *file, int line, const char * fun
 	va_end(args);
 }
 
-inline json_object *req::get_client_info() const
+inline struct json_object *req::get_client_info() const
 {
 	return afb_req_get_client_info(req_);
 }

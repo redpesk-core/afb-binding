@@ -21,7 +21,6 @@
 /* get C definitions of bindings */
 extern "C" {
 #include <afb/afb-binding.h>
-#include <json-c/json.h>
 }
 
 namespace afb {
@@ -38,7 +37,7 @@ class req;
 /* declaration of functions                                              */
 /*************************************************************************/
 
-int broadcast_event(const char *name, json_object *object = nullptr);
+int broadcast_event(const char *name, struct json_object *object = nullptr);
 
 event make_event(const char *name);
 
@@ -178,8 +177,8 @@ public:
 	operator bool() const;
 	bool is_valid() const;
 
-	int broadcast(json_object *object) const;
-	int push(json_object *object) const;
+	int broadcast(struct json_object *object) const;
+	int push(struct json_object *object) const;
 
 	void unref();
 	void addref();
@@ -230,15 +229,15 @@ public:
 
 	const char *path(const char *name) const;
 
-	json_object *json() const;
+	struct json_object *json() const;
 
-	void reply(json_object *obj = nullptr, const char *error = nullptr, const char *info = nullptr) const;
-	void replyf(json_object *obj, const char *error, const char *info, ...) const;
-	void replyv(json_object *obj, const char *error, const char *info, va_list args) const;
+	void reply(struct json_object *obj = nullptr, const char *error = nullptr, const char *info = nullptr) const;
+	void replyf(struct json_object *obj, const char *error, const char *info, ...) const;
+	void replyv(struct json_object *obj, const char *error, const char *info, va_list args) const;
 
-	void success(json_object *obj = nullptr, const char *info = nullptr) const;
-	void successf(json_object *obj, const char *info, ...) const;
-	void successv(json_object *obj, const char *info, va_list args) const;
+	void success(struct json_object *obj = nullptr, const char *info = nullptr) const;
+	void successf(struct json_object *obj, const char *info, ...) const;
+	void successv(struct json_object *obj, const char *info, va_list args) const;
 
 	void fail(const char *error = "failed", const char *info = nullptr) const;
 	void failf(const char *error, const char *info, ...) const;
@@ -256,16 +255,16 @@ public:
 
 	bool unsubscribe(const event &event) const;
 
-	void subcall(const char *api, const char *verb, json_object *args, void (*callback)(void *closure, int iserror, json_object *result, afb_req_t req), void *closure) const;
-	template <class T> void subcall(const char *api, const char *verb, json_object *args, void (*callback)(T *closure, int iserror, json_object *result, afb_req_t req), T *closure) const;
+	void subcall(const char *api, const char *verb, struct json_object *args, void (*callback)(void *closure, int iserror, struct json_object *result, afb_req_t req), void *closure) const;
+	template <class T> void subcall(const char *api, const char *verb, struct json_object *args, void (*callback)(T *closure, int iserror, struct json_object *result, afb_req_t req), T *closure) const;
 
-	bool subcallsync(const char *api, const char *verb, json_object *args, struct json_object *&result) const;
+	bool subcallsync(const char *api, const char *verb, struct json_object *args, struct json_object *&result) const;
 
-	void subcall(const char *api, const char *verb, json_object *args, int flags, void (*callback)(void *closure, json_object *object, const char *error, const char *info, afb_req_t req), void *closure) const;
+	void subcall(const char *api, const char *verb, struct json_object *args, int flags, void (*callback)(void *closure, struct json_object *object, const char *error, const char *info, afb_req_t req), void *closure) const;
 
-	template <class T> void subcall(const char *api, const char *verb, json_object *args, int flags, void (*callback)(T *closure, json_object *object, const char *error, const char *info, afb_req_t req), T *closure) const;
+	template <class T> void subcall(const char *api, const char *verb, struct json_object *args, int flags, void (*callback)(T *closure, struct json_object *object, const char *error, const char *info, afb_req_t req), T *closure) const;
 
-	bool subcallsync(const char *api, const char *verb, json_object *args, int flags, struct json_object *&object, char *&error, char *&info) const;
+	bool subcallsync(const char *api, const char *verb, struct json_object *args, int flags, struct json_object *&object, char *&error, char *&info) const;
 
 	void verbose(int level, const char *file, int line, const char * func, const char *fmt, va_list args) const;
 
@@ -277,7 +276,7 @@ public:
 
 	int get_uid() const;
 
-	json_object *get_client_info() const;
+	struct json_object *get_client_info() const;
 
 	template < class T = void >
 	class contextclass {
@@ -435,8 +434,8 @@ inline afb_event_t event::operator->() const { return event_; }
 inline event::operator bool() const { return is_valid(); }
 inline bool event::is_valid() const { return afb_event_is_valid(event_); }
 
-inline int event::broadcast(json_object *object) const { return afb_event_broadcast(event_, object); }
-inline int event::push(json_object *object) const { return afb_event_push(event_, object); }
+inline int event::broadcast(struct json_object *object) const { return afb_event_broadcast(event_, object); }
+inline int event::push(struct json_object *object) const { return afb_event_push(event_, object); }
 
 inline void event::unref() { if (event_) { afb_event_unref(event_); } event_ = nullptr; }
 inline void event::addref() { afb_event_addref(event_); }
@@ -475,11 +474,11 @@ inline const char *req::value(const char *name) const { return afb_req_value(req
 
 inline const char *req::path(const char *name) const { return afb_req_path(req_, name); }
 
-inline json_object *req::json() const { return afb_req_json(req_); }
+inline struct json_object *req::json() const { return afb_req_json(req_); }
 
-inline void req::reply(json_object *obj, const char *error, const char *info) const { afb_req_reply(req_, obj, error, info); }
-inline void req::replyv(json_object *obj, const char *error, const char *info, va_list args) const { afb_req_reply_v(req_, obj, error, info, args); }
-inline void req::replyf(json_object *obj, const char *error, const char *info, ...) const
+inline void req::reply(struct json_object *obj, const char *error, const char *info) const { afb_req_reply(req_, obj, error, info); }
+inline void req::replyv(struct json_object *obj, const char *error, const char *info, va_list args) const { afb_req_reply_v(req_, obj, error, info, args); }
+inline void req::replyf(struct json_object *obj, const char *error, const char *info, ...) const
 {
 	va_list args;
 	va_start(args, info);
@@ -487,9 +486,9 @@ inline void req::replyf(json_object *obj, const char *error, const char *info, .
 	va_end(args);
 }
 
-inline void req::success(json_object *obj, const char *info) const { reply(obj, nullptr, info); }
-inline void req::successv(json_object *obj, const char *info, va_list args) const { replyv(obj, nullptr, info, args); }
-inline void req::successf(json_object *obj, const char *info, ...) const
+inline void req::success(struct json_object *obj, const char *info) const { reply(obj, nullptr, info); }
+inline void req::successv(struct json_object *obj, const char *info, va_list args) const { replyv(obj, nullptr, info, args); }
+inline void req::successf(struct json_object *obj, const char *info, ...) const
 {
 	va_list args;
 	va_start(args, info);
@@ -519,34 +518,34 @@ inline bool req::subscribe(const event &event) const { return !afb_req_subscribe
 
 inline bool req::unsubscribe(const event &event) const { return !afb_req_unsubscribe(req_, event); }
 
-inline void req::subcall(const char *api, const char *verb, json_object *args, int flags, void (*callback)(void *closure, json_object *result, const char *error, const char *info, afb_req_t req), void *closure) const
+inline void req::subcall(const char *api, const char *verb, struct json_object *args, int flags, void (*callback)(void *closure, struct json_object *result, const char *error, const char *info, afb_req_t req), void *closure) const
 {
 	afb_req_subcall(req_, api, verb, args, flags, callback, closure);
 }
 
 template <class T>
-inline void req::subcall(const char *api, const char *verb, json_object *args, int flags, void (*callback)(T *closure, json_object *result, const char *error, const char *info, afb_req_t req), T *closure) const
+inline void req::subcall(const char *api, const char *verb, struct json_object *args, int flags, void (*callback)(T *closure, struct json_object *result, const char *error, const char *info, afb_req_t req), T *closure) const
 {
-	subcall(api, verb, args, flags, reinterpret_cast<void(*)(void*,json_object*,const char*,const char*,afb_req_t)>(callback), reinterpret_cast<void*>(closure));
+	subcall(api, verb, args, flags, reinterpret_cast<void(*)(void*,struct json_object*,const char*,const char*,afb_req_t)>(callback), reinterpret_cast<void*>(closure));
 }
 
-inline bool req::subcallsync(const char *api, const char *verb, json_object *args, int flags, struct json_object *&object, char *&error, char *&info) const
+inline bool req::subcallsync(const char *api, const char *verb, struct json_object *args, int flags, struct json_object *&object, char *&error, char *&info) const
 {
 	return !afb_req_subcall_sync(req_, api, verb, args, flags, &object, &error, &info);
 }
 
-inline void req::subcall(const char *api, const char *verb, json_object *args, void (*callback)(void *closure, int iserror, json_object *result, afb_req_t req), void *closure) const
+inline void req::subcall(const char *api, const char *verb, struct json_object *args, void (*callback)(void *closure, int iserror, struct json_object *result, afb_req_t req), void *closure) const
 {
 	afb_req_subcall_legacy(req_, api, verb, args, callback, closure);
 }
 
 template <class T>
-inline void req::subcall(const char *api, const char *verb, json_object *args, void (*callback)(T *closure, int iserror, json_object *result, afb_req_t req), T *closure) const
+inline void req::subcall(const char *api, const char *verb, struct json_object *args, void (*callback)(T *closure, int iserror, struct json_object *result, afb_req_t req), T *closure) const
 {
-	subcall(api, verb, args, reinterpret_cast<void(*)(void*,int,json_object*,afb_req_t)>(callback), reinterpret_cast<void*>(closure));
+	subcall(api, verb, args, reinterpret_cast<void(*)(void*,int,struct json_object*,afb_req_t)>(callback), reinterpret_cast<void*>(closure));
 }
 
-inline bool req::subcallsync(const char *api, const char *verb, json_object *args, struct json_object *&result) const
+inline bool req::subcallsync(const char *api, const char *verb, struct json_object *args, struct json_object *&result) const
 {
 	return !afb_req_subcall_sync_legacy(req_, api, verb, args, &result);
 }
@@ -579,13 +578,13 @@ inline int req::get_uid() const
 	return afb_req_get_uid(req_);
 }
 
-inline json_object *req::get_client_info() const
+inline struct json_object *req::get_client_info() const
 {
 	return afb_req_get_client_info(req_);
 }
 
 /* commons */
-inline int broadcast_event(const char *name, json_object *object)
+inline int broadcast_event(const char *name, struct json_object *object)
 	{ return afb_daemon_broadcast_event(name, object); }
 
 inline event make_event(const char *name)
@@ -638,7 +637,7 @@ inline void call(const char *api, const char *verb, struct json_object *args, vo
 template <class T>
 inline void call(const char *api, const char *verb, struct json_object *args, void (*callback)(T*closure, struct json_object *result, const char *error, const char *info, afb_api_t api), T *closure)
 {
-	afb_service_call(api, verb, args, reinterpret_cast<void(*)(void*,json_object*,const char*, const char*,afb_api_t)>(callback), reinterpret_cast<void*>(closure));
+	afb_service_call(api, verb, args, reinterpret_cast<void(*)(void*,struct json_object*,const char*, const char*,afb_api_t)>(callback), reinterpret_cast<void*>(closure));
 }
 
 inline bool callsync(const char *api, const char *verb, struct json_object *args, struct json_object *&result, char *&error, char *&info)
