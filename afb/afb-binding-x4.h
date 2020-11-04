@@ -21,11 +21,9 @@ typedef afb_event_x4_t   afb_event_t;
 typedef afb_data_x4_t    afb_data_t;
 typedef afb_type_x4_t    afb_type_t;
 
-typedef afb_data_action_x4_t    afb_data_action_t;
 typedef afb_type_flags_x4_t     afb_type_flags_t;
 typedef afb_type_converter_x4_t afb_type_converter_t;
 typedef afb_type_updater_x4_t   afb_type_updater_t;
-
 
 typedef afb_api_callback_x4_t     afb_api_callback_t;
 typedef afb_req_callback_x4_t     afb_req_callback_t;
@@ -38,9 +36,9 @@ typedef afb_type_updater_x4_t     afb_type_updater_t;
 
 /** constants ***********************************************************/
 
-#define Afb_Type_Flags_X4_Shareable	Afb_Type_Flags_Shareable
-#define Afb_Type_Flags_X4_Streamable	Afb_Type_Flags_Streamable
-#define Afb_Type_Flags_X4_Opaque	Afb_Type_Flags_Opaque
+#define Afb_Type_Flags_Shareable	Afb_Type_Flags_X4_Shareable
+#define Afb_Type_Flags_Streamable	Afb_Type_Flags_X4_Streamable
+#define Afb_Type_Flags_Opaque		Afb_Type_Flags_X4_Opaque
 
 /******************************************************************************/
 
@@ -92,7 +90,7 @@ afb_data_is_valid(
 }
 
 /**
- * Create a new data instance of the given type with the given values of
+ * Creates a new data instance of the given type with the given values of
  * pointer, size, dispose and closure.
  *
  * A data is defined by the 5 given values defined here:
@@ -126,7 +124,7 @@ int afb_create_data_raw(
 }
 
 /**
- * Create a new data instance of the given type by allocating memory
+ * Creates a new data instance of the given type by allocating memory
  * of the given size. The allocated memory can eventually
  * be shared.
  *
@@ -149,7 +147,7 @@ int afb_create_data_copy(
 }
 
 /**
- * Create a new data instance of the given type by copying the memory
+ * Creates a new data instance of the given type by copying the memory
  * given by pointer and size. The memory where data is copied can eventually
  * be shared.
  *
@@ -177,7 +175,7 @@ int afb_create_data_alloc(
 }
 
 /**
- * Increase the count of references of 'data'
+ * Increases the count of references of 'data'
  *
  * @param data the data
  *
@@ -192,7 +190,7 @@ afb_data_addref(
 }
 
 /**
- * Decrease the count of references of 'data'.
+ * Decreases the count of references of 'data'.
  * Call this function when the data is no more used.
  * It destroys the data when the reference count falls to zero.
  *
@@ -207,7 +205,7 @@ afb_data_unref(
 }
 
 /**
- * Get a new instance of the 'data' converted to the 'type'
+ * Gets a new instance of the 'data' converted to the 'type'
  *
  * If a data is returned (no error case), it MUST be released
  * using afb_data_unref.
@@ -232,7 +230,7 @@ afb_data_convert(
 }
 
 /**
- * Get the type of the data.
+ * Gets the type of the data.
  *
  * @param data the data
  */
@@ -245,7 +243,7 @@ afb_data_type(
 }
 
 /**
- * Get a mutable pointer to the data and also its size
+ * Gets a mutable pointer to the data and also its size
  *
  * @param data the data
  * @param pointer if not NULL address where to store the pointer
@@ -264,7 +262,7 @@ afb_data_get_mutable(
 }
 
 /**
- * Get a mutable pointer to the data.
+ * Gets a mutable pointer to the data.
  * Getting a mutable pointer has the effect of
  * notifying that the data changed.
  *
@@ -283,7 +281,7 @@ afb_data_get_constant(
 }
 
 /**
- * Get the size of the data
+ * Gets the size of the data
  *
  * @param data the data
  *
@@ -300,7 +298,7 @@ afb_data_size(
 }
 
 /**
- * Get a read only pointer to the data
+ * Gets a read only pointer to the data
  *
  * @param data the data
  *
@@ -317,7 +315,8 @@ afb_data_ro_pointer(
 }
 
 /**
- * Get a read/write pointer to the data
+ * Gets a read/write pointer to the data.
+ * Returns NULL if the data is constant.
  *
  * @param data the data
  *
@@ -334,73 +333,99 @@ afb_data_rw_pointer(
 }
 
 /**
+ * Notifies that the data changed and that any of its conversions are not
+ * more valid.
+ * 
+ * @param data the data that changed
  */
 static inline
 void
 afb_data_notify_changed(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Notify_Changed);
+	afbBindingV4r1_itf.data_notify_changed(data);
 }
 
 /**
+ * Tests if the data is volatile. Conversions of volatile data are never cached.
+ *
+ * @param data the data to test
+ * 
+ * @return 1 if the data is volatile or 0 otherwise
  */
 static inline
 int
 afb_data_is_volatile(
 	afb_data_t data
 ) {
-	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Is_Volatile);
+	return afbBindingV4r1_itf.data_is_volatile(data);
 }
 
 /**
+ * Makes the data volatile
+ *
+ * @param data the data to set
  */
 static inline
 void
 afb_data_set_volatile(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Volatile);
+	afbBindingV4r1_itf.data_set_volatile(data);
 }
 
 /**
+ * Makes the data not volatile
+ *
+ * @param data the data to set
  */
 static inline
 void
 afb_data_set_not_volatile(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Not_Volatile);
+	afbBindingV4r1_itf.data_set_not_volatile(data);
 }
 
 /**
+ * Tests if the data is constant.
+ *
+ * @param data the data to test
+ * 
+ * @return 1 if the data is constant or 0 otherwise
  */
 static inline
 int
 afb_data_is_constant(
 	afb_data_t data
 ) {
-	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Is_Constant);
+	return afbBindingV4r1_itf.data_is_constant(data);
 }
 
 /**
+ * Makes the data constant
+ *
+ * @param data the data to set
  */
 static inline
 void
 afb_data_set_constant(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Constant);
+	afbBindingV4r1_itf.data_set_constant(data);
 }
 
 /**
+ * Makes the data not constant
+ *
+ * @param data the data to set
  */
 static inline
 void
 afb_data_set_not_constant(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Set_Not_Constant);
+	afbBindingV4r1_itf.data_set_not_constant(data);
 }
 
 /**
@@ -410,7 +435,7 @@ void
 afb_data_lock_read(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Lock_Read);
+	afbBindingV4r1_itf.data_lock_read(data);
 }
 
 /**
@@ -420,7 +445,7 @@ int
 afb_data_try_lock_read(
 	afb_data_t data
 ) {
-	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Try_Lock_Read);
+	return afbBindingV4r1_itf.data_try_lock_read(data);
 }
 
 /**
@@ -430,7 +455,7 @@ void
 afb_data_lock_write(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Lock_Write);
+	afbBindingV4r1_itf.data_lock_write(data);
 }
 
 /**
@@ -440,7 +465,7 @@ int
 afb_data_try_lock_write(
 	afb_data_t data
 ) {
-	return afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Try_Lock_Write);
+	return afbBindingV4r1_itf.data_try_lock_write(data);
 }
 
 /**
@@ -450,7 +475,7 @@ void
 afb_data_unlock(
 	afb_data_t data
 ) {
-	afbBindingV4r1_itf.data_control(data, Afb_Data_Action_x4_Unlock);
+	afbBindingV4r1_itf.data_unlock(data);
 }
 
 /**
@@ -481,7 +506,6 @@ afb_data_assign(
 /** DATA ARRAY ***********************************************************/
 /** @defgroup AFB_DATA_ARRAY
  *  @{ */
-
 
 /**
  * Increase the count of references of the array 'array'

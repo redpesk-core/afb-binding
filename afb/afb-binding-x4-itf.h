@@ -33,83 +33,6 @@ typedef const struct afb_type_x4       *afb_type_x4_t;
 /******************************************************************************/
 
 typedef
-	enum afb_data_action_x4
-{
-	/**
-	 * Notify that the value of the data changed
-	 */
-	Afb_Data_Action_x4_Notify_Changed = 0,
-
-	/**
-	 * Test if the data is constant.
-	 * If the data is constant, it can not be modified
-	 * by querying a not const pointer to it.
-	 */
-	Afb_Data_Action_x4_Is_Constant = 1,
-
-	/**
-	 * Tell that the data is constant.
-	 * That is the default state at creation.
-	 */
-	Afb_Data_Action_x4_Set_Constant = 2,
-
-	/**
-	 * Tell that the data is not constant.
-	 * At creation, data is told to be constant.
-	 */
-	Afb_Data_Action_x4_Set_Not_Constant = 3,
-
-	/**
-	 * Test if the data is volatile.
-	 * A data is volatile if its value can change at
-	 * any time. If a data is volatile, it implies
-	 * conversions of that have a limited validity.
-	 * Clock is the good example of a volatile data.
-	 */
-	Afb_Data_Action_x4_Is_Volatile = 4,
-
-	/**
-	 * Tell that the data is volatile.
-	 * At creation, data are not told volatile.
-	 */
-	Afb_Data_Action_x4_Set_Volatile = 5,
-
-	/**
-	 * Tell that the data is not volatile.
-	 * That is the default state at creation.
-	 */
-	Afb_Data_Action_x4_Set_Not_Volatile = 6,
-
-	/**
-	 * Requires to lock the data for reading.
-	 */
-	Afb_Data_Action_x4_Lock_Read = 7,
-
-	/**
-	 * Requires to try to lock the data for reading.
-	 */
-	Afb_Data_Action_x4_Try_Lock_Read = 8,
-
-	/**
-	 * Requires to lock the data for writing.
-	 */
-	Afb_Data_Action_x4_Lock_Write = 9,
-
-	/**
-	 * Requires to try to lock the data for writing.
-	 */
-	Afb_Data_Action_x4_Try_Lock_Write = 10,
-
-	/**
-	 * Requires to unlock the locked data.
-	 */
-	Afb_Data_Action_x4_Unlock = 11
-}
-	afb_data_action_x4_t;
-
-/******************************************************************************/
-
-typedef
 	enum afb_type_flags_x4
 {
 	/** Data of that type can be shared through memory */
@@ -319,13 +242,56 @@ struct afb_binding_x4r1_itf
 		afb_type_x4_t type,
 		afb_data_x4_t *result);
 
-	/** set flags of the data  */
-	int (*data_control)(
-		afb_data_x4_t data,
-		afb_data_action_x4_t action);
-
 	/** get the type */
 	afb_type_x4_t (*data_type)(
+		afb_data_x4_t data);
+
+	/** notify the data changed */
+	void (*data_notify_changed)(
+		afb_data_x4_t data);
+
+	/** is data volatile? */
+	int (*data_is_volatile)(
+		afb_data_x4_t data);
+
+	/** set data volatile */
+	void (*data_set_volatile)(
+		afb_data_x4_t data);
+
+	/** set data not volatile */
+	void (*data_set_not_volatile)(
+		afb_data_x4_t data);
+
+	/** is data constant? */
+	int (*data_is_constant)(
+		afb_data_x4_t data);
+
+	/** set data constant */
+	void (*data_set_constant)(
+		afb_data_x4_t data);
+
+	/** set data not constant */
+	void (*data_set_not_constant)(
+		afb_data_x4_t data);
+
+	/** lock data for reading */
+	void (*data_lock_read)(
+		afb_data_x4_t data);
+
+	/** try lock data for reading */
+	int (*data_try_lock_read)(
+		afb_data_x4_t data);
+
+	/** lock data for writing */
+	void (*data_lock_write)(
+		afb_data_x4_t data);
+
+	/** try lock data for writing */
+	int (*data_try_lock_write)(
+		afb_data_x4_t data);
+
+	/** unlock the data */
+	void (*data_unlock)(
 		afb_data_x4_t data);
 
 /*-- REQ ------------------------------------------*/
