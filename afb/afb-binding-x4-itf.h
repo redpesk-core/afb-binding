@@ -625,6 +625,11 @@ struct afb_binding_x4r1_itf
 		const char *name,
 		const char *as_name);
 
+	/** setup shared object */
+	int (*setup_shared_object)(
+		afb_api_x4_t root,
+		void *handle);
+
 /*-- PREDEFINED TYPES -----------------------------------*/
 
 	/** predefined type opaque */

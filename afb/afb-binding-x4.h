@@ -2096,6 +2096,25 @@ int afb_alias_api(
 	return afbBindingV4r1_itf.alias_api(afbBindingV4root, name, as_name);
 }
 
+/**
+ * Setup the given shared object.
+ *
+ * This function allows bindings to load shared object that use the binder
+ * functions.
+ *
+ * @param api the api that requires to setup the shared object can be null
+ * @param handle the handle of the shared object (as returned by dlopen)
+ *
+ * @return 0 in case of success or -1 in case of error with errno set appropriately.
+ */
+static inline
+int afb_setup_shared_object(
+	afb_api_t api,
+	void *handle)
+{
+	return afbBindingV4r1_itf.setup_shared_object(api ? api : afbBindingV4root, handle);
+}
+
 /** @} */
 /** PREDEFINED TYPE ***********************************************************/
 /** @defgroup AFB_PREDEFINED_TYPE
