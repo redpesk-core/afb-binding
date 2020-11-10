@@ -335,7 +335,7 @@ afb_data_rw_pointer(
 /**
  * Notifies that the data changed and that any of its conversions are not
  * more valid.
- * 
+ *
  * @param data the data that changed
  */
 static inline
@@ -350,7 +350,7 @@ afb_data_notify_changed(
  * Tests if the data is volatile. Conversions of volatile data are never cached.
  *
  * @param data the data to test
- * 
+ *
  * @return 1 if the data is volatile or 0 otherwise
  */
 static inline
@@ -391,7 +391,7 @@ afb_data_set_not_volatile(
  * Tests if the data is constant.
  *
  * @param data the data to test
- * 
+ *
  * @return 1 if the data is constant or 0 otherwise
  */
 static inline
@@ -2105,6 +2105,12 @@ int afb_alias_api(
 #define AFB_PREDEFINED_TYPE_STRINGZ (afbBindingV4r1_itf.type_stringz)
 #define AFB_PREDEFINED_TYPE_JSON    (afbBindingV4r1_itf.type_json)
 #define AFB_PREDEFINED_TYPE_JSON_C  (afbBindingV4r1_itf.type_json_c)
+#define AFB_PREDEFINED_TYPE_BOOL    (afbBindingV4r1_itf.type_bool)
+#define AFB_PREDEFINED_TYPE_I32     (afbBindingV4r1_itf.type_i32)
+#define AFB_PREDEFINED_TYPE_U32     (afbBindingV4r1_itf.type_u32)
+#define AFB_PREDEFINED_TYPE_I64     (afbBindingV4r1_itf.type_i64)
+#define AFB_PREDEFINED_TYPE_U64     (afbBindingV4r1_itf.type_u64)
+#define AFB_PREDEFINED_TYPE_DOUBLE  (afbBindingV4r1_itf.type_double)
 
 /** @} */
 /** MISC ***********************************************************/

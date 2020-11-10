@@ -639,6 +639,24 @@ struct afb_binding_x4r1_itf
 	/** predefined type json-c */
 	afb_type_x4_t type_json_c;
 
+	/** predefined type char (0 or 1) */
+	afb_type_x4_t type_bool;
+
+	/** predefined type int32_t */
+	afb_type_x4_t type_i32;
+
+	/** predefined type uint32_t */
+	afb_type_x4_t type_u32;
+
+	/** predefined type int64_t */
+	afb_type_x4_t type_i64;
+
+	/** predefined type uint64_t */
+	afb_type_x4_t type_u64;
+
+	/** predefined type double */
+	afb_type_x4_t type_double;
+
 /*-- AFTERWARD ------------------------------------------*/
 
 };
