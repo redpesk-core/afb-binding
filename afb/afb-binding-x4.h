@@ -61,7 +61,7 @@ typedef afb_timer_handler_x4_t    afb_timer_handler_t;
  * @see afbBindingV4
  * @see @ref validity-v4
  */
-struct afb_api_x4 *afbBindingV4root __attribute__((weak));
+afb_api_t afbBindingV4root __attribute__((weak));
 
 /******************************************************************************/
 /**
@@ -116,9 +116,10 @@ afb_data_is_valid(
  * @return 0 in case of successful subscription or negative value in case of error.
  */
 static inline
-int afb_create_data_raw(
+int
+afb_create_data_raw(
 	afb_data_t *data,
-	afb_type_x4_t type,
+	afb_type_t type,
 	const void *buffer,
 	size_t size,
 	void (*dispose)(void*),
@@ -141,9 +142,10 @@ int afb_create_data_raw(
  * @return 0 in case of successful subscription or negative value in case of error.
  */
 static inline
-int afb_create_data_copy(
+int
+afb_create_data_copy(
 	afb_data_t *data,
-	afb_type_x4_t type,
+	afb_type_t type,
 	const void *buffer,
 	size_t size
 ) {
@@ -168,9 +170,10 @@ int afb_create_data_copy(
  * @return 0 in case of successful subscription or negative value in case of error.
  */
 static inline
-int afb_create_data_alloc(
+int
+afb_create_data_alloc(
 	afb_data_t *data,
-	afb_type_x4_t type,
+	afb_type_t type,
 	void **pointer,
 	size_t size,
 	int zeroes
@@ -227,7 +230,7 @@ static inline
 int
 afb_data_convert(
 	afb_data_t data,
-	afb_type_x4_t type,
+	afb_type_t type,
 	afb_data_t *result
 ) {
 	return afbBindingV4r1_itf.data_convert(data, type, result);
@@ -237,9 +240,11 @@ afb_data_convert(
  * Gets the type of the data.
  *
  * @param data the data
+ *
+ * @return the type of the data
  */
 static inline
-afb_type_x4_t
+afb_type_t
 afb_data_type(
 	afb_data_t data
 ) {
@@ -433,6 +438,12 @@ afb_data_set_not_constant(
 }
 
 /**
+ * Locks the data for read, blocks the current thread
+ * until the data is available for reading.
+ *
+ * The data MUST be unlocked afterward using 'afb_data_unlock'
+ *
+ * @param data the data to lock for read
  */
 static inline
 void
@@ -443,6 +454,16 @@ afb_data_lock_read(
 }
 
 /**
+ * Try to locks the data for read. Always return immediately
+ * with a status indicating whether the data has been locked
+ * for read or whether it wasn't possible to lock it for read.
+ *
+ * If the lock was successful, the data MUST be unlocked
+ * afterward using 'afb_data_unlock'.
+ *
+ * @param data the data to lock for read
+ *
+ * @return 0 in case of success or a negative -errno status if not locked
  */
 static inline
 int
@@ -453,6 +474,12 @@ afb_data_try_lock_read(
 }
 
 /**
+ * Locks the data for write, blocks the current thread
+ * until the data is available for writing.
+ *
+ * The data MUST be unlocked afterward using 'afb_data_unlock'
+ *
+ * @param data the data to lock for write
  */
 static inline
 void
@@ -463,6 +490,16 @@ afb_data_lock_write(
 }
 
 /**
+ * Try to locks the data for write. Always return immediately
+ * with a status indicating whether the data has been locked
+ * for write or whether it wasn't possible to lock it for write.
+ *
+ * If the lock was successful, the data MUST be unlocked
+ * afterward using 'afb_data_unlock'.
+ *
+ * @param data the data to lock for write
+ *
+ * @return 0 in case of success or a negative -errno status if not locked
  */
 static inline
 int
@@ -473,6 +510,10 @@ afb_data_try_lock_write(
 }
 
 /**
+ * Unlock a locked data. It is an error to unlock a data that
+ * the current thread doesn't hold locked.
+ *
+ * @param data the data to unlock
  */
 static inline
 void
@@ -483,6 +524,12 @@ afb_data_unlock(
 }
 
 /**
+ * Update the value of the given data with the given value
+ *
+ * @param data the data to be changed, must be mutable
+ * @param value the value to set to data, possibly with convertion
+ *
+ * @return 0 on success or a negative -errno like value
  */
 static inline
 int
@@ -494,6 +541,11 @@ afb_data_update(
 }
 
 /**
+ * Replace 'data' with the given 'value', taking care to unreference
+ * the data.
+ *
+ * @param data address of the data to assign
+ * @param value value to assign to the data
  */
 static inline
 void
@@ -501,9 +553,8 @@ afb_data_assign(
 	afb_data_t *data,
 	afb_data_t value
 ) {
-	afb_data_t old = *data;
+	afb_data_unref(*data);
 	*data = value;
-	afb_data_unref(old);
 }
 
 /*  @} */
@@ -567,7 +618,7 @@ int
 afb_data_array_convert(
 	unsigned count,
 	afb_data_t const * array_data,
-	afb_type_x4_t const * array_type,
+	afb_type_t const * array_type,
 	afb_data_t *array_result
 ) {
 	int rc = 0;
@@ -600,9 +651,10 @@ afb_data_array_convert(
  * @return logmask of the req.
  */
 static inline
-int afb_req_logmask(
-	afb_req_t req)
-{
+int
+afb_req_logmask(
+	afb_req_t req
+) {
 	return afbBindingV4r1_itf.req_logmask(req);
 }
 
@@ -1321,14 +1373,17 @@ afb_event_broadcast(
  *  @{ */
 
 /**
- * Lookup for a type
+ * Lookup for an existing type
  *
+ * @param type pointer to the type returned if found
+ * @param name name of the searched type
  *
  * @return 0 in case of success or a negative error code
  */
 static inline
-int afb_type_lookup(
-	afb_type_x4_t *type,
+int
+afb_type_lookup(
+	afb_type_t *type,
 	const char *name
 ) {
 	return afbBindingV4r1_itf.type_lookup(type, name);
@@ -1337,11 +1392,21 @@ int afb_type_lookup(
 /**
  * Register a type
  *
+ * @param type pointer to the returned created type
+ * @param name name of the type to be created
+ * @param flags flags of the created type: a or combination of
+ *                 - Afb_Type_Flags_Shareable:
+ *                      Data of that type can be shared through memory
+ *                 - Afb_Type_Flags_Streamable:
+ *                      Data of that type can be streamed
+ *                 - Afb_Type_Flags_Opaque:
+ *                      Data of that type can be opacified.
  *
  * @return 0 in case of success or a negative error code
  */
 static inline
-int afb_type_register(
+int
+afb_type_register(
 	afb_type_t *type,
 	const char *name,
 	afb_type_flags_t flags
@@ -1349,67 +1414,117 @@ int afb_type_register(
 	return afbBindingV4r1_itf.type_register(type, name, flags);
 }
 
-/**  */
+/**
+ * Get the name of a type
+ *
+ * @param type the type whose name is queried
+ *
+ * @return the name of the type
+ */
 static inline
 const char *
 afb_type_name(
-	afb_type_x4_t type
+	afb_type_t type
 ) {
 	return afbBindingV4r1_itf.type_name(type);
 }
 
-/**  */
+/**
+ * Set the family of the type. An instance of a type naturally converts
+ * to an instance of its family.
+ *
+ * @param type the type whose family is to update
+ * @param family the family to set to the type
+ *
+ * @return 0 on success or a negative -errno like error code
+ */
 static inline
 int
 afb_type_set_family(
 	afb_type_t type,
-	afb_type_x4_t family
+	afb_type_t family
 ) {
 	return afbBindingV4r1_itf.type_set_family(type, family);
 }
 
-/** add convert to */
+/**
+ * Add a convertion routine to a given type
+ *
+ * @param type the reference type
+ * @param to_type the type to convert to
+ * @param converter the converter routine
+ * @param closure the closure for the converter
+ *
+ * @return 0 in case of success or a negative error code
+ */
 static inline
 int
 afb_type_add_convert_to(
 	afb_type_t type,
-	afb_type_x4_t to_type,
+	afb_type_t to_type,
 	afb_type_converter_t converter,
 	void *closure
 ) {
 	return afbBindingV4r1_itf.type_add_converter(type, to_type, converter, closure);
 }
 
-/** add convert from */
+/**
+ * Add a convertion routine from a given type
+ *
+ * @param type the reference type
+ * @param from_type the type to convert from
+ * @param converter the converter routine
+ * @param closure the closure for the converter
+ *
+ * @return 0 in case of success or a negative error code
+ */
 static inline
 int
 afb_type_add_convert_from(
 	afb_type_t type,
-	afb_type_x4_t from_type,
+	afb_type_t from_type,
 	afb_type_converter_t converter,
 	void *closure
 ) {
 	return afbBindingV4r1_itf.type_add_converter(from_type, type, converter, closure);
 }
 
-/** add update to */
+/**
+ * Add an update routine to a given type
+ *
+ * @param type the reference type
+ * @param to_type the type to update to
+ * @param updater the updater routine
+ * @param closure the closure for the converter
+ *
+ * @return 0 in case of success or a negative error code
+ */
 static inline
 int
 afb_type_add_update_to(
 	afb_type_t type,
-	afb_type_x4_t to_type,
+	afb_type_t to_type,
 	afb_type_updater_t updater,
 	void *closure
 ) {
 	return afbBindingV4r1_itf.type_add_updater(type, to_type, updater, closure);
 }
 
-/** add update from */
+/**
+ * Add an update routine from a given type
+ *
+ * @param type the reference type
+ * @param from_type the type to update from
+ * @param updater the updater routine
+ * @param closure the closure for the converter
+ *
+ * @return 0 in case of success or a negative error code
+ */
 static inline
 int
 afb_type_add_update_from(
 	afb_type_t type,
-	afb_type_x4_t from_type,
+	afb_type_t from_type,
 	afb_type_updater_t updater,
 	void *closure
 ) {
@@ -1429,9 +1544,10 @@ afb_type_add_update_from(
  * @return logmask of the api.
  */
 static inline
-int afb_api_logmask(
-	afb_api_t api)
-{
+int
+afb_api_logmask(
+	afb_api_t api
+) {
 	return afbBindingV4r1_itf.api_logmask(api);
 }
 
@@ -1445,9 +1561,10 @@ int afb_api_logmask(
  * The returned value must not be changed nor freed.
  */
 static inline
-const char *afb_api_name(
-	afb_api_t api)
-{
+const char *
+afb_api_name(
+	afb_api_t api
+) {
 	return afbBindingV4r1_itf.api_name(api);
 }
 
@@ -1461,9 +1578,10 @@ const char *afb_api_name(
  * @see afb_api_set_userdata
  */
 static inline
-void *afb_api_get_userdata(
-	afb_api_t api)
-{
+void *
+afb_api_get_userdata(
+	afb_api_t api
+) {
 	return afbBindingV4r1_itf.api_get_userdata(api);
 }
 
@@ -1478,10 +1596,11 @@ void *afb_api_get_userdata(
  * @see afb_api_get_userdata
  */
 static inline
-void *afb_api_set_userdata(
+void *
+afb_api_set_userdata(
 	afb_api_t api,
-	void *value)
-{
+	void *value
+) {
 	return afbBindingV4r1_itf.api_set_userdata(api, value);
 }
 
@@ -1505,10 +1624,11 @@ void *afb_api_set_userdata(
  * @see syslog
  */
 static inline
-int afb_api_wants_log_level(
+int
+afb_api_wants_log_level(
 	afb_api_t api,
-	int level)
-{
+	int level
+) {
 	return AFB_SYSLOG_MASK_WANT(afb_api_logmask(api), level);
 }
 
@@ -1542,15 +1662,16 @@ int afb_api_wants_log_level(
  * @see printf
  */
 static inline
-void afb_api_vverbose(
+void
+afb_api_vverbose(
 	afb_api_t api,
 	int level,
 	const char *file,
 	int line,
 	const char *func,
 	const char *fmt,
-	va_list args)
-{
+	va_list args
+) {
 	afbBindingV4r1_itf.api_vverbose(api, level, file, line, func, fmt, args);
 }
 
@@ -1584,15 +1705,16 @@ void afb_api_vverbose(
  */
 __attribute__((format(printf, 6, 7)))
 static inline
-void afb_api_verbose(
+void
+afb_api_verbose(
 	afb_api_t api,
 	int level,
 	const char *file,
 	int line,
 	const char *func,
 	const char *fmt,
-	...)
-{
+	...
+) {
 	va_list args;
 	va_start(args, fmt);
 	afbBindingV4r1_itf.api_vverbose(api, level, file, line, func, fmt, args);
@@ -1620,12 +1742,13 @@ void afb_api_verbose(
  * @return the count of clients that received the event.
  */
 static inline
-int afb_api_broadcast_event(
+int
+afb_api_broadcast_event(
 	afb_api_t api,
 	const char *name,
 	unsigned nparams,
-	afb_data_t const params[])
-{
+	afb_data_t const params[]
+) {
 	return afbBindingV4r1_itf.api_event_broadcast(api, name, nparams, params);
 }
 
@@ -1647,11 +1770,12 @@ int afb_api_broadcast_event(
  * @return 0 in case of success or -1 in case of error with errno set appropriately.
  */
 static inline
-int afb_api_require_api(
+int
+afb_api_require_api(
 	afb_api_t api,
 	const char *name,
-	int initialized)
-{
+	int initialized
+) {
 	return afbBindingV4r1_itf.api_require_api(api, name, initialized);
 }
 
@@ -1674,11 +1798,12 @@ int afb_api_require_api(
  * @see afb_event_is_valid
  */
 static inline
-int afb_api_new_event(
+int
+afb_api_new_event(
 	afb_api_t api,
 	const char *name,
-	afb_event_t *event)
-{
+	afb_event_t *event
+) {
 	return afbBindingV4r1_itf.api_new_event(api, name, event);
 }
 
@@ -1702,7 +1827,8 @@ int afb_api_new_event(
  * @see fnmatch for matching names using glob
  */
 static inline
-int afb_api_add_verb(
+int
+afb_api_add_verb(
 	afb_api_t api,
 	const char *verb,
 	const char *info,
@@ -1710,8 +1836,8 @@ int afb_api_add_verb(
 	void *vcbdata,
 	const struct afb_auth *auth,
 	uint32_t session,
-	int glob)
-{
+	int glob
+) {
 	return afbBindingV4r1_itf.api_add_verb(api, verb, info, callback, vcbdata, auth, session, glob);
 }
 
@@ -1727,11 +1853,12 @@ int afb_api_add_verb(
  * @see afb_api_add_verb
  */
 static inline
-int afb_api_del_verb(
+int
+afb_api_del_verb(
 	afb_api_t api,
 	const char *verb,
-	void **vcbdata)
-{
+	void **vcbdata
+) {
 	return afbBindingV4r1_itf.api_del_verb(api, verb, vcbdata);
 }
 
@@ -1742,9 +1869,10 @@ int afb_api_del_verb(
  * @param api the api to be sealed
  */
 static inline
-void afb_api_seal(
-	afb_api_t api)
-{
+void
+afb_api_seal(
+	afb_api_t api
+) {
 	afbBindingV4r1_itf.api_seal(api);
 }
 
@@ -1761,10 +1889,11 @@ void afb_api_seal(
  * @see afb_api_del_verb
  */
 static inline
-int afb_api_set_verbs(
+int
+afb_api_set_verbs(
 	afb_api_t api,
-	const struct afb_verb_v4 *verbs)
-{
+	const struct afb_verb_v4 *verbs
+) {
 	return afbBindingV4r1_itf.api_set_verbs(api, verbs);
 }
 
@@ -1793,12 +1922,13 @@ int afb_api_set_verbs(
  * @see afb_api_event_handler_del
  */
 static inline
-int afb_api_event_handler_add(
+int
+afb_api_event_handler_add(
 	afb_api_t api,
 	const char *pattern,
 	afb_event_handler_t callback,
-	void *closure)
-{
+	void *closure
+) {
 	return afbBindingV4r1_itf.api_event_handler_add(api, pattern, callback, closure);
 }
 
@@ -1815,11 +1945,12 @@ int afb_api_event_handler_add(
  * @see afb_api_event_handler_add
  */
 static inline
-int afb_api_event_handler_del(
+int
+afb_api_event_handler_del(
 	afb_api_t api,
 	const char *pattern,
-	void **closure)
-{
+	void **closure
+) {
 	return afbBindingV4r1_itf.api_event_handler_del(api, pattern, closure);
 }
 
@@ -1858,15 +1989,16 @@ int afb_api_event_handler_del(
  * @see afb_api_call_sync
  */
 static inline
-void afb_api_call(
+void
+afb_api_call(
 	afb_api_t api,
 	const char *apiname,
 	const char *verbname,
 	unsigned nparams,
 	afb_data_t const params[],
 	afb_call_callback_t callback,
-	void *closure)
-{
+	void *closure
+) {
 	afbBindingV4r1_itf.api_call(api, apiname, verbname, nparams, params, callback, closure);
 }
 
@@ -1909,7 +2041,8 @@ void afb_api_call(
  * @see afb_api_call
  */
 static inline
-int afb_api_call_sync(
+int
+afb_api_call_sync(
 	afb_api_t api,
 	const char *apiname,
 	const char *verbname,
@@ -1917,8 +2050,8 @@ int afb_api_call_sync(
 	afb_data_t const params[],
 	int *status,
 	unsigned *nreplies,
-	afb_data_t replies[])
-{
+	afb_data_t replies[]
+) {
 	return afbBindingV4r1_itf.api_call_sync(api,
 			apiname, verbname, nparams, params,
 			status, nreplies, replies);
@@ -1939,10 +2072,11 @@ int afb_api_call_sync(
  * @see afb_api_require_class
  */
 static inline
-int afb_api_provide_class(
+int
+afb_api_provide_class(
 	afb_api_t api,
-	const char *name)
-{
+	const char *name
+) {
 	return afbBindingV4r1_itf.api_class_provide(api, name);
 }
 
@@ -1961,10 +2095,11 @@ int afb_api_provide_class(
  * @see afb_api_provide_class
  */
 static inline
-int afb_api_require_class(
+int
+afb_api_require_class(
 	afb_api_t api,
-	const char *name)
-{
+	const char *name
+) {
 	return afbBindingV4r1_itf.api_class_require(api, name);
 }
 
@@ -1981,9 +2116,10 @@ int afb_api_require_class(
  * @see afb_api_new_api
  */
 static inline
-int afb_api_delete(
-	afb_api_t api)
-{
+int
+afb_api_delete(
+	afb_api_t api
+) {
 	return afbBindingV4r1_itf.api_delete(api);
 }
 
@@ -1999,9 +2135,10 @@ int afb_api_delete(
  * @returns The setting object.
  */
 static inline
-struct json_object *afb_api_settings(
-	afb_api_t api)
-{
+struct json_object *
+afb_api_settings(
+	afb_api_t api
+) {
 	return afbBindingV4r1_itf.api_settings(api);
 }
 
@@ -2036,14 +2173,15 @@ struct json_object *afb_api_settings(
  * @see afb_api_delete_api
  */
 static inline
-int afb_create_api(
+int
+afb_create_api(
 	afb_api_t *newapi,
 	const char *apiname,
 	const char *info,
 	int noconcurrency,
 	afb_api_callback_t mainctl,
-	void *userdata)
-{
+	void *userdata
+) {
 	return afbBindingV4r1_itf.create_api(afbBindingV4root, newapi, apiname, info, noconcurrency, mainctl, userdata);
 }
 
@@ -2051,11 +2189,14 @@ int afb_create_api(
  * Queue the job defined by 'callback' and 'argument' for being executed asynchronously
  * in this thread (later) or in an other thread.
  *
- * If 'group' is not NULL, the jobs queued with a same value (as the pointer value 'group')
- * are executed in sequence in the order of there submission.
+ * If 'delay' is not 0, it represent the minimal delay in miliseconds before the start
+ * of the job.
  *
  * If 'timeout' is not 0, it represent the maximum execution time for the job in seconds.
  * At first, the job is called with 0 as signum and the given argument.
+ *
+ * If 'group' is not NULL, the jobs queued with a same value (as the pointer value 'group')
+ * are executed in sequence in the order of there submission.
  *
  * The job is executed with the monitoring of its time and some signals like SIGSEGV and
  * SIGFPE. When a such signal is catched, the job is terminated and reexecuted but with
@@ -2080,7 +2221,7 @@ int afb_create_api(
  * ```
  *
  * @param delayms the minimal delay (in milliseconds) before starting the job
- * @param timeout the timeout of execution of the job in seconds
+ * @param timeout the timeout (in seconds) of execution of the job
  * @param callback the job as a callback function
  * @param argument the argument to pass to the queued job
  * @param group the group of the job, NULL if no group
@@ -2088,14 +2229,14 @@ int afb_create_api(
  * @return 0 in case of success or -1 in case of error with errno set appropriately.
  */
 static inline
-int afb_job_post(
+int
+afb_job_post(
 	long delayms,
 	int timeout,
 	void (*callback)(int signum, void *arg),
 	void *argument,
 	void *group
-)
-{
+) {
 	return afbBindingV4r1_itf.job_post(afbBindingV4root, delayms, timeout, callback, argument, group);
 }
 
@@ -2110,10 +2251,11 @@ int afb_job_post(
  * @return 0 in case of success or -1 in case of error with errno set appropriately.
  */
 static inline
-int afb_alias_api(
+int
+afb_alias_api(
 	const char *name,
-	const char *as_name)
-{
+	const char *as_name
+) {
 	return afbBindingV4r1_itf.alias_api(afbBindingV4root, name, as_name);
 }
 
@@ -2129,10 +2271,11 @@ int afb_alias_api(
  * @return 0 in case of success or -1 in case of error with errno set appropriately.
  */
 static inline
-int afb_setup_shared_object(
+int
+afb_setup_shared_object(
 	afb_api_t api,
-	void *handle)
-{
+	void *handle
+) {
 	return afbBindingV4r1_itf.setup_shared_object(api ? api : afbBindingV4root, handle);
 }
 
@@ -2141,15 +2284,55 @@ int afb_setup_shared_object(
 /** @defgroup AFB_PREDEFINED_TYPE
  *  @{ */
 
+/**
+ * The opaque type is anything represented by its address
+ */
 #define AFB_PREDEFINED_TYPE_OPAQUE  (afbBindingV4r1_itf.type_opaque)
+
+/**
+ * Type of zero terminated string. The length includes the tailing zero.
+ * A length of zero is compatible with a value NULL.
+ */
 #define AFB_PREDEFINED_TYPE_STRINGZ (afbBindingV4r1_itf.type_stringz)
+
+/**
+ * Type of json string terminated by a zero
+ */
 #define AFB_PREDEFINED_TYPE_JSON    (afbBindingV4r1_itf.type_json)
+
+/**
+ * Type of json object as handled by libjson-c
+ */
 #define AFB_PREDEFINED_TYPE_JSON_C  (afbBindingV4r1_itf.type_json_c)
+
+/**
+ * Type of boolean values
+ */
 #define AFB_PREDEFINED_TYPE_BOOL    (afbBindingV4r1_itf.type_bool)
+
+/**
+ * Type of signed 32 bit integers
+ */
 #define AFB_PREDEFINED_TYPE_I32     (afbBindingV4r1_itf.type_i32)
+
+/**
+ * Type of unsigned 32 bit integers
+ */
 #define AFB_PREDEFINED_TYPE_U32     (afbBindingV4r1_itf.type_u32)
+
+/**
+ * Type of signed 64 bit integers
+ */
 #define AFB_PREDEFINED_TYPE_I64     (afbBindingV4r1_itf.type_i64)
+
+/**
+ * Type of unsigned 64 bit integers
+ */
 #define AFB_PREDEFINED_TYPE_U64     (afbBindingV4r1_itf.type_u64)
+
+/**
+ * Type of doubles
+ */
 #define AFB_PREDEFINED_TYPE_DOUBLE  (afbBindingV4r1_itf.type_double)
 
 /** @} */
@@ -2158,64 +2341,105 @@ int afb_setup_shared_object(
  *  @{ */
 
 /**
+ * Creates a callback for handling asynchronousely the events associated with
+ * the file descriptor 'fd'.
+ *
+ * @param efd pointer to receive the created evfd result
+ * @param fd  the file descriptor to be handled
+ * @param events the events for triggerring callbacks (see epoll_ctl)
+ * @param handler the callback handler
+ * @param closure the closure for the handler
+ * @param autounref boolean, if not null the evfd if automatically unreferenced at close
+ * @param autoclose boolean, if not null fd if automatically closed when unreferenced
+ *
+ * @return 0 in case of success or a negative -errno like value
  */
 static inline
-int afb_evfd_create(
+int
+afb_evfd_create(
 	afb_evfd_t *efd,
 	int fd,
 	uint32_t events,
 	afb_evfd_handler_t handler,
 	void *closure,
 	int autounref,
-	int autoclose)
-{
+	int autoclose
+) {
 	return afbBindingV4r1_itf.evfd_create(
 			efd, fd, events, handler, closure, autounref, autoclose);
 }
 
 /**
+ * Add one reference to the evfd object 'efd'
+ *
+ * @param efd the object to reference
+ *
+ * @return the referenced object
  */
 static inline
-afb_evfd_t afb_evfd_addref(
-	afb_evfd_t efd)
-{
+afb_evfd_t
+afb_evfd_addref(
+	afb_evfd_t efd
+) {
 	return afbBindingV4r1_itf.evfd_addref(efd);
 }
 
 /**
+ * Remove one reference to the evfd object 'efd' and
+ * destroys the object if not more referenced
+ *
+ * @param efd the object to unreference
  */
 static inline
-void afb_evfd_unref(
-	afb_evfd_t efd)
-{
+void
+afb_evfd_unref(
+	afb_evfd_t efd
+) {
 	return afbBindingV4r1_itf.evfd_unref(efd);
 }
 
 /**
+ * Retrieve the file descriptor of the evfd object 'efd'
+ *
+ * @param efd the object to query
+ *
+ * @return the file descriptor of the object
  */
 static inline
-int afb_evfd_get_fd(
-	afb_evfd_t efd)
-{
+int
+afb_evfd_get_fd(
+	afb_evfd_t efd
+) {
 	return afbBindingV4r1_itf.evfd_get_fd(efd);
 }
 
 /**
+ * Retrieve the event flags for the evfd object 'efd'
+ *
+ * @param efd the object to query
+ *
+ * @return the event flags of the object
  */
 static inline
-uint32_t afb_evfd_get_events(
-	afb_evfd_t efd)
-{
+uint32_t
+afb_evfd_get_events(
+	afb_evfd_t efd
+) {
 	return afbBindingV4r1_itf.evfd_get_events(efd);
 }
 
 /**
+ * Set the event flags for the evfd object 'efd'
+ *
+ * @param efd    the object to query
+ * @param events the events flags (see epoll_ctl)
  */
 static inline
-void afb_evfd_set_events(
+void
+afb_evfd_set_events(
 	afb_evfd_t efd,
-	uint32_t events)
-{
+	uint32_t events
+) {
 	return afbBindingV4r1_itf.evfd_set_events(efd, events);
 }
 
@@ -2225,9 +2449,24 @@ void afb_evfd_set_events(
  *  @{ */
 
 /**
+ * Creates a timer handler object
+ *
+ * @param timer pointer to receive the created timer result
+ * @param absolute boolean indicatying if the start is given in absolute (relative to epoch)
+ * @param start_sec start time in seconds
+ * @param start_ms millisecond part of the start time
+ * @param count count of time the handler must be called (zero for endlessly)
+ * @param period_ms the period in milliseconds between to calls to the handler
+ * @param accuracy_ms the expected accuracy in the period
+ * @param handler the handler callback
+ * @param closure closure pointer for the handler
+ * @param autounref boolean if not null the timer is automatically unreferenced when finished
+ *
+ * @return 0 in case of success or a negative -errno like value
  */
 static inline
-int afb_timer_create(
+int
+afb_timer_create(
 	afb_timer_t *timer,
 	int absolute,
 	time_t start_sec,
@@ -2237,8 +2476,8 @@ int afb_timer_create(
 	unsigned accuracy_ms,
 	afb_timer_handler_t handler,
 	void *closure,
-	int autounref)
-{
+	int autounref
+) {
 	return afbBindingV4r1_itf.timer_create(
 		timer, absolute, start_sec, start_ms,
 		count, period_ms, accuracy_ms,
@@ -2246,21 +2485,31 @@ int afb_timer_create(
 }
 
 /**
+ * Add one reference to the 'timer' object
+ *
+ * @param timer the object to reference
+ *
+ * @return the referenced object
  */
 static inline
-afb_timer_t afb_timer_addref(
-	afb_timer_t timer)
-{
+afb_timer_t
+afb_timer_addref(
+	afb_timer_t timer
+) {
 	return afbBindingV4r1_itf.timer_addref(timer);
 }
 
-
 /**
+ * Remove one reference to the 'timer' object and
+ * destroys the object if not more referenced
+ *
+ * @param timer the object to unreference
  */
 static inline
-void afb_timer_unref(
-	afb_timer_t timer)
-{
+void
+afb_timer_unref(
+	afb_timer_t timer
+) {
 	return afbBindingV4r1_itf.timer_unref(timer);
 }
 

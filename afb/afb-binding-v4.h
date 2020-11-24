@@ -153,7 +153,7 @@ extern int afbBindingV4entry(afb_api_x4_t rootapi, afb_ctlid_t ctlid, afb_ctlarg
 extern const struct afb_binding_v4 afbBindingV4;
 
 /**
- *
+ * Get the default log mask
  */
 static inline int afb_get_logmask()
 {

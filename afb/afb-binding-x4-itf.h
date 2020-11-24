@@ -183,13 +183,30 @@ typedef int (*afb_type_updater_x4_t)(
 		afb_type_x4_t type,
 		afb_data_x4_t to);
 
-
-
-
+/**
+ * Callbacks of file event handlers
+ *
+ * These callbacks are called when an event occurs on the handled
+ * file descriptor.
+ *
+ * @param efd the file event handler object
+ * @param fd the file descriptor index
+ * @param revents the received events
+ * @param closure the closure given at creation
+ */
 typedef void (*afb_evfd_handler_x4_t)(afb_evfd_x4_t efd, int fd, uint32_t revents, void *closure);
 
+/**
+ * Callbacks of timers
+ *
+ * These callbacks are called when a programmed time even occurs.
+ *
+ * @param timer the timer object
+ * @param closure the closure given at creation
+ * @param decount reverse index of the event: zero for infinite timer
+ *                or a decreasing value finishing with 1
+ */
 typedef void (*afb_timer_handler_x4_t)(afb_timer_x4_t timer, void *closure, int decount);
-
 
 /******************************************************************************/
 
@@ -678,6 +695,7 @@ struct afb_binding_x4r1_itf
 
 /*-- FD's EVENT HANDLING -----------------------------------*/
 
+	/** create file event handler */
 	int (*evfd_create)(
 		afb_evfd_x4_t *efd,
 		int fd,
@@ -687,18 +705,23 @@ struct afb_binding_x4r1_itf
 		int autounref,
 		int autoclose);
 
+	/** addref a file event handler */
 	afb_evfd_x4_t (*evfd_addref)(
 		afb_evfd_x4_t efd);
 
+	/** unref a file event handler */
 	void (*evfd_unref)(
 		afb_evfd_x4_t efd);
 
+	/** get file of a file event handler */
 	int (*evfd_get_fd)(
 		afb_evfd_x4_t efd);
 
+	/** get events of a file event handler */
 	uint32_t (*evfd_get_events)(
 		afb_evfd_x4_t efd);
 
+	/** set events of a file event handler */
 	void (*evfd_set_events)(
 		afb_evfd_x4_t efd,
 		uint32_t events);
@@ -718,10 +741,11 @@ struct afb_binding_x4r1_itf
 		void *closure,
 		int autounref);
 
-	/** unref the timer */
+	/** addref the timer */
 	afb_timer_x4_t (*timer_addref)(
 		afb_timer_x4_t timer);
 
+	/** unref the timer */
 	void (*timer_unref)(
 		afb_timer_x4_t timer);
 

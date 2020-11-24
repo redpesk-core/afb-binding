@@ -12,4 +12,3 @@ Bindings of Application Framework Binder
   * [Macros for logging](reference-v3/macro-log.md)
 - [Binding events guide](afb-events-guide.md)
 - [Binding vocabulary](afb-binding-vocabulary.md)
-- [Document revisions](REVISIONS.md)

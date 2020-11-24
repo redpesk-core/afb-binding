@@ -1,62 +1,8 @@
-# Overview of the bindings
-
-***Bindings*** are micro services built on the current **API**.
-Such bindings are put together by some system composition (such
-composition might be distributed across many machines)
-
-This part describes how to write a ***binding***
-or in other words how to add a new **service** to the system.
-
-This section target developers.
-
-This section shortly explain how to write a binding
-using the C programming language.
-
-## Nature of a binding
-
-A ***binding*** is an independent piece of software compiled as a shared
-library and dynamically loaded by a ***binder***.
-It is intended to provide one **API** (**A**pplication **P**rogramming
-**I**nterface).
-
-The **API** is designated and accessed through its name.
-It contains several **verbs** that implement the ***binding***
-functionalities.
-Each of these **verbs** is a **method** that
-processes requests of applications and sends results.
-
-The ***binding***'s methods are invoked by HTTP or websocket
-requests.
-
-The **methods** of the ***bindings*** are noted **api/verb**
-where **api** is the **API** name of the binding and **verb** is
-the **method**'s name within the **API**.
-This notation comes from HTTP invocations that rely on URL path terminated
-with **api/verb**.
-
-The name of an **API** can be made of any characters except:
-
-- the control characters (\u0000 .. \u001f)
-- the characters of the set { ' ', '"', '#', '%', '&',
-   '\'', '/', '?', '`', '\x7f' }
-
-The names of the **verbs** can be any character.
-
-No distinction is made between upper case and lower case
-latin letters.
-So **API/VERB** matches **Api/Verb** or **api/verb**.
-
-## Versions of the bindings
-
-The versions 1 and 2 of the binding API are now obsoleted.
-
-You have to use the version 3 until the next version is introduced.
-
-<!-- pagebreak -->
+# Tutorial of bindings version 3
 
 ## Sample binding: tuto-1
 
-This is the code of the binding **tuto-1.c**:
+This is the code of the binding **tutorials/v3/tuto-1.c**:
 
 ```C
   1 #define AFB_BINDING_VERSION 3
@@ -82,40 +28,45 @@ This is the code of the binding **tuto-1.c**:
 Compiling:
 
 ```bash
-gcc -fPIC -shared tuto-1.c -o tuto-1.so $(pkg-config --cflags-only-I afb-daemon)
+gcc -fPIC -shared tuto-1.c -o tuto-1.so $(pkg-config --cflags-only-I afb-binding)
 ```
 
 > Note: the variable environment variable PKG_CONFIG_PATH might be necessary
 > tuned to get **pkg-config** working properly
 
-Running it (with the binder afb-daemon):
+Running it (with the binder afb-binder):
 
 ```bash
-afb-daemon --binding ./tuto-1.so --port 3333 --token ''
+afb-binder --binding ./tuto-1.so --port 3333
 ```
 
-At this point, afb-daemon has started, it loaded the binding tuto-1.so and now
+At this point, afb-binder has started, it loaded the binding tuto-1.so and now
 listen at localhost on the port 3333.
 
 Testing using **curl**:
 
 ```bash
-$ curl http://localhost:3333/api/tuto-1/hello
-{"jtype":"afb-reply","request":{"status":"success","info":"hello world","uuid":"1e587b54-900b-49ab-9940-46141bc2e1d6"}}
+$ curl -i http://localhost:3333/api/tuto-1/hello
+HTTP/1.1 200 OK
+Connection: close
+Content-Length: 89
+Set-Cookie: x-afb-uuid-3333=273a0eae-7248-48b2-beab-3fc37fc930fd; Path=/api; Max-Age=32000000; HttpOnly
+Date: Tue, 24 Nov 2020 13:09:15 GMT
+
+{"jtype":"afb-reply","request":{"status":"success","info":"hello world"},"response":null}
 ```
 
-Testing using **afb-client-demo** (with option -H for
+Testing using **afb-client** (with option -H for
 getting a human readable output):
 
 ```bash
-$ afb-client-demo -H ws://localhost:3333/api?token=x tuto-1 hello
+$ afb-client -H ws://localhost:3333/api tuto-1 hello
 ON-REPLY 1:tuto-1/hello: OK
 {
   "jtype":"afb-reply",
   "request":{
     "status":"success",
-    "info":"hello world",
-    "uuid":"03a84ad1-458a-4ace-af74-b1da917391b9"
+    "info":"hello world"
   }
 }
 ```
@@ -136,10 +87,11 @@ The lines 1 and 2 show how to get the include file **afb-binding.h**.
 ```
 
 You must define the version of ***binding*** that you are using.
-This is done line 1 where we define that this is the version 3 (earlier
-versions 1 and 2 are deprecated).
+This is done line 1 where we define that this is the version 3.
 
 If you don't define it, an error is reported and the compilation aborts.
+Note that this define is sometime done outside of the code but using
+the option -D of C compilers/preprocessors.
 
 To include **afb-binding.h** successfully, the include search path
 should be set correctly if needed (not needed only if installed in
@@ -148,7 +100,7 @@ should be set correctly if needed (not needed only if installed in
 Setting the include path is easy using **pkg-config**:
 
 ```bash
-pkg-config --cflags-only-I afb-daemon
+pkg-config --cflags-only-I afb-binding
 ```
 
 > Note for **C++** developers:
@@ -191,8 +143,9 @@ and the function that handle the related request is **hello**
 
 ### Handling binder's requests
 
-As shown above this is by default the common include directory where
-the AGL stuff is installed.
+When the ***binder*** receives a request for the verb **hello** of
+of the api **tuto-1**, it invoke the callback **hello** of the **binding**
+with the argument **req** that handles the client request.
 
 ```C
   4 void hello(afb_req_t req)
@@ -202,17 +155,13 @@ the AGL stuff is installed.
   8 }
 ```
 
-When the ***binder*** receives a request for the verb **hello** of
-of the api **tuto-1**, it invoke the callback **hello** of the **binding**
-with the argument **req** that handles the client request.
-
-The callback has to treat synchronously or asynchronously the request and
-should at the end emit a reply for the request.
+The callback method for the verb receives the request and must
+reply to it, either synchronously or asynchronously.
 
 At the line 7, the callback for **tuto-1/hello** replies to the request **req**.
 Parameters of the reply are:
 
- 1. The first parameter is the replied request
+ 1. The first parameter is the request that is replied
  2. The second parameter is a json object (here NULL)
  3. The third parameter is the error string indication (here NULL: no error)
  4. The fourth parameter is an informative string (that can be NULL) that can be used to provide meta data.
@@ -228,7 +177,7 @@ commonly be used when writing a ***binding***:
 
 - initialization, getting arguments, sending replies, pushing events.
 
-This is the code of the binding **tuto-2.c**:
+This is the code of the binding **tutorials/v3/tuto-2.c**:
 
 ```C
       1 #include <string.h>
@@ -336,26 +285,25 @@ This is the code of the binding **tuto-2.c**:
 Compiling:
 
 ```bash
-gcc -fPIC -shared tuto-2.c -o tuto-2.so $(pkg-config --cflags --libs afb-daemon)
+gcc -fPIC -shared tuto-2.c -o tuto-2.so $(pkg-config --cflags --libs afb-binding)
 ```
 
 Running:
 
 ```bash
-afb-daemon --binding ./tuto-2.so --port 3333 --token ''
+afb-binder --binding ./tuto-2.so --port 3333
 ```
 
 Testing:
 
 ```bash
-$ afb-client-demo -H localhost:3333/api?token=toto
+$ afb-client -H localhost:3333/api
 tuto-2 login {"help":true}
 ON-REPLY 1:tuto-2/login: ERROR
 {
   "jtype":"afb-reply",
   "request":{
-    "status":"bad-request",
-    "uuid":"e2b24a13-fc43-487e-a5f4-9266dd1e60a9"
+    "status":"bad-request"
   }
 }
 tuto-2 login {"user":"jose","password":"please"}
@@ -377,12 +325,12 @@ ON-REPLY 3:tuto-2/login: ERROR
 tuto-2 action {"subscribe":true}
 ON-REPLY 4:tuto-2/action: OK
 {
-  "response":{
-    "subscribe":true
-  },
   "jtype":"afb-reply",
   "request":{
     "status":"success"
+  },
+  "response":{
+    "subscribe":true
   }
 }
 ```
@@ -390,14 +338,13 @@ ON-REPLY 4:tuto-2/action: OK
 In another terminal:
 
 ```bash
-$ afb-client-demo -H localhost:3333/api?token=toto
+$ afb-client -H localhost:3333/api
 tuto-2 login {"user":"jobol","password":"please"}
 ON-REPLY 1:tuto-2/login: OK
 {
   "jtype":"afb-reply",
   "request":{
-    "status":"success",
-    "uuid":"a09f55ff-0e89-4f4e-8415-c6e0e7f439be"
+    "status":"success"
   }
 }
 tuto-2 logout true
@@ -415,14 +362,14 @@ It produced in the first terminal:
 ```bash
 ON-EVENT tuto-2/login:
 {
-  "event":"tuto-2\/login",
-  "data":"jobol",
-  "jtype":"afb-event"
+  "jtype":"afb-event",
+  "event":"tuto-2/login",
+  "data":"jobol"
 }
 ON-EVENT tuto-2/logout:
 {
-  "event":"tuto-2\/logout",
-  "data":"jobol",
-  "jtype":"afb-event"
+  "jtype":"afb-event",
+  "event":"tuto-2/logout",
+  "data":"jobol"
 }
 ```

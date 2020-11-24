@@ -170,29 +170,8 @@ will receive an event of name ***api/event***.
 
 ### Generating and pushing signals and data
 
-- This of the responsibility of the designer of the signaling agent to establish the processing chain for generating events.
-
-In many cases, this can be achieved using I/O or timer or signal events inserted in the main loop.
-For this case, the AGL framework uses **libsystemd** and
-provide a way to integrates to the main loop of this library using
-afb\_api\_get\_event\_loop.
-Example:
-
-```C
-    sdev = afb_api_get_event_loop(api);
-    rc = sd_event_add_io(sdev, &source, fd, EPOLLIN, myfunction, NULL);
-```
-
-In some other cases, the events are coming from D-Bus.
-In that case, the framework also uses **libsystemd** internally to access D-Bus.
-It provides two methods to get the available D-Bus objects, already existing and
-bound to the main **libsystemd** event loop.
-Use either ***afb\_api\_get\_system\_bus*** or
-***afb\_api\_get\_user\_bus*** to get the required instance.
-Then use functions of **libsystemd** to handle D-Bus.
-
-In some rare cases, the generation of the data requires to start a new
-thread.
+This of the responsibility of the designer of the signaling agent
+to establish the processing chain for generating events.
 
 When a data is generated and ready to be pushed, the signaling agent
 should call the function ***afb\_event\_push***.
@@ -285,5 +264,5 @@ appropriate service enable parking brake.).
 
 The apis functions allow to declare event handling callbacks. These callbacks are
 called on reception of an  event matching a pattern and a receive in more that
-the event name and its companion JSON data, a user defiend closure and the api
+the event name and its companion JSON data, a user defined closure and the api
 that is used to create it.

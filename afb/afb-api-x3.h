@@ -371,7 +371,8 @@ int afb_api_x3_rootdir_open_locale(
  * @param callback the job as a callback function
  * @param argument the argument to pass to the queued job
  * @param group the group of the job, NULL if no group
- * @param timeout the timeout of execution of the job
+ * @param timeout if positive or null, the timeout in seconds of execution of the job
+ *                if negative, the delay in milliseconds before executing the job
  *
  * @return 0 in case of success or -1 in case of error with errno set appropriately.
  */
