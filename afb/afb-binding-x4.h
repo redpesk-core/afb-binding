@@ -20,6 +20,8 @@ typedef afb_req_x4_t     afb_req_t;
 typedef afb_event_x4_t   afb_event_t;
 typedef afb_data_x4_t    afb_data_t;
 typedef afb_type_x4_t    afb_type_t;
+typedef afb_evfd_x4_t    afb_evfd_t;
+typedef afb_timer_x4_t   afb_timer_t;
 
 typedef afb_type_flags_x4_t     afb_type_flags_t;
 typedef afb_type_converter_x4_t afb_type_converter_t;
@@ -33,6 +35,8 @@ typedef afb_check_callback_x4_t   afb_check_callback_t;
 typedef afb_event_handler_x4_t    afb_event_handler_t;
 typedef afb_type_converter_x4_t   afb_type_converter_t;
 typedef afb_type_updater_x4_t     afb_type_updater_t;
+typedef afb_evfd_handler_x4_t     afb_evfd_handler_t;
+typedef afb_timer_handler_x4_t    afb_timer_handler_t;
 
 /** constants ***********************************************************/
 
@@ -2132,9 +2136,119 @@ int afb_setup_shared_object(
 #define AFB_PREDEFINED_TYPE_DOUBLE  (afbBindingV4r1_itf.type_double)
 
 /** @} */
-/** MISC ***********************************************************/
-/** AFTERWARD ***********************************************************/
+/** FD's EVENT HANDLING ***********************************************************/
+/** @defgroup AFB_EVFD
+ *  @{ */
 
+/**
+ */
+static inline
+int afb_evfd_create(
+	afb_evfd_t *efd,
+	int fd,
+	uint32_t events,
+	afb_evfd_handler_t handler,
+	void *closure,
+	int autounref,
+	int autoclose)
+{
+	return afbBindingV4r1_itf.evfd_create(
+			efd, fd, events, handler, closure, autounref, autoclose);
+}
+
+/**
+ */
+static inline
+afb_evfd_t afb_evfd_addref(
+	afb_evfd_t efd)
+{
+	return afbBindingV4r1_itf.evfd_addref(efd);
+}
+
+/**
+ */
+static inline
+void afb_evfd_unref(
+	afb_evfd_t efd)
+{
+	return afbBindingV4r1_itf.evfd_unref(efd);
+}
+
+/**
+ */
+static inline
+int afb_evfd_get_fd(
+	afb_evfd_t efd)
+{
+	return afbBindingV4r1_itf.evfd_get_fd(efd);
+}
+
+/**
+ */
+static inline
+uint32_t afb_evfd_get_events(
+	afb_evfd_t efd)
+{
+	return afbBindingV4r1_itf.evfd_get_events(efd);
+}
+
+/**
+ */
+static inline
+void afb_evfd_set_events(
+	afb_evfd_t efd,
+	uint32_t events)
+{
+	return afbBindingV4r1_itf.evfd_set_events(efd, events);
+}
+
+/** @} */
+/** TIMER HANDLING ***********************************************************/
+/** @defgroup AFB_TIMER
+ *  @{ */
+
+/**
+ */
+static inline
+int afb_timer_create(
+	afb_timer_t *timer,
+	int absolute,
+	time_t start_sec,
+	unsigned start_ms,
+	unsigned count,
+	unsigned period_ms,
+	unsigned accuracy_ms,
+	afb_timer_handler_t handler,
+	void *closure,
+	int autounref)
+{
+	return afbBindingV4r1_itf.timer_create(
+		timer, absolute, start_sec, start_ms,
+		count, period_ms, accuracy_ms,
+		handler, closure, autounref);
+}
+
+/**
+ */
+static inline
+afb_timer_t afb_timer_addref(
+	afb_timer_t timer)
+{
+	return afbBindingV4r1_itf.timer_addref(timer);
+}
+
+
+/**
+ */
+static inline
+void afb_timer_unref(
+	afb_timer_t timer)
+{
+	return afbBindingV4r1_itf.timer_unref(timer);
+}
+
+
+/** @} */
 /******************************************************************************/
 
 #endif

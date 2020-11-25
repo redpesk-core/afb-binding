@@ -900,16 +900,16 @@ static void opaque(afb_req_t request, unsigned nparams, afb_data_t const *params
 	reply_oEI(request, rep, NULL, NULL);
 }
 
-static void in_after (afb_req_t request, unsigned nparams, afb_data_t const *params)
+static void hndafter(afb_timer_x4_t timer, void *closure, int decount)
 {
+	afb_req_t request = closure;
+	unsigned nparams;
+	afb_data_t const *params;
 	int rc;
-	const char *ts, *ty;
-	char *te;
-	double td;
-	struct timespec t;
+	const char *ty;
 	json_object *json, *x;
 
-
+	nparams = afb_req_parameters(request, &params);
 	args_to_json(nparams, params, &json);
 
 	/* get the type */
@@ -918,32 +918,6 @@ static void in_after (afb_req_t request, unsigned nparams, afb_data_t const *par
 	 && strcmp(ty, "subcall") && strcmp(ty, "subcallsync") && strcmp(ty, "nop")) {
 		reply_oEI(request, NULL, "invalid", "bad type");
 		goto end;
-	}
-
-	/* get the delay */
-	ts = json_object_object_get_ex(json, "delay", &x) ? json_object_get_string(x) : NULL;
-	if (!ts) {
-		reply_oEI(request, NULL, "invalid", "no delay");
-		goto end;
-	}
-	td = strtod(ts, &te);
-	if (*te || td < 0 || td > 3e6) { /* a month is the biggest accepted */
-		reply_oEI(request, NULL, "invalid", "bad delay");
-		goto end;
-	}
-
-	/* wait for that time */
-	if (td > 0) {
-		t.tv_nsec = (long)(1e6 * modf(td, &td));
-		t.tv_sec = (time_t)td;
-		do {
-			rc = nanosleep(&t, &t);
-		} while (rc != 0 && errno == EINTR);
-
-		if (rc) {
-			reply_oEI(request, NULL, "error", "sleep failed");
-			goto end;
-		}
 	}
 
 	/* do the call */
@@ -960,38 +934,51 @@ static void in_after (afb_req_t request, unsigned nparams, afb_data_t const *par
 
 end:
 	json_object_put(json);
-}
-
-static void *thread_after (void *closure)
-{
-	afb_data_t data;
-	afb_req_t request = closure;
-	unsigned nparams;
-	afb_data_t const *params;
-
-	nparams = afb_req_parameters(request, &params);
-	in_after (request, nparams, params);
 	afb_req_unref(request);
-	return NULL;
 }
 
 static void after (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	int rc;
-	pthread_t tid;
-	pthread_attr_t attr;
+	afb_timer_t timer;
+	json_object *json, *x;
+	const char *ts, *ty;
+	char *te;
+	double td;
+	time_t tsec;
+	unsigned tms;
+
+	args_to_json(nparams, params, &json);
+
+	/* get the delay */
+	ts = json_object_object_get_ex(json, "delay", &x) ? json_object_get_string(x) : NULL;
+	if (!ts) {
+		reply_oEI(request, NULL, "invalid", "no delay");
+		goto end;
+	}
+	td = strtod(ts, &te);
+	if (*te || td < 0 || td > 3e6) { /* a month is the biggest accepted */
+		reply_oEI(request, NULL, "invalid", "bad delay");
+		goto end;
+	}
+
+	/* wait for that time */
+	tms = 0;
+	tsec = 0;
+	if (td > 0) {
+		tms = (unsigned)(1e3 * modf(td, &td));
+		tsec = (time_t)td;
+	}
+
 
 	afb_req_addref(request);
-
-	pthread_attr_init(&attr);
-	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-	rc = pthread_create(&tid, &attr, thread_after, (void*)request);
-	pthread_attr_destroy(&attr);
-
-	if (rc != 0) {
+	rc = afb_timer_create(&timer, 0, tsec, tms, 1, 0, 0, hndafter, (void*)request, 1);
+	if (rc < 0) {
 		afb_req_unref(request);
-		reply_oEI(request, NULL, "cant-start", NULL);
+		reply_oEI(request, NULL, "cant-defer", NULL);
 	}
+end:
+	json_object_put(json);
 }
 
 static void api (afb_req_t request, unsigned nparams, afb_data_t const *params);

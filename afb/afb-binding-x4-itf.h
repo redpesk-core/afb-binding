@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>
+#include <time.h>
 
 #include "afb-ctlid.h"
 
@@ -23,12 +24,16 @@ struct afb_req_x4;
 struct afb_event_x4;
 struct afb_type_x4;
 struct afb_data_x4;
+struct afb_evfd_x4;
+struct afb_timer_x4;
 
 typedef const struct afb_api_x4        *afb_api_x4_t;
 typedef const struct afb_req_x4        *afb_req_x4_t;
 typedef const struct afb_event_x4      *afb_event_x4_t;
 typedef const struct afb_data_x4       *afb_data_x4_t;
 typedef const struct afb_type_x4       *afb_type_x4_t;
+typedef const struct afb_evfd_x4       *afb_evfd_x4_t;
+typedef const struct afb_timer_x4      *afb_timer_x4_t;
 
 /******************************************************************************/
 
@@ -177,6 +182,14 @@ typedef int (*afb_type_updater_x4_t)(
 		afb_data_x4_t from,
 		afb_type_x4_t type,
 		afb_data_x4_t to);
+
+
+
+
+typedef void (*afb_evfd_handler_x4_t)(afb_evfd_x4_t efd, int fd, uint32_t revents, void *closure);
+
+typedef void (*afb_timer_handler_x4_t)(afb_timer_x4_t timer, void *closure, int decount);
+
 
 /******************************************************************************/
 
@@ -662,6 +675,54 @@ struct afb_binding_x4r1_itf
 	/** predefined type double */
 	afb_type_x4_t type_double;
 
-/*-- AFTERWARD ------------------------------------------*/
+/*-- FD's EVENT HANDLING -----------------------------------*/
 
+	int (*evfd_create)(
+		afb_evfd_x4_t *efd,
+		int fd,
+		uint32_t events,
+		afb_evfd_handler_x4_t handler,
+		void *closure,
+		int autounref,
+		int autoclose);
+
+	afb_evfd_x4_t (*evfd_addref)(
+		afb_evfd_x4_t efd);
+
+	void (*evfd_unref)(
+		afb_evfd_x4_t efd);
+
+	int (*evfd_get_fd)(
+		afb_evfd_x4_t efd);
+
+	uint32_t (*evfd_get_events)(
+		afb_evfd_x4_t efd);
+
+	void (*evfd_set_events)(
+		afb_evfd_x4_t efd,
+		uint32_t events);
+
+/*-- TIMER HANDLING -----------------------------------*/
+
+	/** create a timer */
+	int (*timer_create)(
+		afb_timer_x4_t *timer,
+		int absolute,
+		time_t start_sec,
+		unsigned start_ms,
+		unsigned count,
+		unsigned period_ms,
+		unsigned accuracy_ms,
+		afb_timer_handler_x4_t handler,
+		void *closure,
+		int autounref);
+
+	/** unref the timer */
+	afb_timer_x4_t (*timer_addref)(
+		afb_timer_x4_t timer);
+
+	void (*timer_unref)(
+		afb_timer_x4_t timer);
+
+/*-- END OF VERSION 4r1 -----------------------------------*/
 };
