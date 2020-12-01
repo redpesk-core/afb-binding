@@ -625,12 +625,13 @@ struct afb_binding_x4r1_itf
 		void *userdata);
 
 	/** queue a job */
-	int (*job_queue)(
+	int (*job_post)(
 		afb_api_x4_t root,
+		long delayms,
+		int timeout,
 		void (*callback)(int signum, void *arg),
 		void *argument,
-		void *group,
-		int timeout);
+		void *group);
 
 	/** add an alias */
 	int (*alias_api)(

@@ -804,7 +804,7 @@ void queue_cb(int signum, void *arg)
 static void queue(afb::req request, afb::received_data params)
 {
 	afb_req_addref(request);
-	afb_job_queue(queue_cb, (void*)(afb_req_t)request, NULL, 0);
+	afb_job_post(0, 0, queue_cb, (void*)(afb_req_t)request, NULL);
 }
 
 static void settings(afb::req request, afb::received_data params)

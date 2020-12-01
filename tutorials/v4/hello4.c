@@ -861,7 +861,7 @@ void queue_cb(int signum, void *arg)
 static void queue(afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	afb_req_addref(request);
-	afb_job_queue(queue_cb, (void*)request, NULL, 0);
+	afb_job_post(0, 0, queue_cb, (void*)request, NULL);
 }
 
 static void settings(afb_req_t request, unsigned nparams, afb_data_t const *params)
@@ -900,7 +900,7 @@ static void opaque(afb_req_t request, unsigned nparams, afb_data_t const *params
 	reply_oEI(request, rep, NULL, NULL);
 }
 
-static void hndafter(afb_timer_x4_t timer, void *closure, int decount)
+static void hndafter(int sig, void *closure)
 {
 	afb_req_t request = closure;
 	unsigned nparams;
@@ -922,9 +922,9 @@ static void hndafter(afb_timer_x4_t timer, void *closure, int decount)
 
 	/* do the call */
 	if (!strcmp(ty, "subcallsync"))
-		subcall(request, nparams, params);
-	else if (!strcmp(ty, "subcall"))
 		subcallsync(request, nparams, params);
+	else if (!strcmp(ty, "subcall"))
+		subcall(request, nparams, params);
 	else if (!strcmp(ty, "callsync"))
 		callsync(request, nparams, params);
 	else if (!strcmp(ty, "call"))
@@ -947,6 +947,7 @@ static void after (afb_req_t request, unsigned nparams, afb_data_t const *params
 	double td;
 	time_t tsec;
 	unsigned tms;
+	long delayms;
 
 	args_to_json(nparams, params, &json);
 
@@ -961,18 +962,10 @@ static void after (afb_req_t request, unsigned nparams, afb_data_t const *params
 		reply_oEI(request, NULL, "invalid", "bad delay");
 		goto end;
 	}
-
-	/* wait for that time */
-	tms = 0;
-	tsec = 0;
-	if (td > 0) {
-		tms = (unsigned)(1e3 * modf(td, &td));
-		tsec = (time_t)td;
-	}
-
+	delayms = (long)(td * 1000.0);
 
 	afb_req_addref(request);
-	rc = afb_timer_create(&timer, 0, tsec, tms, 1, 0, 0, hndafter, (void*)request, 1);
+	rc = afb_job_post(delayms, 0, hndafter, (void*)request, 0);
 	if (rc < 0) {
 		afb_req_unref(request);
 		reply_oEI(request, NULL, "cant-defer", NULL);

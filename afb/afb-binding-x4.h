@@ -2064,22 +2064,24 @@ int afb_create_api(
  * }
  * ```
  *
- * @param api the api that queue the job
+ * @param delayms the minimal delay (in milliseconds) before starting the job
+ * @param timeout the timeout of execution of the job in seconds
  * @param callback the job as a callback function
  * @param argument the argument to pass to the queued job
  * @param group the group of the job, NULL if no group
- * @param timeout the timeout of execution of the job
  *
  * @return 0 in case of success or -1 in case of error with errno set appropriately.
  */
 static inline
-int afb_job_queue(
+int afb_job_post(
+	long delayms,
+	int timeout,
 	void (*callback)(int signum, void *arg),
 	void *argument,
-	void *group,
-	int timeout)
+	void *group
+)
 {
-	return afbBindingV4r1_itf.job_queue(afbBindingV4root, callback, argument, group, timeout);
+	return afbBindingV4r1_itf.job_post(afbBindingV4root, delayms, timeout, callback, argument, group);
 }
 
 /**
