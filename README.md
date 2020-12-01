@@ -4,7 +4,10 @@ This project provides the header files and their documentation for
 building microservice architecture components called bindings of the
 application framework binder.
 
-This project is available there https://github.com/redpesk/afb-binding.
+This project is available there https://github.com/redpesk-core/afb-binding.
+
+The binding are usually run by the micro-service architecture
+binder that is available here ttps://github.com/redpesk-core/afb-binder.
 
 ## License and copying
 
