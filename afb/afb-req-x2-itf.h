@@ -284,6 +284,10 @@ struct afb_req_x2_itf
 			const char *permission,
 			void (*callback)(void *closure, int status, struct afb_req_x2 *req),
 			void *closure);
+
+	/** get the current LOA for the request */
+	unsigned (*session_get_LOA)(
+			struct afb_req_x2 *req);
 };
 
 

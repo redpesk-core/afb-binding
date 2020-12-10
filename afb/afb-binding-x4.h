@@ -950,6 +950,21 @@ afb_req_session_set_LOA(
 }
 
 /**
+ * Gets the current level of assurance of the session of 'req'.
+ *
+ * @param req the request
+ *
+ * @return the current LOA, a value of 0 to 7
+ */
+static inline
+unsigned
+afb_req_session_get_LOA(
+	afb_req_t req
+) {
+	return afbBindingV4r1_itf.req_session_get_LOA(req);
+}
+
+/**
  * Establishes for the client link identified by 'req' a subscription
  * to the 'event'.
  *

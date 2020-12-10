@@ -725,5 +725,11 @@ struct afb_binding_x4r1_itf
 	void (*timer_unref)(
 		afb_timer_x4_t timer);
 
+/*-- EXTRA FUNCTIONS -----------------------------------*/
+
+	/** get the current LOA for the request */
+	unsigned (*req_session_get_LOA)(
+		afb_req_x4_t req);
+
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };

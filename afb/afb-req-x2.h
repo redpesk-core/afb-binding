@@ -37,6 +37,7 @@
 #define afb_req_unref			afb_req_x2_unref
 #define afb_req_session_close		afb_req_x2_session_close
 #define afb_req_session_set_LOA		afb_req_x2_session_set_LOA
+#define afb_req_session_get_LOA		afb_req_x2_session_get_LOA
 #define afb_req_subscribe		afb_req_x2_subscribe
 #define afb_req_unsubscribe		afb_req_x2_unsubscribe
 #define afb_req_subcall			afb_req_x2_subcall
@@ -496,6 +497,20 @@ int afb_req_x2_session_set_LOA(
 			unsigned level)
 {
 	return req->itf->session_set_LOA(req, level);
+}
+
+/**
+ * Gets the current level of assurance of the session of 'req'.
+ *
+ * @param req the request
+ *
+ * @return the current LOA, a value of 0 to 7
+ */
+static inline
+unsigned afb_req_x2_session_get_LOA(
+			struct afb_req_x2 *req)
+{
+	return req->itf->session_get_LOA(req);
 }
 
 /**

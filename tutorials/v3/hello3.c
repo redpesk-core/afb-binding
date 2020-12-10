@@ -605,6 +605,12 @@ static void setloa (afb_req_t request)
 	afb_req_reply_f(request, NULL, NULL, "LOA set to %d", loa);
 }
 
+static void getloa (afb_req_t request)
+{
+	unsigned loa = afb_req_session_get_LOA(request);
+	afb_req_reply_f(request, json_object_new_int((int)loa), NULL, "LOA = %u", loa);
+}
+
 static void ok (afb_req_t request)
 {
 	afb_req_reply_f(request, NULL, NULL, NULL);
@@ -938,6 +944,7 @@ static const struct afb_verb_v3 verbs[]= {
   { .verb="exit",        .callback=exitnow },
   { .verb="close",       .callback=closess, .session=AFB_SESSION_CLOSE },
   { .verb="set-loa",     .callback=setloa, .auth = &auths[0] },
+  { .verb="get-loa",     .callback=getloa },
   { .verb="has-loa-1",   .callback=ok, .session=AFB_SESSION_LOA_1 },
   { .verb="has-loa-2",   .callback=ok, .session=AFB_SESSION_LOA_2 },
   { .verb="has-loa-3",   .callback=ok, .session=AFB_SESSION_LOA_3 },
