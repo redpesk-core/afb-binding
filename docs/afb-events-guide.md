@@ -1,35 +1,37 @@
 # Guide for developing with events
 
 Signaling agents are services that send events to any clients that
-are subscribed to receive it.
-The sent events carry any data.
-
-To have a good understanding of how to:
-
-- write a signaling agent.
-- actions of subscribing.
-- actions of unsubscribing.
-- actions of producing.
-- actions of sending and receiving.
-
-Events must be described and explained.
+has subscribed to receive them.
+The events sent can carry any payload data.
 
 ## Overview of events
 
-The basis of a signaling agent is shown in the following figure:
+For people familiar with the framework, a signaling agent is
+commonly a “binding”.
+
+Signaling agents invoke the framework to create 'event' objects.
+An event object has:
+
+- a name: the name of the event
+- a list of subscribers: the list of clients that subscribed to the event.
+
+The signaling agent:
+
+- creates event objects, giving their name
+- adds or removes clients subscribers of its event objects
+- push data (even empty data) to the subscribers of event object at any time
+
+These basis are summarized on the following figure:
 
 ![scenario of using events](pictures/signaling-basis.svg)
 
 This figure shows the main role of the signaling framework for the events
 propagation.
 
-For people not familiar with the framework, a signaling agent and
-a “binding” are similar.
-
 ### Subscribing and unsubscribing
 
-- Subscribing is the action that makes a client able to receive
-  data from a signaling agent.
+Subscribing is the action that makes a client able to receive
+data from a signaling agent.
 
 Subscription must :
 
@@ -46,7 +48,7 @@ When a client subscribes for data, the agent must:
 1. Check that the subscription request is correct.
 1. Establish the computation chain of the required data (if not already done).
 1. Create a named event for the computed data (if not already done).
-1. Ask the framework to establish the subscription to the event for the request.
+1. Ask the framework to establish the subscription to the event for the client identified by its querying request.
 1. Optionally give indications about the event in the reply to the client.
 
 The first two steps do not involve the framework.
@@ -54,11 +56,6 @@ They are linked to the business logic of the binding.
 The request can be any description of the requested data
 and the computing stream can be of any nature,
 this is specific to the binding.
-
-As said before, the framework uses and integrates **libsystemd** and its event
-loop.
-Within the framework, **libsystemd** is the standard API/library for
-bindings expecting to setup and handle I/O, timer or signal events.
 
 Steps 3 and 4 are bound to the framework.
 
@@ -157,7 +154,7 @@ Thus, when unsubscribing is invoked, it becomes immediately effective.
 
 #### More on naming events
 
-- Within the AGL framework, a signaling agent is a binding that has an API prefix.
+Generally, a signaling agent is a binding that has an API prefix.
 
 This prefix is meant to be unique and to identify the binding API.
 The names of the events that this signaling agent creates are
