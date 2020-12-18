@@ -1,8 +1,8 @@
 
-# Functions of class **afb_event**
+# Functions of class **afb\_event**
 
 
-## afb_event_is_valid
+## Function afb\_event\_is\_valid
 
 ```C
 /**
@@ -18,7 +18,7 @@ afb_event_is_valid(
 );
 ```
 
-## afb_event_addref
+## Function afb\_event\_addref
 
 ```C
 /**
@@ -34,7 +34,7 @@ afb_event_addref(
 );
 ```
 
-## afb_event_unref
+## Function afb\_event\_unref
 
 ```C
 /**
@@ -50,7 +50,7 @@ afb_event_unref(
 );
 ```
 
-## afb_event_name
+## Function afb\_event\_name
 
 ```C
 /**
@@ -69,7 +69,7 @@ afb_event_name(
 );
 ```
 
-## afb_event_push
+## Function afb\_event\_push
 
 ```C
 /**
@@ -97,7 +97,7 @@ afb_event_push(
 );
 ```
 
-## afb_event_broadcast
+## Function afb\_event\_broadcast
 
 ```C
 /**

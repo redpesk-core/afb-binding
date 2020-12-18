@@ -10,16 +10,16 @@ However, the final behaviour of macros can be tuned
 using 2 preprocessor defines that can be defined
 before including **<afb/afb-binding.h>**:
 
-- **AFB_BINDING_PRAGMA_NO_VERBOSE_DATA**:
+- **AFB\_BINDING\_PRAGMA\_NO\_VERBOSE\_DATA**:
   if defined, only filename and line are shown
-- **AFB_BINDING_PRAGMA_NO_VERBOSE_DETAILS**:
+- **AFB\_BINDING\_PRAGMA\_NO\_VERBOSE\_DETAILS**:
   if defined, only the message and its formatted arguments are shown
 
 
 ## Logging for an api
 
 The following macros must be used for logging for an **api** of type
-**afb_api_t**.
+**afb\_api\_t**.
 
 ```C
 AFB_API_ERROR(api,fmt,...)
@@ -33,7 +33,7 @@ AFB_API_DEBUG(api,fmt,...)
 
 
 The following macros can be used for logging in the context
-of a request **req** of type **afb_req_t**:
+of a request **req** of type **afb\_req\_t**:
 
 ```C
 AFB_REQ_ERROR(req,fmt,...)

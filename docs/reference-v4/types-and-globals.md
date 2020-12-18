@@ -2,12 +2,12 @@
 
 ## The global afbBindingRoot
 
-The global **afbBindingRoot** of type **afb_api_t** is always implicitly
+The global **afbBindingRoot** of type **afb\_api\_t** is always implicitly
 defined for bindings of version 3 or upper. It records the root api of
 the binding.
 
 When the binding has a defined **afbBindingExport**,  the root api
-**afbBindingRoot** is the **afb_pi_t** relative to the api created for
+**afbBindingRoot** is the **afb\_pi\_t** relative to the api created for
 this static description.
 
 When the binding has no defined **afbBindingExport**, the root api is
@@ -20,17 +20,17 @@ but allows log messages.
 The global **afbBindingExport** is not mandatory.
 
 If **afbBindingExport** is defined and exported, it must be of the type
-**const afb_binding_t** and must describe the *root* api of the binding.
+**const afb\_binding\_t** and must describe the *root* api of the binding.
 
-## The type afb_api_t
+## The type afb\_api\_t
 
 Bindings now can declare more than one api. The counter part is that
 a new handle is needed to manage apis. These handles are of the type
-**afb_api_t**.
+**afb\_api\_t**.
 
-## The type afb_binding_t
+## The type afb\_binding\_t
 
-The main structure, of type **afb_binding_t**, for describing the binding
+The main structure, of type **afb\_binding\_t**, for describing the binding
 must be exported under the name **afbBindingExport**.
 
 This structure is defined as below.
@@ -79,9 +79,9 @@ struct afb_binding_v4
 };
 ```
 
-## The type afb_verb_t
+## The type afb\_verb\_t
 
-Each verb is described with a structure of type **afb_verb_t**
+Each verb is described with a structure of type **afb\_verb\_t**
 defined below:
 
 ```C
@@ -121,24 +121,24 @@ The **session** flags is one of the constant defined below:
 
 | Name                   | Description
 |:----------------------:|------------------------------------------------------
-| AFB_SESSION_NONE       | no flag, synonym to 0
-| AFB_SESSION_LOA_0      | Requires the LOA to be 0 or more, synonym to 0 or AFB_SESSION_NONE
-| AFB_SESSION_LOA_1      | Requires the LOA to be 1 or more
-| AFB_SESSION_LOA_2      | Requires the LOA to be 2 or more
-| AFB_SESSION_LOA_3      | Requires the LOA to be 3 or more
-| AFB_SESSION_CHECK      | Requires the token to be set and valid
-| AFB_SESSION_CLOSE      | Implies closing the session after request processed
+| AFB\_SESSION\_NONE       | no flag, synonym to 0
+| AFB\_SESSION\_LOA\_0      | Requires the LOA to be 0 or more, synonym to 0 or AFB\_SESSION\_NONE
+| AFB\_SESSION\_LOA\_1      | Requires the LOA to be 1 or more
+| AFB\_SESSION\_LOA\_2      | Requires the LOA to be 2 or more
+| AFB\_SESSION\_LOA\_3      | Requires the LOA to be 3 or more
+| AFB\_SESSION\_CHECK      | Requires the token to be set and valid
+| AFB\_SESSION\_CLOSE      | Implies closing the session after request processed
 
 The LOA (Level Of Assurance) is set, by binding api,
-using the function **afb_req_session_set_LOA**.
-It can be check using the function **afb_req_session_get_LOA**.
+using the function **afb\_req\_session\_set\_LOA**.
+It can be check using the function **afb\_req\_session\_get\_LOA**.
 
 The session can be closed, by binding api, using the function
- **afb_req_session_close**.
+ **afb\_req\_session\_close**.
 
-## The types afb_auth_t and afb_auth_type_t
+## The types afb\_auth\_t and afb\_auth\_type\_t
 
-The structure **afb_auth_t** is used within verb description to
+The structure **afb\_auth\_t** is used within verb description to
 set security requirements.
 The interpretation of the structure depends on the value of the field **type**.
 
@@ -218,21 +218,21 @@ static const afb_auth_t myauth[] = {
 };
 ```
 
-## The type afb_req_subcall_flags_t
+## The type afb\_req\_subcall\_flags\_t
 
 This is an enumeration that defines bit's positions for setting behaviour
 of subcalls.
 
 | flag                       | value | description
 |----------------------------|-------|--------------
-| afb_req_subcall_catch_events | 1 | the calling API wants to receive the events from subscription
-| afb_req_subcall_pass_events  | 2 | the original request will receive the events from subscription
-| afb_req_subcall_on_behalf    | 4 | the calling API wants to use the credentials of the original request
-| afb_req_subcall_api_session  | 8 | the calling API wants to use its session instead of the one of the original request
+| afb\_req\_subcall\_catch\_events | 1 | the calling API wants to receive the events from subscription
+| afb\_req\_subcall\_pass\_events  | 2 | the original request will receive the events from subscription
+| afb\_req\_subcall\_on\_behalf    | 4 | the calling API wants to use the credentials of the original request
+| afb\_req\_subcall\_api\_session  | 8 | the calling API wants to use its session instead of the one of the original request
 
-## The type afb_ctlid_t
+## The type afb\_ctlid\_t
 
-The enumeration **afb_ctlid_t** is used in control functions of
+The enumeration **afb\_ctlid\_t** is used in control functions of
 APIs to identify control message received.
 
 It's defined as:
@@ -262,10 +262,10 @@ enum afb_ctlid
 };
 ```
 
-## The type afb_ctlarg_t
+## The type afb\_ctlarg\_t
 
-The union **afb_ctlarg_t** wrap the argument of the control message.
-Its real value depends on a value of type afb_ctlid_t. That type is
+The union **afb\_ctlarg\_t** wrap the argument of the control message.
+Its real value depends on a value of type afb\_ctlid\_t. That type is
 used in API's control functions.
 
 ```C
@@ -307,7 +307,7 @@ union afb_ctlarg
 };
 ```
 
-## The type afb_api_callback_t
+## The type afb\_api\_callback\_t
 
 ```C
 /**
@@ -330,7 +330,7 @@ typedef int (*afb_api_callback_t)(
 		void *userdata);
 ```
 
-## The type afb_req_callback_t
+## The type afb\_req\_callback\_t
 
 ```C
 /**
@@ -346,7 +346,7 @@ typedef void (*afb_req_callback_t)(
 		afb_data_t const params[]);
 ```
 
-## The type afb_call_callback_t
+## The type afb\_call\_callback\_t
 
 ```C
 /**
@@ -366,7 +366,7 @@ typedef void (*afb_call_callback_t)(
 		afb_api_t api);
 ```
 
-## The type afb_subcall_callback_t
+## The type afb\_subcall\_callback\_t
 
 ```C
 /**
@@ -386,7 +386,7 @@ typedef void (*afb_subcall_callback_t)(
 		afb_req_t req);
 ```
 
-## The type afb_check_callback_t
+## The type afb\_check\_callback\_t
 
 ```C
 /**
@@ -402,7 +402,7 @@ typedef void (*afb_check_callback_t)(
 		afb_req_t req);
 ```
 
-## The type afb_event_handler_t
+## The type afb\_event\_handler\_t
 
 ```C
 /**
@@ -422,7 +422,7 @@ typedef void (*afb_event_handler_t)(
 		afb_api_t api);
 ```
 
-## The type afb_type_converter_t
+## The type afb\_type\_converter\_t
 
 ```C
 /**
@@ -445,7 +445,7 @@ typedef int (*afb_type_converter_t)(
 		afb_data_t *to);
 ```
 
-## The type afb_type_updater_t
+## The type afb\_type\_updater\_t
 
 ```C
 /**
@@ -469,7 +469,7 @@ typedef int (*afb_type_updater_t)(
 		afb_data_t to);
 ```
 
-## The type afb_evfd_handler_t
+## The type afb\_evfd\_handler\_t
 
 ```C
 /**
@@ -490,7 +490,7 @@ typedef void (*afb_evfd_handler_t)(
 		void *closure);
 ```
 
-## The type afb_timer_handler_t
+## The type afb\_timer\_handler\_t
 
 ```C
 /**
@@ -508,4 +508,3 @@ typedef void (*afb_timer_handler_t)(
 		void *closure,
 		int decount);
 ```
-

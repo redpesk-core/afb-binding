@@ -45,10 +45,11 @@ $1 == ")" {
 }
 ' |
 awk '
+function esc(x) { gsub("[_*]","\\\\&",x); return x; }
 $1=="BEGIN-GROUP" {
 	print
 	print ""
-	print "# Functions of class **"$2"**"
+	print "# Functions of class **"esc($2)"**"
 	print ""
 	next
 }
@@ -57,7 +58,7 @@ $1=="END-GROUP" {
 }
 $1=="BEGIN-FUNCTION" {
 	print ""
-	print "## "$2
+	print "## Function "esc($2)
 	print ""
 	print "```C"
 	next
@@ -71,11 +72,12 @@ $1=="END-FUNCTION" {
 awk '
 $1=="BEGIN-GROUP" {
 	o = $2
+	gsub("\\\\","",o)
 	gsub("_","-",o)
 	o = "docs/reference-v4/func-" o ".md"
 	next
 }
 o {
-	print >> o
+	print > o
 }
 '

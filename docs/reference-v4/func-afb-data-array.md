@@ -1,8 +1,8 @@
 
-# Functions of class **afb_data_array**
+# Functions of class **afb\_data\_array**
 
 
-## afb_data_array_addref
+## Function afb\_data\_array\_addref
 
 ```C
 /**
@@ -19,7 +19,7 @@ afb_data_array_addref(
 );
 ```
 
-## afb_data_array_unref
+## Function afb\_data\_array\_unref
 
 ```C
 /**
@@ -39,7 +39,7 @@ afb_data_array_unref(
 );
 ```
 
-## afb_data_array_convert
+## Function afb\_data\_array\_convert
 
 ```C
 /**

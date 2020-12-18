@@ -1,8 +1,8 @@
 
-# Functions of class **afb_data**
+# Functions of class **afb\_data**
 
 
-## afb_data_is_valid
+## Function afb\_data\_is\_valid
 
 ```C
 /**
@@ -18,7 +18,7 @@ afb_data_is_valid(
 );
 ```
 
-## afb_create_data_raw
+## Function afb\_create\_data\_raw
 
 ```C
 /**
@@ -54,7 +54,7 @@ afb_create_data_raw(
 );
 ```
 
-## afb_create_data_copy
+## Function afb\_create\_data\_copy
 
 ```C
 /**
@@ -79,7 +79,7 @@ afb_create_data_copy(
 );
 ```
 
-## afb_create_data_alloc
+## Function afb\_create\_data\_alloc
 
 ```C
 /**
@@ -109,7 +109,7 @@ afb_create_data_alloc(
 );
 ```
 
-## afb_data_addref
+## Function afb\_data\_addref
 
 ```C
 /**
@@ -125,7 +125,7 @@ afb_data_addref(
 );
 ```
 
-## afb_data_unref
+## Function afb\_data\_unref
 
 ```C
 /**
@@ -141,7 +141,7 @@ afb_data_unref(
 );
 ```
 
-## afb_data_convert
+## Function afb\_data\_convert
 
 ```C
 /**
@@ -167,7 +167,7 @@ afb_data_convert(
 );
 ```
 
-## afb_data_type
+## Function afb\_data\_type
 
 ```C
 /**
@@ -183,7 +183,7 @@ afb_data_type(
 );
 ```
 
-## afb_data_get_mutable
+## Function afb\_data\_get\_mutable
 
 ```C
 /**
@@ -203,7 +203,7 @@ afb_data_get_mutable(
 );
 ```
 
-## afb_data_get_constant
+## Function afb\_data\_get\_constant
 
 ```C
 /**
@@ -223,7 +223,7 @@ afb_data_get_constant(
 );
 ```
 
-## afb_data_size
+## Function afb\_data\_size
 
 ```C
 /**
@@ -239,7 +239,7 @@ afb_data_size(
 );
 ```
 
-## afb_data_ro_pointer
+## Function afb\_data\_ro\_pointer
 
 ```C
 /**
@@ -255,7 +255,7 @@ afb_data_ro_pointer(
 );
 ```
 
-## afb_data_rw_pointer
+## Function afb\_data\_rw\_pointer
 
 ```C
 /**
@@ -272,7 +272,7 @@ afb_data_rw_pointer(
 );
 ```
 
-## afb_data_notify_changed
+## Function afb\_data\_notify\_changed
 
 ```C
 /**
@@ -287,7 +287,7 @@ afb_data_notify_changed(
 );
 ```
 
-## afb_data_is_volatile
+## Function afb\_data\_is\_volatile
 
 ```C
 /**
@@ -303,7 +303,7 @@ afb_data_is_volatile(
 );
 ```
 
-## afb_data_set_volatile
+## Function afb\_data\_set\_volatile
 
 ```C
 /**
@@ -317,7 +317,7 @@ afb_data_set_volatile(
 );
 ```
 
-## afb_data_set_not_volatile
+## Function afb\_data\_set\_not\_volatile
 
 ```C
 /**
@@ -331,7 +331,7 @@ afb_data_set_not_volatile(
 );
 ```
 
-## afb_data_is_constant
+## Function afb\_data\_is\_constant
 
 ```C
 /**
@@ -347,7 +347,7 @@ afb_data_is_constant(
 );
 ```
 
-## afb_data_set_constant
+## Function afb\_data\_set\_constant
 
 ```C
 /**
@@ -361,7 +361,7 @@ afb_data_set_constant(
 );
 ```
 
-## afb_data_set_not_constant
+## Function afb\_data\_set\_not\_constant
 
 ```C
 /**
@@ -375,7 +375,7 @@ afb_data_set_not_constant(
 );
 ```
 
-## afb_data_lock_read
+## Function afb\_data\_lock\_read
 
 ```C
 /**
@@ -392,7 +392,7 @@ afb_data_lock_read(
 );
 ```
 
-## afb_data_try_lock_read
+## Function afb\_data\_try\_lock\_read
 
 ```C
 /**
@@ -413,7 +413,7 @@ afb_data_try_lock_read(
 );
 ```
 
-## afb_data_lock_write
+## Function afb\_data\_lock\_write
 
 ```C
 /**
@@ -430,7 +430,7 @@ afb_data_lock_write(
 );
 ```
 
-## afb_data_try_lock_write
+## Function afb\_data\_try\_lock\_write
 
 ```C
 /**
@@ -451,7 +451,7 @@ afb_data_try_lock_write(
 );
 ```
 
-## afb_data_unlock
+## Function afb\_data\_unlock
 
 ```C
 /**
@@ -466,7 +466,7 @@ afb_data_unlock(
 );
 ```
 
-## afb_data_update
+## Function afb\_data\_update
 
 ```C
 /**
@@ -484,7 +484,7 @@ afb_data_update(
 );
 ```
 
-## afb_data_assign
+## Function afb\_data\_assign
 
 ```C
 /**

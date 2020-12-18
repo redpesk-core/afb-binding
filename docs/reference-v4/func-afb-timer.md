@@ -1,8 +1,8 @@
 
-# Functions of class **afb_timer**
+# Functions of class **afb\_timer**
 
 
-## afb_timer_create
+## Function afb\_timer\_create
 
 ```C
 /**
@@ -36,7 +36,7 @@ afb_timer_create(
 );
 ```
 
-## afb_timer_addref
+## Function afb\_timer\_addref
 
 ```C
 /**
@@ -52,7 +52,7 @@ afb_timer_addref(
 );
 ```
 
-## afb_timer_unref
+## Function afb\_timer\_unref
 
 ```C
 /**

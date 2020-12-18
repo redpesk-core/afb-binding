@@ -1,8 +1,8 @@
 
-# Functions of class **afb_req**
+# Functions of class **afb\_req**
 
 
-## afb_req_logmask
+## Function afb\_req\_logmask
 
 ```C
 /**
@@ -18,7 +18,7 @@ afb_req_logmask(
 );
 ```
 
-## afb_req_wants_log_level
+## Function afb\_req\_wants\_log\_level
 
 ```C
 /**
@@ -48,7 +48,7 @@ afb_req_wants_log_level(
 );
 ```
 
-## afb_req_is_valid
+## Function afb\_req\_is\_valid
 
 ```C
 /**
@@ -64,7 +64,7 @@ afb_req_is_valid(
 );
 ```
 
-## afb_req_get_api
+## Function afb\_req\_get\_api
 
 ```C
 /**
@@ -80,7 +80,7 @@ afb_req_get_api(
 );
 ```
 
-## afb_req_get_vcbdata
+## Function afb\_req\_get\_vcbdata
 
 ```C
 /**
@@ -97,7 +97,7 @@ afb_req_get_vcbdata(
 );
 ```
 
-## afb_req_get_called_api
+## Function afb\_req\_get\_called\_api
 
 ```C
 /**
@@ -115,7 +115,7 @@ afb_req_get_called_api(
 );
 ```
 
-## afb_req_get_called_verb
+## Function afb\_req\_get\_called\_verb
 
 ```C
 /**
@@ -131,7 +131,7 @@ afb_req_get_called_verb(
 );
 ```
 
-## afb_req_addref
+## Function afb\_req\_addref
 
 ```C
 /**
@@ -147,7 +147,7 @@ afb_req_addref(
 );
 ```
 
-## afb_req_unref
+## Function afb\_req\_unref
 
 ```C
 /**
@@ -161,7 +161,7 @@ afb_req_unref(
 );
 ```
 
-## afb_req_vverbose
+## Function afb\_req\_vverbose
 
 ```C
 /**
@@ -203,7 +203,7 @@ afb_req_vverbose(
 );
 ```
 
-## afb_req_verbose
+## Function afb\_req\_verbose
 
 ```C
 /**
@@ -245,7 +245,7 @@ afb_req_verbose(
 );
 ```
 
-## afb_req_context
+## Function afb\_req\_context
 
 ```C
 /**
@@ -279,7 +279,7 @@ afb_req_context(
 );
 ```
 
-## afb_req_context_get
+## Function afb\_req\_context\_get
 
 ```C
 /**
@@ -298,7 +298,7 @@ afb_req_context_get(
 );
 ```
 
-## afb_req_context_set
+## Function afb\_req\_context\_set
 
 ```C
 /**
@@ -321,7 +321,7 @@ afb_req_context_set(
 );
 ```
 
-## afb_req_context_clear
+## Function afb\_req\_context\_clear
 
 ```C
 /**
@@ -338,7 +338,7 @@ afb_req_context_clear(
 );
 ```
 
-## afb_req_session_close
+## Function afb\_req\_session\_close
 
 ```C
 /**
@@ -353,7 +353,7 @@ afb_req_session_close(
 );
 ```
 
-## afb_req_session_set_LOA
+## Function afb\_req\_session\_set\_LOA
 
 ```C
 /**
@@ -373,7 +373,7 @@ afb_req_session_set_LOA(
 );
 ```
 
-## afb_req_session_get_LOA
+## Function afb\_req\_session\_get\_LOA
 
 ```C
 /**
@@ -389,7 +389,7 @@ afb_req_session_get_LOA(
 );
 ```
 
-## afb_req_subscribe
+## Function afb\_req\_subscribe
 
 ```C
 /**
@@ -410,7 +410,7 @@ afb_req_subscribe(
 );
 ```
 
-## afb_req_unsubscribe
+## Function afb\_req\_unsubscribe
 
 ```C
 /**
@@ -432,7 +432,7 @@ afb_req_unsubscribe(
 );
 ```
 
-## afb_req_check_permission
+## Function afb\_req\_check\_permission
 
 ```C
 /**
@@ -453,7 +453,7 @@ afb_req_check_permission(
 );
 ```
 
-## afb_req_get_client_info
+## Function afb\_req\_get\_client\_info
 
 ```C
 /**
@@ -480,7 +480,7 @@ afb_req_get_client_info(
 );
 ```
 
-## afb_req_parameters
+## Function afb\_req\_parameters
 
 ```C
 /**
@@ -499,7 +499,7 @@ afb_req_parameters(
 );
 ```
 
-## afb_req_reply
+## Function afb\_req\_reply
 
 ```C
 /**
@@ -524,7 +524,7 @@ afb_req_reply(
 );
 ```
 
-## afb_req_subcall
+## Function afb\_req\_subcall
 
 ```C
 /**
@@ -573,7 +573,7 @@ afb_req_subcall(
 );
 ```
 
-## afb_req_subcall_sync
+## Function afb\_req\_subcall\_sync
 
 ```C
 /**

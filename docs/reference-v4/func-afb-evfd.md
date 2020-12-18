@@ -1,8 +1,8 @@
 
-# Functions of class **afb_evfd**
+# Functions of class **afb\_evfd**
 
 
-## afb_evfd_create
+## Function afb\_evfd\_create
 
 ```C
 /**
@@ -31,7 +31,7 @@ afb_evfd_create(
 );
 ```
 
-## afb_evfd_addref
+## Function afb\_evfd\_addref
 
 ```C
 /**
@@ -47,7 +47,7 @@ afb_evfd_addref(
 );
 ```
 
-## afb_evfd_unref
+## Function afb\_evfd\_unref
 
 ```C
 /**
@@ -62,7 +62,7 @@ afb_evfd_unref(
 );
 ```
 
-## afb_evfd_get_fd
+## Function afb\_evfd\_get\_fd
 
 ```C
 /**
@@ -78,7 +78,7 @@ afb_evfd_get_fd(
 );
 ```
 
-## afb_evfd_get_events
+## Function afb\_evfd\_get\_events
 
 ```C
 /**
@@ -94,7 +94,7 @@ afb_evfd_get_events(
 );
 ```
 
-## afb_evfd_set_events
+## Function afb\_evfd\_set\_events
 
 ```C
 /**

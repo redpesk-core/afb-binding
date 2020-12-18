@@ -1,8 +1,8 @@
 
-# Functions of class **afb_api**
+# Functions of class **afb\_api**
 
 
-## afb_api_logmask
+## Function afb\_api\_logmask
 
 ```C
 /**
@@ -18,7 +18,7 @@ afb_api_logmask(
 );
 ```
 
-## afb_api_name
+## Function afb\_api\_name
 
 ```C
 /**
@@ -36,7 +36,7 @@ afb_api_name(
 );
 ```
 
-## afb_api_get_userdata
+## Function afb\_api\_get\_userdata
 
 ```C
 /**
@@ -54,7 +54,7 @@ afb_api_get_userdata(
 );
 ```
 
-## afb_api_set_userdata
+## Function afb\_api\_set\_userdata
 
 ```C
 /**
@@ -74,7 +74,7 @@ afb_api_set_userdata(
 );
 ```
 
-## afb_api_wants_log_level
+## Function afb\_api\_wants\_log\_level
 
 ```C
 /**
@@ -103,7 +103,7 @@ afb_api_wants_log_level(
 );
 ```
 
-## afb_api_vverbose
+## Function afb\_api\_vverbose
 
 ```C
 /**
@@ -147,7 +147,7 @@ afb_api_vverbose(
 );
 ```
 
-## afb_api_verbose
+## Function afb\_api\_verbose
 
 ```C
 /**
@@ -190,7 +190,7 @@ afb_api_verbose(
 );
 ```
 
-## afb_api_broadcast_event
+## Function afb\_api\_broadcast\_event
 
 ```C
 /**
@@ -222,7 +222,7 @@ afb_api_broadcast_event(
 );
 ```
 
-## afb_api_require_api
+## Function afb\_api\_require\_api
 
 ```C
 /**
@@ -250,7 +250,7 @@ afb_api_require_api(
 );
 ```
 
-## afb_api_new_event
+## Function afb\_api\_new\_event
 
 ```C
 /**
@@ -279,7 +279,7 @@ afb_api_new_event(
 );
 ```
 
-## afb_api_add_verb
+## Function afb\_api\_add\_verb
 
 ```C
 /**
@@ -314,7 +314,7 @@ afb_api_add_verb(
 );
 ```
 
-## afb_api_del_verb
+## Function afb\_api\_del\_verb
 
 ```C
 /**
@@ -336,7 +336,7 @@ afb_api_del_verb(
 );
 ```
 
-## afb_api_seal
+## Function afb\_api\_seal
 
 ```C
 /**
@@ -351,7 +351,7 @@ afb_api_seal(
 );
 ```
 
-## afb_api_set_verbs
+## Function afb\_api\_set\_verbs
 
 ```C
 /**
@@ -373,7 +373,7 @@ afb_api_set_verbs(
 );
 ```
 
-## afb_api_event_handler_add
+## Function afb\_api\_event\_handler\_add
 
 ```C
 /**
@@ -409,7 +409,7 @@ afb_api_event_handler_add(
 );
 ```
 
-## afb_api_event_handler_del
+## Function afb\_api\_event\_handler\_del
 
 ```C
 /**
@@ -432,7 +432,7 @@ afb_api_event_handler_del(
 );
 ```
 
-## afb_api_call
+## Function afb\_api\_call
 
 ```C
 /**
@@ -481,7 +481,7 @@ afb_api_call(
 );
 ```
 
-## afb_api_call_sync
+## Function afb\_api\_call\_sync
 
 ```C
 /**
@@ -535,7 +535,7 @@ afb_api_call_sync(
 );
 ```
 
-## afb_api_provide_class
+## Function afb\_api\_provide\_class
 
 ```C
 /**
@@ -559,7 +559,7 @@ afb_api_provide_class(
 );
 ```
 
-## afb_api_require_class
+## Function afb\_api\_require\_class
 
 ```C
 /**
@@ -583,7 +583,7 @@ afb_api_require_class(
 );
 ```
 
-## afb_api_delete
+## Function afb\_api\_delete
 
 ```C
 /**
@@ -604,7 +604,7 @@ afb_api_delete(
 );
 ```
 
-## afb_api_settings
+## Function afb\_api\_settings
 
 ```C
 /**

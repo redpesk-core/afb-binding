@@ -1,8 +1,8 @@
 
-# Functions of class **afb_misc**
+# Functions of class **afb\_misc**
 
 
-## afb_create_api
+## Function afb\_create\_api
 
 ```C
 /** MISC ***********************************************************/
@@ -43,7 +43,7 @@ afb_create_api(
 );
 ```
 
-## afb_job_post
+## Function afb\_job\_post
 
 ```C
 /**
@@ -99,7 +99,7 @@ afb_job_post(
 );
 ```
 
-## afb_alias_api
+## Function afb\_alias\_api
 
 ```C
 /**
@@ -119,7 +119,7 @@ afb_alias_api(
 );
 ```
 
-## afb_setup_shared_object
+## Function afb\_setup\_shared\_object
 
 ```C
 /**

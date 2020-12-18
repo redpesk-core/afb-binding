@@ -1,8 +1,8 @@
 
-# Functions of class **afb_type**
+# Functions of class **afb\_type**
 
 
-## afb_type_lookup
+## Function afb\_type\_lookup
 
 ```C
 /**
@@ -20,7 +20,7 @@ afb_type_lookup(
 );
 ```
 
-## afb_type_register
+## Function afb\_type\_register
 
 ```C
 /**
@@ -46,7 +46,7 @@ afb_type_register(
 );
 ```
 
-## afb_type_name
+## Function afb\_type\_name
 
 ```C
 /**
@@ -62,7 +62,7 @@ afb_type_name(
 );
 ```
 
-## afb_type_set_family
+## Function afb\_type\_set\_family
 
 ```C
 /**
@@ -81,7 +81,7 @@ afb_type_set_family(
 );
 ```
 
-## afb_type_add_convert_to
+## Function afb\_type\_add\_convert\_to
 
 ```C
 /**
@@ -103,7 +103,7 @@ afb_type_add_convert_to(
 );
 ```
 
-## afb_type_add_convert_from
+## Function afb\_type\_add\_convert\_from
 
 ```C
 /**
@@ -125,7 +125,7 @@ afb_type_add_convert_from(
 );
 ```
 
-## afb_type_add_update_to
+## Function afb\_type\_add\_update\_to
 
 ```C
 /**
@@ -147,7 +147,7 @@ afb_type_add_update_to(
 );
 ```
 
-## afb_type_add_update_from
+## Function afb\_type\_add\_update\_from
 
 ```C
 /**
