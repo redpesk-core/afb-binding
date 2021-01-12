@@ -72,7 +72,6 @@ $1=="END-FUNCTION" {
 awk '
 $1=="BEGIN-GROUP" {
 	o = $2
-	gsub("\\\\","",o)
 	gsub("_","-",o)
 	o = "docs/reference-v4/func-" o ".md"
 	next
