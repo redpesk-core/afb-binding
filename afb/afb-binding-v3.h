@@ -11,6 +11,7 @@
 
 /******************************************************************************/
 
+#include "afb-errno.h"
 #include "afb-verbosity.h"
 #include "afb-auth.h"
 #include "afb-event-x2.h"
