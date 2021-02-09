@@ -89,7 +89,7 @@
 /*
  * Use of AFB_BINDING_VERSION==0 is valid.
  * It avoids to define unversionned symbols.
- * It that case, removes definition of the root.
+ * If that case, removes definition of the root.
  */
 #  define AFB_BINDING_NO_ROOT 1
 
