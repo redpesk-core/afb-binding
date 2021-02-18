@@ -159,9 +159,9 @@ public:
 		return r;
 	}
 
-	afb_data_t create_alloc(void **pointer, size_t size, bool zeroes = true) const {
+	afb_data_t create_alloc(void **pointer, size_t size) const {
 		afb_data_t r;
-		int rc = afb_create_data_alloc(&r, type_, pointer, size, zeroes);
+		int rc = afb_create_data_alloc(&r, type_, pointer, size);
 		if (rc < 0)
 			throw std::bad_alloc();
 		return r;
@@ -201,7 +201,7 @@ public:
 	data(afb::type type, const data &other);
 	data(afb::type type, const void *pointer, size_t size, void (*dispose)(void*), void *closure);
 	data(afb::type type, const void *pointer, size_t size);
-	data(afb::type type, void *&pointer, size_t size, bool zeroes);
+	data(afb::type type, void *&pointer, size_t size);
 	~data();
 
 	data &operator=(afb_data_t d);
@@ -710,8 +710,8 @@ inline data::data(afb::type type, const void *pointer, size_t size, void (*dispo
 	{ afb_create_data_raw(&data_, type, pointer, size, dispose, closure); }
 inline data::data(afb::type type, const void *pointer, size_t size)
 	{ afb_create_data_copy(&data_, type, pointer, size); }
-inline data::data(afb::type type, void *&pointer, size_t size, bool zeroes)
-	{ afb_create_data_alloc(&data_, type, &pointer, size, int(zeroes)); }
+inline data::data(afb::type type, void *&pointer, size_t size)
+	{ afb_create_data_alloc(&data_, type, &pointer, size); }
 inline data::~data() {  }
 
 inline data &data::operator=(afb_data_t d) { data_ = d; return *this; }

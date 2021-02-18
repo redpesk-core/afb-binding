@@ -141,20 +141,17 @@ afb_create_data_raw(
 
 /**
  * Creates a new data instance of the given type by allocating memory
- * of the given size. The allocated memory can eventually
- * be shared.
+ * of the given size. The allocated memory filled with zeroes.
  *
  * This function is equivalent to (if allocation doesn't fails):
  *
- *    *pointer = malloc(size);
- *    if (zeroes) memset(*pointer, 0, size);
+ *    *pointer = calloc(1, size);
  *    return afb_create_data_raw(data, type, *pointer, size, free, *pointer);
  *
  * @param data     pointer to the created data
  * @param type     type of the data to created
  * @param pointer  pointer of the data to create
  * @param size     size of the data to create
- * @param zeroes   if not null, the allocated memory is filled with zeroes
  *
  * @return 0 in case of successful subscription or negative value in case of error.
  */
@@ -164,10 +161,9 @@ afb_create_data_alloc(
 	afb_data_t *data,
 	afb_type_t type,
 	void **pointer,
-	size_t size,
-	int zeroes
+	size_t size
 ) {
-	return afbBindingV4r1_itf.create_data_alloc(data, type, pointer, size, zeroes);
+	return afbBindingV4r1_itf.create_data_alloc(data, type, pointer, size);
 }
 
 /**

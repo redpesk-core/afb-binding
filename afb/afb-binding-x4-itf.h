@@ -231,8 +231,7 @@ struct afb_binding_x4r1_itf
 		afb_data_x4_t *data,
 		afb_type_x4_t type,
 		void **pointer,
-		size_t size,
-		int zeroes);
+		size_t size);
 
 	/** create a new data by copying in shareable memory */
 	int (*create_data_copy)(
