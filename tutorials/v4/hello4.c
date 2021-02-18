@@ -1259,6 +1259,10 @@ static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *
 
 	case afb_ctlid_Pre_Init:
 		AFB_NOTICE("hello binding comes to live");
+		AFB_NOTICE("hello binding is %s", ctlarg->pre_init.path ?: "<null>");
+		AFB_NOTICE("hello binding's uid is %s", ctlarg->pre_init.uid);
+		AFB_NOTICE("hello binding's config is %s", json_object_get_string(ctlarg->pre_init.config));
+
 #if defined(PREINIT_PROVIDE_CLASS)
 		afb_api_provide_class(api, PREINIT_PROVIDE_CLASS);
 #endif
