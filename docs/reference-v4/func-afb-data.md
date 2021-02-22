@@ -34,6 +34,17 @@ afb_data_is_valid(
  *              it can be NULL if nothing has to be done to release resources
  *   - closure: the closure for the dispose callback
  *
+ * Once created, the data wraps public values type, pointer and size for its life time.
+ * The life time of the data is given by reference counting done using
+ * functions @see afb_data_addref and @see afb_data_unref
+ *
+ * When the data is no more used, it will release the data using dispose if
+ * dispose is not null
+ *
+ * In case of error, if the dispose function is defined, it is called to release
+ * the wrapped data. The closure given to the dispose function can be the given
+ * pointer or can be any meaningful value.
+ *
  * @param data     pointer to the created data
  * @param type     type of the data to created
  * @param pointer  pointer of the data to create
@@ -54,43 +65,17 @@ afb_create_data_raw(
 );
 ```
 
-## Function afb\_create\_data\_copy
-
-```C
-/**
- * Creates a new data instance of the given type by allocating memory
- * of the given size. The allocated memory can eventually
- * be shared.
- *
- * @param data     pointer to the created data
- * @param type     type of the data to created
- * @param pointer  pointer of the data to create
- * @param size     size of the data to create
- * @param zeroes   if not null, the allocated memory is filled with zeroes
- *
- * @return 0 in case of successful subscription or negative value in case of error.
- */
-int
-afb_create_data_copy(
-	afb_data_t *data,
-	afb_type_t type,
-	const void *buffer,
-	size_t size
-);
-```
-
 ## Function afb\_create\_data\_alloc
 
 ```C
 /**
- * Creates a new data instance of the given type by copying the memory
- * given by pointer and size. The memory where data is copied can eventually
- * be shared.
+ * Creates a new data instance of the given type by allocating memory
+ * of the given size. The allocated memory filled with zeroes.
  *
- * This function is equivalent to:
+ * This function is equivalent to (if allocation doesn't fails):
  *
- *    if (afb_create_data_alloc(req, data, type, &ptr, size, 0) >= 0)
- *        memcpy(ptr, pointer, size);
+ *    *pointer = calloc(1, size);
+ *    return afb_create_data_raw(data, type, *pointer, size, free, *pointer);
  *
  * @param data     pointer to the created data
  * @param type     type of the data to created
@@ -104,8 +89,36 @@ afb_create_data_alloc(
 	afb_data_t *data,
 	afb_type_t type,
 	void **pointer,
-	size_t size,
-	int zeroes
+	size_t size
+);
+```
+
+## Function afb\_create\_data\_copy
+
+```C
+/**
+ * Creates a new data instance of the given type by copying the memory
+ * given by pointer and size. The memory where data is copied can eventually
+ * be shared.
+ *
+ * This function is equivalent to (except it returns valid code):
+ *
+ *    if (afb_create_data_alloc(data, type, &ptr, size, 0) >= 0)
+ *        memcpy(ptr, pointer, size);
+ *
+ * @param data     pointer to the created data
+ * @param type     type of the data to created
+ * @param pointer  pointer of the data to create
+ * @param size     size of the data to create
+ *
+ * @return 0 in case of successful subscription or negative value in case of error.
+ */
+int
+afb_create_data_copy(
+	afb_data_t *data,
+	afb_type_t type,
+	const void *buffer,
+	size_t size
 );
 ```
 

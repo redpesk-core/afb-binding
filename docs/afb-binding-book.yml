@@ -23,43 +23,43 @@ books:
           - url: "reference-v3/types-and-globals.md"
             name: Types and globals
           - url: "reference-v3/macro-log.md"
-            name: Macros for logging
+            name: Logging macros
           - url: "reference-v3/func-api.md"
-            name: Functions of class afb_api
+            name: afb_api functions
           - url: "reference-v3/func-req.md"
-            name: Functions of class afb_req
+            name: afb_req functions
           - url: "reference-v3/func-event.md"
-            name: Functions of class afb_event
+            name: afb_event functions
           - url: "reference-v3/func-daemon.md"
-            name: Functions of class afb_daemon
+            name: afb_daemon functions
           - url: "reference-v3/func-service.md"
-            name: Functions of class afb_service
+            name: afb_service functions
     - name: Bindings Version 4 References
       children:
           - url: "reference-v4/types-and-globals.md"
             name: Types and globals
           - url: "reference-v4/macro-log.md"
-            name: Macros for logging
+            name: Logging macros
           - url: "reference-v4/func-afb-api.md"
-            name: Functions of class afb_api
+            name: afb_api functions
           - url: "reference-v4/func-afb-req.md"
-            name: Functions of class afb_req
+            name: afb_req functions
           - url: "reference-v4/func-afb-event.md"
-            name: Functions of class afb_event
+            name: afb_event functions
           - url: "reference-v4/func-afb-misc.md"
             name: Miscellanous functions
           - url: "reference-v4/func-afb-type.md"
-            name: Functions of class afb_event
+            name: afb_type functions
           - url: "reference-v4/predefined-afb-type.md"
-            name: Predefined types for data
+            name: Types predefined
           - url: "reference-v4/func-afb-data.md"
-            name: Functions of class afb_data
+            name: afb_data functions
           - url: "reference-v4/func-afb-data-array.md"
-            name: Functions of class afb_data_array
+            name: afb_data_array functions
           - url: "reference-v4/func-afb-evfd.md"
-            name: Functions of class afb_evfd
+            name: afb_evfd functions
           - url: "reference-v4/func-afb-timer.md"
-            name: Functions of class afb_timer
+            name: afb_timer functions
     - url: "afb-desktop-package.md"
       name: Developping bindings on a desktop
 

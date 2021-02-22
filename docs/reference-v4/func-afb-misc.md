@@ -106,9 +106,8 @@ afb_job_post(
  * Create an aliased name 'as_name' for the api 'name'.
  * Calling this function is only allowed within preinit.
  *
- * @param api the api that requires the aliasing
  * @param name the api to alias
- * @param as_name the aliased name of the aliased api
+ * @param as_name the aliased name
  *
  * @return 0 in case of success or -1 in case of error with errno set appropriately.
  */

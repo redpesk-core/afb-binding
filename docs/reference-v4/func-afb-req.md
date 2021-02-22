@@ -107,7 +107,7 @@ afb_req_get_vcbdata(
  *
  * @return the name of the called api
  *
- * @see afb_api_x3_add_alias
+ * @see afb_alias_api
  */
 const char *
 afb_req_get_called_api(
