@@ -27,13 +27,13 @@ struct afb_data_x4;
 struct afb_evfd_x4;
 struct afb_timer_x4;
 
-typedef const struct afb_api_x4        *afb_api_x4_t;
-typedef const struct afb_req_x4        *afb_req_x4_t;
-typedef const struct afb_event_x4      *afb_event_x4_t;
-typedef const struct afb_data_x4       *afb_data_x4_t;
-typedef const struct afb_type_x4       *afb_type_x4_t;
-typedef const struct afb_evfd_x4       *afb_evfd_x4_t;
-typedef const struct afb_timer_x4      *afb_timer_x4_t;
+typedef struct afb_api_x4        *afb_api_x4_t;
+typedef struct afb_req_x4        *afb_req_x4_t;
+typedef struct afb_event_x4      *afb_event_x4_t;
+typedef struct afb_data_x4       *afb_data_x4_t;
+typedef struct afb_type_x4       *afb_type_x4_t;
+typedef struct afb_evfd_x4       *afb_evfd_x4_t;
+typedef struct afb_timer_x4      *afb_timer_x4_t;
 
 /******************************************************************************/
 
