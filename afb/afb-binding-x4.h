@@ -63,6 +63,8 @@ typedef afb_timer_handler_x4_t    afb_timer_handler_t;
  */
 afb_api_t afbBindingV4root __attribute__((weak));
 
+#endif
+
 /******************************************************************************/
 /**
  * Instanciation of the interface to the binder
@@ -2195,7 +2197,11 @@ afb_create_api(
 	afb_api_callback_t mainctl,
 	void *userdata
 ) {
+#if !defined(AFB_BINDING_NO_ROOT)
 	return afbBindingV4r1_itf.create_api(afbBindingV4root, newapi, apiname, info, noconcurrency, mainctl, userdata);
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
+#endif
 }
 
 /**
@@ -2250,7 +2256,11 @@ afb_job_post(
 	void *argument,
 	void *group
 ) {
+#if !defined(AFB_BINDING_NO_ROOT)
 	return afbBindingV4r1_itf.job_post(afbBindingV4root, delayms, timeout, callback, argument, group);
+#else
+	return afbBindingV4r1_itf.job_post(NULL, delayms, timeout, callback, argument, group);
+#endif
 }
 
 /**
@@ -2268,7 +2278,11 @@ afb_alias_api(
 	const char *name,
 	const char *as_name
 ) {
+#if !defined(AFB_BINDING_NO_ROOT)
 	return afbBindingV4r1_itf.alias_api(afbBindingV4root, name, as_name);
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
+#endif
 }
 
 /**
@@ -2288,7 +2302,7 @@ afb_setup_shared_object(
 	afb_api_t api,
 	void *handle
 ) {
-	return afbBindingV4r1_itf.setup_shared_object(api ? api : afbBindingV4root, handle);
+	return afbBindingV4r1_itf.setup_shared_object(api, handle);
 }
 
 /** @} */
@@ -2529,5 +2543,4 @@ afb_timer_unref(
 /** @} */
 /******************************************************************************/
 
-#endif
 #endif
