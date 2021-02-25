@@ -7,8 +7,21 @@
 
 #pragma once
 
+/********************************************************************************/
+
 /** test if an code is for an error. It's yes when the value negative */
 #define AFB_IS_ERRNO(code)            ((code) < 0)
+
+/** Test if the code is a user error */
+#define AFB_USER_ERROR_BASE           (-1000)
+
+/** Test if the code is a user error */
+#define AFB_IS_USER_ERROR(code)       ((code) <= AFB_USER_ERROR_BASE)
+
+/** Test if the code is a binder error */
+#define AFB_IS_BINDER_ERROR(code)     (AFB_IS_ERRNO(code) && !AFB_IS_USER_ERROR(code))
+
+/********************************************************************************/
 
 /** Any unclassified internal error */
 #define AFB_ERRNO_INTERNAL_ERROR      -1    /* 500 HTTP_INTERNAL_SERVER_ERROR */
