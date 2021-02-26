@@ -572,6 +572,55 @@ afb_data_assign(
 	*data = value;
 }
 
+/**
+ * Add one dependency from a data to an other. This ensures
+ * that pointers of the data @p to_data can be safely referenced
+ * by the data @p from_data
+ *
+ * @param from_data the data that depends of @p to_data
+ * @param to_data that from wich depends @p from_data
+ *
+ * @return 0 in case of success or a negative number
+ */
+static inline
+int
+afb_data_dependency_add(
+	afb_data_t from_data,
+	afb_data_t to_data
+) {
+	return afbBindingV4r1_itf.data_dependency_add(from_data, to_data);
+}
+
+/**
+ * Remove one dependency from a data to an other
+ *
+ * @param from_data the data that depends of @p to_data
+ * @param to_data that from wich depends @p from_data
+ *
+ * @return 0 in case of success or a negative number
+ */
+static inline
+int
+afb_data_dependency_sub(
+	afb_data_t from_data,
+	afb_data_t to_data
+) {
+	return afbBindingV4r1_itf.data_dependency_sub(from_data, to_data);
+}
+
+/**
+ * Remove all dependencies of the @p data
+ *
+ * @param data the data whose dependencies can be cleaned
+ */
+static inline
+void
+afb_data_dependency_drop_all(
+	afb_data_t data
+) {
+	return afbBindingV4r1_itf.data_dependency_drop_all(data);
+}
+
 /*  @} */
 /** DATA ARRAY ***********************************************************/
 /** @defgroup AFB_DATA_ARRAY

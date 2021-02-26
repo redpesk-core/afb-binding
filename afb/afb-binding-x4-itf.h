@@ -754,5 +754,19 @@ struct afb_binding_x4r1_itf
 	unsigned (*req_session_get_LOA)(
 		afb_req_x4_t req);
 
+	/** add dependency from a data to an other data */
+	int (*data_dependency_add)(
+		afb_data_x4_t from_data,
+		afb_data_x4_t to_data);
+
+	/** remove dependency from a data to an other data */
+	int (*data_dependency_sub)(
+		afb_data_x4_t from_data,
+		afb_data_x4_t to_data);
+
+	/** drop all dependency from a data to all other data */
+	void (*data_dependency_drop_all)(
+		afb_data_x4_t data);
+
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };
