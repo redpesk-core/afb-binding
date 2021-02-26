@@ -298,7 +298,7 @@ static inline
 int
 afb_data_get_constant(
 	afb_data_t data,
-	const void **pointer,
+	void **pointer,
 	size_t *size
 ) {
 	return afbBindingV4r1_itf.data_get_constant(data, pointer, size);
@@ -329,11 +329,11 @@ afb_data_size(
  * @return the buffer (can be NULL)
  */
 static inline
-const void *
+void *
 afb_data_ro_pointer(
 	afb_data_t data
 ) {
-	const void *ptr;
+	void *ptr;
 	afb_data_get_constant(data, &ptr, 0);
 	return ptr;
 }

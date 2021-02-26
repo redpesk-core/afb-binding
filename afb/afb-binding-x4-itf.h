@@ -257,7 +257,7 @@ struct afb_binding_x4r1_itf
 	/** get constant pointer and size optionally */
 	int (*data_get_constant)(
 		afb_data_x4_t data,
-		const void **pointer,
+		void **pointer,
 		size_t *size);
 
 	/** updfate the data from the given value */

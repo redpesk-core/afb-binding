@@ -231,7 +231,7 @@ afb_data_get_mutable(
 int
 afb_data_get_constant(
 	afb_data_t data,
-	const void **pointer,
+	void **pointer,
 	size_t *size
 );
 ```
@@ -262,7 +262,7 @@ afb_data_size(
  *
  * @return the buffer (can be NULL)
  */
-const void *
+void *
 afb_data_ro_pointer(
 	afb_data_t data
 );
