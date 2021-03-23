@@ -372,13 +372,13 @@ struct afb_binding_x4r1_itf
 		afb_req_x4_t req,
 		unsigned level);
 
-	/** handle client cookie of the api getting the request */
-	void *(*req_cookie)(
+	/** [LEGACY] handle client cookie of the api getting the request */
+	void *(*LEGACY_req_cookie)(
 		afb_req_x4_t req,
 		int replace,
-		void *(*create_value)(void *creation_closure),
-		void (*free_value)(void*),
-		void *creation_closure);
+		void *(*createcb)(void *closure),
+		void (*freecb)(void *value),
+		void *closure);
 
 	/** make subscription of the client of the request to the event */
 	int (*req_subscribe)(
@@ -767,6 +767,29 @@ struct afb_binding_x4r1_itf
 	/** drop all dependency from a data to all other data */
 	void (*data_dependency_drop_all)(
 		afb_data_x4_t data);
+
+	/** set the cookie of the api getting the request */
+	int (*req_cookie_set)(
+		afb_req_x4_t req,
+		void *value,
+		void (*freecb)(void*),
+		void *freeclo);
+
+	/** get the cookie of the api getting the request */
+	int (*req_cookie_get)(
+		afb_req_x4_t req,
+		void **value);
+
+	/** get the cookie of the api getting the request */
+	int (*req_cookie_getinit)(
+		afb_req_x4_t req,
+		void **value,
+		int (*initcb)(void *closure, void **value, void (**freecb)(void*), void **freeclo),
+		void *closure);
+
+	/** set the cookie of the api getting the request */
+	int (*req_cookie_drop)(
+		afb_req_x4_t req);
 
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };

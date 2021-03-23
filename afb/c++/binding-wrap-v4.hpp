@@ -483,21 +483,18 @@ public:
 		inline operator T &() const { return *get(); }
 		inline T* get() const {
 			return reinterpret_cast<T*>(
-				afb_req_context(req_, 0,
-					nullptr,
-					nullptr,
-					nullptr));
+				afb_req_context_get(req_));
 		}
 
 		inline void set(T *value, void (*destroyer)(T*) = [](T*t){delete t;}) const {
-			afb_req_context(req_, 1,
-				nullptr,
+			afb_req_context_set(req_,
+				reinterpret_cast<void*>(value),
 				reinterpret_cast<void(*)(void*)>(destroyer),
 				reinterpret_cast<void*>(value));
 		}
 
-		inline void unset() { set(nullptr); }
-		inline void clear() { set(nullptr); }
+		inline void unset() { afb_req_context_drop(req_); }
+		inline void clear() { afb_req_context_drop(req_); }
 
 		inline T *lazy(T *(*allocator)() = []()->T*{return new T();}, void (*destroyer)(T*) = [](T*t){delete t;}) const {
 			return reinterpret_cast<T*>(
@@ -533,13 +530,18 @@ template < class _T_ >
 struct client_context {
 
 	inline _T_ *get(afb_req_t req) const {
-		void *ptr = afb_req_context(req, 0, _create_, _destroy_, nullptr);
+		void *ptr = afb_req_context(req, _init_, nullptr);
 		return reinterpret_cast<_T_*>(ptr);
 	}
 
 private:
 
-	static _T_ *_create_() { return reinterpret_cast<void*>(new _T_()); }
+	static int _init_(void*, void **value, void (**freecb)(void*), void **freeclo) {
+		_T_ *t = new _T_();
+		*value = *freeclo = t;
+		*freecb = _destroy_;
+		return 0;
+	}
 	static void _destroy_(void *ptr) { delete reinterpret_cast<_T_*>(ptr); }
 };
 

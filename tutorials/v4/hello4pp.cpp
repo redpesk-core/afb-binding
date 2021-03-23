@@ -743,8 +743,16 @@ static void setctx (afb::req request, afb::received_data params)
 	json_object *json;
 
 	args_to_json(params, &json);
-	afb_req_context(request, 1, NULL, (void(*)(void*))json_object_put, json);
+	afb_req_context_set(request, json, (void(*)(void*))json_object_put, json);
 	reply_oEI(request, json_object_get(json), NULL, "context set");
+}
+
+static int initctxcb(void *closure, void **value, void (**freecb)(void*), void **freeclo)
+{
+//	json_object *json = closure;
+	*value = *freeclo = closure;
+	*freecb = (void(*)(void*))json_object_put;
+	return 0;
 }
 
 static void setctxif (afb::req request, afb::received_data params)
@@ -752,13 +760,13 @@ static void setctxif (afb::req request, afb::received_data params)
 	json_object *json;
 
 	args_to_json(params, &json);
-	afb_req_context(request, 0, NULL, (void(*)(void*))json_object_put, json);
+	afb_req_context(request, initctxcb, json);
 	reply_oEI(request, json_object_get(json), NULL, "context set");
 }
 
 static void getctx (afb::req request, afb::received_data params)
 {
-	struct json_object *x = (struct json_object*)afb_req_context(request, 0, 0, 0, 0);
+	struct json_object *x = (struct json_object*)afb_req_context_get(request);
 	reply_oEI(request, json_object_get(x), NULL, "returning the context");
 }
 

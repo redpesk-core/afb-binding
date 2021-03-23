@@ -815,13 +815,30 @@ static void setctx (afb_req_t request, unsigned nparams, afb_data_t const *param
 	json_object *json;
 
 	args_to_json(nparams, params, &json);
-	afb_req_context(request, (int)(intptr_t)afb_req_get_vcbdata(request), NULL, (void*)json_object_put, json);
+	afb_req_context_set(request, json, (void*)json_object_put, json);
 	reply_oEI(request, json_object_get(json), NULL, "context set");
+}
+
+static int initctxcb(void *closure, void **value, void (**freecb)(void*), void **freeclo)
+{
+	json_object *json = closure;
+	*value = *freeclo = closure;
+	*freecb = (void(*)(void*))json_object_put;
+	return 0;
+}
+
+static void setctxif (afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	json_object *json;
+
+	args_to_json(nparams, params, &json);
+	afb_req_context(request, initctxcb, json);
+	reply_oEI(request, json_object_get(json), NULL, "context setif");
 }
 
 static void getctx (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
-	struct json_object *x = afb_req_context(request, 0, 0, 0, 0);
+	struct json_object *x = afb_req_context_get(request);
 	reply_oEI(request, json_object_get(x), NULL, "returning the context");
 }
 
@@ -1090,8 +1107,8 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="has-loa-1",   .callback=ok, .session=AFB_SESSION_LOA_1 },
   { .verb="has-loa-2",   .callback=ok, .session=AFB_SESSION_LOA_2 },
   { .verb="has-loa-3",   .callback=ok, .session=AFB_SESSION_LOA_3 },
-  { .verb="setctx",      .callback=setctx, .vcbdata = (void*)(intptr_t)1 },
-  { .verb="setctxif",    .callback=setctx, .vcbdata = (void*)(intptr_t)0 },
+  { .verb="setctx",      .callback=setctx },
+  { .verb="setctxif",    .callback=setctxif },
   { .verb="getctx",      .callback=getctx },
   { .verb="checktok",    .callback=ok, .session=AFB_SESSION_CHECK },
   { .verb="info",        .callback=info },

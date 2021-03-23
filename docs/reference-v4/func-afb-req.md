@@ -251,20 +251,22 @@ afb_req_verbose(
 /**
  * Manage the pointer stored by the binding for the client session of 'req'.
  *
- * If no previous pointer is stored or if 'replace' is not zero, a new value
- * is generated using the function 'create_context' called with the 'closure'.
- * If 'create_context' is NULL the generated value is 'closure'.
+ * If some value was set as context by a previous call to 'afb_req_context' or
+ * 'afb_req_context_set', return that value.
  *
- * When a value is created, the function 'free_context' is recorded and will
- * be called (with the created value as argument) to free the created value when
- * it is not more used.
+ * Otherwise, call the initialization callback 'initcb' with the given 'closure'
+ * to initialize the value. The callback 'initcb' must initialiaze the 3 data
+ * whose pointers are given: value, freecb and freeclo, as for the function
+ * 'afb_req_context_set'.
+ *
+ * It is allowed to pass NULL for 'initcb'. In that case, the value of the
+ * context is initialized to 'closure'.
  *
  * This function is atomic: it ensures that 2 threads will not race together.
  *
  * @param req the request
  * @param replace if not zero an existing value is replaced
- * @param create_context the creation function or NULL
- * @param free_context the destroying function or NULL
+ * @param initcb the initialisation function or NULL
  * @param closure the closure to the creation function
  *
  * @return the stored value
@@ -272,9 +274,7 @@ afb_req_verbose(
 void *
 afb_req_context(
 	afb_req_t req,
-	int replace,
-	void *(*create_context)(void *closure),
-	void (*free_context)(void*),
+	int (*initcb)(void *closure, void **value, void (**freecb)(void*), void **freeclo),
 	void *closure
 );
 ```
@@ -285,8 +285,6 @@ afb_req_context(
 /**
  * Gets the pointer stored by the binding for the session of 'req'.
  * When the binding has not yet recorded a pointer, NULL is returned.
- *
- * Shortcut for: afb_req_context(req, 0, NULL, NULL, NULL)
  *
  * @param req the request
  *
@@ -302,38 +300,37 @@ afb_req_context_get(
 
 ```C
 /**
- * Stores for the binding the pointer 'context' to the session of 'req'.
- * The function 'free_context' will be called when the session is closed
- * or if binding stores an other pointer.
- *
- * Shortcut for: afb_req_context(req, 1, NULL, free_context, context)
- *
+ * Stores for the binding the pointer 'value' to the session of 'req'.
+ * The function 'freecb' will be called with the given 'freeclo' when the
+ * session is closed or if binding stores an other value.
  *
  * @param req the request
- * @param context the context value to store
- * @param free_context the cleaning function for the stored context (can be NULL)
+ * @param value the context value to store
+ * @param freecb the cleaning function for the stored context (can be NULL)
+ * @param freeclo the closure for the cleaning function 'freecb' (can be 'context')
+ *
+ * @return 0 in case of success or a negative error code
  */
-void
+int
 afb_req_context_set(
 	afb_req_t req,
-	void *context,
-	void (*free_context)(void*)
+	void *value,
+	void (*freecb)(void*),
+	void *freeclo
 );
 ```
 
-## Function afb\_req\_context\_clear
+## Function afb\_req\_context\_drop
 
 ```C
 /**
  * Frees the pointer stored by the binding for the session of 'req'
  * and sets it to NULL.
  *
- * Shortcut for: afb_req_context_set(req, NULL, NULL)
- *
  * @param req the request
  */
 void
-afb_req_context_clear(
+afb_req_context_drop(
 	afb_req_t req
 );
 ```
