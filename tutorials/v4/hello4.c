@@ -827,7 +827,7 @@ static int initctxcb(void *closure, void **value, void (**freecb)(void*), void *
 	return 0;
 }
 
-static void setctxif (afb_req_t request, unsigned nparams, afb_data_t const *params)
+static void setctxif(afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	json_object *json;
 
@@ -836,12 +836,50 @@ static void setctxif (afb_req_t request, unsigned nparams, afb_data_t const *par
 	reply_oEI(request, json_object_get(json), NULL, "context setif");
 }
 
-static void getctx (afb_req_t request, unsigned nparams, afb_data_t const *params)
+static void getctx(afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	struct json_object *x;
 
 	afb_req_context_get(request, (void**)&x);
 	reply_oEI(request, json_object_get(x), NULL, "returning the context");
+}
+
+static void getfile(afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	json_object *json, *path;
+	FILE *f;
+	char *buffer;
+	long sz;
+
+	args_to_json(nparams, params, &json);
+	if (json_object_is_type(json, json_type_string))
+		path = json;
+	else if (!json_object_object_get_ex(json ,"path", &path)) {
+		reply_oEI(request, NULL, "invalid-arguments", NULL);
+		json_object_put(json);
+		return;
+	}
+	f = fopen(json_object_get_string(path), "r");
+	json_object_put(json);
+	if (f == NULL) {
+		reply_oEI(request, NULL, "bad-file", NULL);
+		return;
+	}
+
+	fseek(f, 0, SEEK_END);
+	sz = ftell(f);
+	buffer = malloc((size_t)sz + 1);
+	if (buffer == NULL) {
+		reply_oEI(request, NULL, "out-of-memory", NULL);
+		return;
+	}
+
+	fseek(f, 0, SEEK_SET);
+	fread(buffer, (size_t)sz, 1, f);
+	fclose(f);
+	buffer[sz] = 0;
+	json = json_object_new_string_len(buffer, (int)sz);
+	reply_oEI(request, json, NULL, NULL);
 }
 
 static void info (afb_req_t request, unsigned nparams, afb_data_t const *params)
@@ -1123,6 +1161,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="settings",    .callback=settings},
   { .verb="after",       .callback=after},
   { .verb="opaque",      .callback=opaque},
+  { .verb="getfile",     .callback=getfile},
   { .verb=NULL}
 };
 
