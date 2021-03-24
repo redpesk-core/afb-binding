@@ -252,7 +252,7 @@ afb_req_verbose(
  * Manage the pointer stored by the binding for the client session of 'req'.
  *
  * If some value was set as context by a previous call to 'afb_req_context' or
- * 'afb_req_context_set', return that value.
+ * 'afb_req_context_set', return that value where 'ptrval' points.
  *
  * Otherwise, call the initialization callback 'initcb' with the given 'closure'
  * to initialize the value. The callback 'initcb' must initialiaze the 3 data
@@ -265,15 +265,16 @@ afb_req_verbose(
  * This function is atomic: it ensures that 2 threads will not race together.
  *
  * @param req the request
- * @param replace if not zero an existing value is replaced
+ * @param ptrval if not zero the value of the context is returned where pointed
  * @param initcb the initialisation function or NULL
  * @param closure the closure to the creation function
  *
- * @return the stored value
+ * @return 0 if context was set, 1 if context has been created, a negative value on error
  */
-void *
+int
 afb_req_context(
 	afb_req_t req,
+	void **ptrval,
 	int (*initcb)(void *closure, void **value, void (**freecb)(void*), void **freeclo),
 	void *closure
 );
@@ -283,16 +284,18 @@ afb_req_context(
 
 ```C
 /**
- * Gets the pointer stored by the binding for the session of 'req'.
+ * Gets in '*ptrval' the pointer stored by the binding for the session of 'req'.
  * When the binding has not yet recorded a pointer, NULL is returned.
  *
  * @param req the request
+ * @param ptrval if not zero the value of the context is returned where pointed
  *
- * @return the previously stored value
+ * @return 0 on success, a negative value on error
  */
-void *
+int
 afb_req_context_get(
-	afb_req_t req
+	afb_req_t req,
+	void **ptrval
 );
 ```
 
@@ -328,8 +331,10 @@ afb_req_context_set(
  * and sets it to NULL.
  *
  * @param req the request
+ *
+ * @return 0 in case of success or a negative error code
  */
-void
+int
 afb_req_context_drop(
 	afb_req_t req
 );

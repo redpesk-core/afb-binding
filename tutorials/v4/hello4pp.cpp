@@ -760,13 +760,14 @@ static void setctxif (afb::req request, afb::received_data params)
 	json_object *json;
 
 	args_to_json(params, &json);
-	afb_req_context(request, initctxcb, json);
+	afb_req_context(request, NULL, initctxcb, json);
 	reply_oEI(request, json_object_get(json), NULL, "context set");
 }
 
 static void getctx (afb::req request, afb::received_data params)
 {
-	struct json_object *x = (struct json_object*)afb_req_context_get(request);
+	struct json_object *x;
+	afb_req_context_get(request, (void**)&x);
 	reply_oEI(request, json_object_get(x), NULL, "returning the context");
 }
 

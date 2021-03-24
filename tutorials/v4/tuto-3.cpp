@@ -67,7 +67,7 @@ void login(afb::req req, afb::received_data params)
 	 || !json_object_object_get_ex(args, "password", &passwd)) {
 		AFB_REQ_ERROR(req, "login, bad request: %s", json_object_get_string(args));
 		reply_error(req, "bad-request");
-	} else if (afb_req_context_get(req)) {
+	} else if (afb_req_context_get(req, NULL)) {
 		AFB_REQ_ERROR(req, "login, bad state, logout first");
 		reply_error(req, "bad-state");
 	} else if (strcmp(json_object_get_string(passwd), "please")) {

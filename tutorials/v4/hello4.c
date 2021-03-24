@@ -832,13 +832,15 @@ static void setctxif (afb_req_t request, unsigned nparams, afb_data_t const *par
 	json_object *json;
 
 	args_to_json(nparams, params, &json);
-	afb_req_context(request, initctxcb, json);
+	afb_req_context(request, NULL, initctxcb, json);
 	reply_oEI(request, json_object_get(json), NULL, "context setif");
 }
 
 static void getctx (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
-	struct json_object *x = afb_req_context_get(request);
+	struct json_object *x;
+
+	afb_req_context_get(request, (void**)&x);
 	reply_oEI(request, json_object_get(x), NULL, "returning the context");
 }
 
