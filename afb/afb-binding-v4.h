@@ -16,6 +16,7 @@
 #include "afb-auth.h"
 #include "afb-ctlid.h"
 #include "afb-session.h"
+#include "afb-req-subcall-flags.h"
 
 #include "afb-binding-x4-itf.h"
 #include "afb-binding-x4.h"
