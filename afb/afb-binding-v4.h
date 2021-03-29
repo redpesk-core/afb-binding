@@ -31,13 +31,13 @@
  *   - @ref afbBindingV4root
  *   - @ref afbBindingV4  and/or  @ref afbBindingV4entry
  *
- * @ref afbBindingV4root is automatically created when **AFB_BINDING_VERSION == 3**
+ * @ref afbBindingV4root is automatically created when **AFB_BINDING_VERSION == 4**
  * without programmer action, as a hidden variable linked as *weak*.
  *
  * The symbols @ref afbBindingV4  and  **afbBindingV4entry** are under control
  * of the programmer.
  *
- * The symbol @ref afbBindingV4 if defined is used, as in binding v2, to describe
+ * The symbol @ref afbBindingV4 if defined is used, to describe
  * an API that will be declared during pre-initialization of bindings.
  *
  * The symbol @ref afbBindingV4entry if defined will be called during
