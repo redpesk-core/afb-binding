@@ -46,8 +46,8 @@ Running it (with the binder afb-binder):
 afb-binder --binding ./tuto-1.so --port 3333
 ```
 
-At this point, afb-binder has started, it loaded the binding tuto-1.so and now
-listen at localhost on the port 3333.
+At this point, afb-binder has started, it loaded the binding tuto-1.so and is now
+listening at localhost on the port 3333.
 
 Testing using **curl**:
 
@@ -59,7 +59,7 @@ Content-Length: 77
 Set-Cookie: x-afb-uuid-3333=0f6345d9-9d5b-4ff5-8bb2-cbd147ed45da; Path=/api; Max-Age=32000000; HttpOnly
 Date: Tue, 24 Nov 2020 15:28:49 GMT
 
-{"jtype":"afb-reply","request":{"status":"success"},"response":"hello world"}
+{"jtype":"afb-reply","request":{"status":"success","code":0},"response":"hello world"}
 ```
 
 Testing using **afb-client** (with option -H for
@@ -71,7 +71,8 @@ ON-REPLY 1:tuto-1/hello: OK
 {
   "jtype":"afb-reply",
   "request":{
-    "status":"success"
+    "status":"success",
+    "code":0
   },
   "response":"hello world"
 }
