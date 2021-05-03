@@ -70,6 +70,10 @@ afb_api_t afbBindingV4root __attribute__((weak));
  * Instanciation of the interface to the binder
  */
 const struct afb_binding_x4r1_itf *afbBindingV4r1_itfptr __attribute__((weak));
+#ifndef AFB_BINDING_X4R1_ITF_REVISION
+#define AFB_BINDING_X4R1_ITF_REVISION AFB_BINDING_X4R1_ITF_CURRENT_REVISION
+#endif
+short afbBindingV4_itf_revision  __attribute__((weak)) = AFB_BINDING_X4R1_ITF_REVISION;
 
 /** DATA ***********************************************************/
 /** @defgroup AFB_DATA

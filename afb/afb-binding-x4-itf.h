@@ -791,5 +791,9 @@ struct afb_binding_x4r1_itf
 	int (*req_cookie_drop)(
 		afb_req_x4_t req);
 
+/* increment the below value each time a verb is added */
+#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  1
+
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };
+
