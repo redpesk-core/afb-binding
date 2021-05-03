@@ -51,7 +51,7 @@ books:
           - url: "reference-v4/func-afb-type.md"
             name: afb_type functions
           - url: "reference-v4/predefined-afb-type.md"
-            name: Types predefined
+            name: Predefined data types
           - url: "reference-v4/func-afb-data.md"
             name: afb_data functions
           - url: "reference-v4/func-afb-data-array.md"

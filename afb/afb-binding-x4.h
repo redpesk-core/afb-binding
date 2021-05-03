@@ -2382,6 +2382,11 @@ afb_setup_shared_object(
 #define AFB_PREDEFINED_TYPE_JSON_C  (afbBindingV4r1_itfptr->type_json_c)
 
 /**
+ * Type of arrays of bytes
+ */
+#define AFB_PREDEFINED_TYPE_BYTEARRAY (afbBindingV4r1_itfptr->type_bytearray)
+
+/**
  * Type of boolean values
  */
 #define AFB_PREDEFINED_TYPE_BOOL    (afbBindingV4r1_itfptr->type_bool)
