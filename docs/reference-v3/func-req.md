@@ -318,12 +318,12 @@ The functions **success** and **fail** are still supported.
 These functions are now implemented as the following macros:
 
 ```C
-#define afb_req_success(r,o,i)		afb_req_reply(r,o,NULL,i)
-#define afb_req_success_f(r,o,...)	afb_req_reply_f(r,o,NULL,__VA_ARGS__)
-#define afb_req_success_v(r,o,f,v)	afb_req_reply_v(r,o,NULL,f,v)
-#define afb_req_fail(r,e,i)		afb_req_reply(r,NULL,e,i)
-#define afb_req_fail_f(r,e,...)		afb_req_reply_f(r,NULL,e,__VA_ARGS__)
-#define afb_req_fail_v(r,e,f,v)		afb_req_reply_v(r,NULL,e,f,v)
+#define afb_req_success(req,obj,info)		    afb_req_reply(req,obj,NULL,info)
+#define afb_req_success_f(req,obj,...)	        afb_req_reply_f(req,obj,NULL,__VA_ARGS__)
+#define afb_req_success_v(req,obj,fmt,vargs)	afb_req_reply_v(req,obj,NULL,fmt,vargs)
+#define afb_req_fail(req,error,info)		    afb_req_reply(req,NULL,error,info)
+#define afb_req_fail_f(req,error,...)		    afb_req_reply_f(req,NULL,error,__VA_ARGS__)
+#define afb_req_fail_v(req,error,fmt,vargs)		afb_req_reply_v(req,NULL,error,fmt,vargs)
 ```
 
 
