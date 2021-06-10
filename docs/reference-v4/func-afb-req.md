@@ -501,6 +501,36 @@ afb_req_parameters(
 );
 ```
 
+## Function afb\_req\_param\_convert
+
+```C
+/**
+ * Convert the parameter of the request of the given index
+ * to a given type and return it.
+ *
+ * The converted result is substituted to the previous parameter.
+ * There is no need to unreference the returned data as it becomes
+ * part of the request and will be released .
+ *
+ * Previous value of the parameter is automatically unreferenced.
+ * If you want keep it, you have to first reference it using afb_data_addref.
+ *
+ * @param req      the request
+ * @param index    index of the parameter to convert
+ * @param type     target type of the conversion
+ * @param result   where to store the result (can be NULL)
+ *
+ * @return 0 in case of success, a negative code on error
+ */
+int
+afb_req_param_convert(
+	afb_req_t req,
+	unsigned index,
+	afb_type_t type,
+	afb_data_t *result
+);
+```
+
 ## Function afb\_req\_reply
 
 ```C

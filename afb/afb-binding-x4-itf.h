@@ -797,6 +797,13 @@ struct afb_binding_x4r1_itf
 	/** predefined type bytearray */
 	afb_type_x4_t type_bytearray;
 
+	/** converts the parameter of index to the given type (return a new reference) */
+	int (*req_param_convert)(
+		afb_req_x4_t req,
+		unsigned index,
+		afb_type_x4_t type,
+		afb_data_x4_t *result);
+
 /*-- END OF VERSION 4r1  REVISION  2 ----------------------*/
 
 /* increment the below value each time a new revision is created */
