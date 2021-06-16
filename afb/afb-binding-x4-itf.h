@@ -791,7 +791,7 @@ struct afb_binding_x4r1_itf
 	int (*req_cookie_drop)(
 		afb_req_x4_t req);
 
-/*-- END OF VERSION 4r1  REVISION  1 ----------------------*/
+/*-- END OF VERSION 4r1  REVISION  1 (last version 4.0.1)----------------------*/
 /*-- BEGIN OF VERSION 4r1  REVISION  2 --------------------*/
 
 	/** predefined type bytearray */
@@ -804,9 +804,9 @@ struct afb_binding_x4r1_itf
 		afb_type_x4_t type,
 		afb_data_x4_t *result);
 
-/*-- END OF VERSION 4r1  REVISION  2 ----------------------*/
+/*-- END OF VERSION 4r1  REVISION  2 (last version 4.0.2) ----------------------*/
 
-/* increment the below value each time a new revision is created */
+/* increment the below value on needed */
 #define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  2
 
 /*-- END OF VERSION 4r1 -----------------------------------*/
