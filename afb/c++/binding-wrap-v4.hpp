@@ -487,6 +487,7 @@ public:
 		friend class req;
 		afb_req_t req_;
 		contextclass(afb_req_t r) : req_(r) {}
+		static void default_destroyer(T*t) { delete t; }
 
 	public:
 		inline operator T *() const { return get(); }
@@ -497,7 +498,7 @@ public:
 			return val;
 		}
 
-		inline void set(T *value, void (*destroyer)(T*) = [](T*t){delete t;}) const {
+		inline void set(T *value, void (*destroyer)(T*) = default_destroyer) const {
 			afb_req_context_set(req_,
 				reinterpret_cast<void*>(value),
 				reinterpret_cast<void(*)(void*)>(destroyer),
