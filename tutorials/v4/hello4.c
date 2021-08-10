@@ -882,6 +882,11 @@ static void getfile(afb_req_t request, unsigned nparams, afb_data_t const *param
 	reply_oEI(request, json, NULL, NULL);
 }
 
+static void any (afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	reply_oEI(request, json_object_new_string(afb_req_get_called_verb(request)), NULL, NULL);
+}
+
 static void info (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	reply_oEI(request, afb_req_get_client_info(request), NULL, NULL);
@@ -1162,6 +1167,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="after",       .callback=after},
   { .verb="opaque",      .callback=opaque},
   { .verb="getfile",     .callback=getfile},
+  { .verb="*",           .callback=any, .glob=1 },
   { .verb=NULL}
 };
 

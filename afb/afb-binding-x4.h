@@ -54,7 +54,7 @@ typedef afb_timer_handler_x4_t    afb_timer_handler_t;
  * available.
  *
  * When @ref afbBindingV4 is defined, this variable records the corresponding
- * api handler. Otherwise, it points to an fake handles that allows logging
+ * api handler. Otherwise, it points to a fake handles that allows logging
  * and api creation.
  *
  * @see afbBindingV4entry
