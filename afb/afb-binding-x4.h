@@ -1340,6 +1340,46 @@ afb_req_subcall_sync(
 	return afbBindingV4r1_itfptr->req_subcall_sync(req, apiname, verbname, nparams, params, flags, status, nreplies, replies);
 }
 
+/**
+ * Get a specialized interface for the request 'req'. The nature of the
+ * interface is givent by its 'itfid'.
+ *
+ * @param req     The request
+ * @param itfid   The id of the interface to return
+ * @param result  The returned interface
+ *
+ * @return 0 in case of success or -1 in case of error
+ */
+static inline
+int
+afb_req_get_interface_by_id(
+	afb_req_t req,
+	int itfid,
+	void **result
+) {
+	return afbBindingV4r1_itfptr->req_interface_by_id(req, itfid, result);
+}
+
+/**
+ * Get a specialized interface for the request 'req'. The nature of the
+ * interface is givent by its 'name'.
+ *
+ * @param req     The request
+ * @param name    The name of the interface to return
+ * @param result  The returned interface
+ *
+ * @return 0 in case of success or -1 in case of error
+ */
+static inline
+int
+afb_req_get_interface_by_name(
+	afb_req_t req,
+	const char *name,
+	void **result
+) {
+	return afbBindingV4r1_itfptr->req_interface_by_name(req, name, result);
+}
+
 /** @} */
 
 /** EVENT ***********************************************************/

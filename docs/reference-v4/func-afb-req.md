@@ -658,3 +658,45 @@ afb_req_subcall_sync(
 	afb_data_t replies[]
 );
 ```
+
+## Function afb\_req\_get\_interface\_by\_id
+
+```C
+/**
+ * Get a specialized interface for the request 'req'. The nature of the
+ * interface is givent by its 'itfid'.
+ *
+ * @param req     The request
+ * @param itfid   The id of the interface to return
+ * @param result  The returned interface
+ *
+ * @return 0 in case of success or -1 in case of error
+ */
+int
+afb_req_get_interface_by_id(
+	afb_req_t req,
+	int itfid,
+	void **result
+);
+```
+
+## Function afb\_req\_get\_interface\_by\_name
+
+```C
+/**
+ * Get a specialized interface for the request 'req'. The nature of the
+ * interface is givent by its 'name'.
+ *
+ * @param req     The request
+ * @param name    The name of the interface to return
+ * @param result  The returned interface
+ *
+ * @return 0 in case of success or -1 in case of error
+ */
+int
+afb_req_get_interface_by_name(
+	afb_req_t req,
+	const char *name,
+	void **result
+);
+```
