@@ -29,6 +29,7 @@
 
 #define AFB_BINDING_VERSION 4
 #include <afb/afb-binding.h>
+#include <afb/interfaces/afb-itf-req-http.h>
 
 #if !defined(APINAME)
 #define APINAME "hello"
@@ -891,6 +892,28 @@ static void getbin(afb_req_t request, unsigned nparams, afb_data_t const *params
 	afb_req_reply(request, 0, 1, &data);
 }
 
+static void gethttp(afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	afb_data_t data;
+	char *message;
+	const char *query;
+	afb_itf_req_http_t http_itf;
+	int rc;
+
+	if (nparams < 1 || afb_req_param_convert(request, 0, AFB_PREDEFINED_TYPE_STRINGZ, &data) < 0)
+		return afb_req_reply(request, AFB_ERRNO_INVALID_REQUEST, 0, 0);
+
+	if (afb_req_get_itf_req_http(request, &http_itf) < 0)
+		return afb_req_reply(request, AFB_ERRNO_NOT_AVAILABLE, 0, 0);
+
+	query = afb_data_ro_pointer(data);
+	rc = asprintf(&message, "<html><body><h1>hello!!</h1><b>received:</b><br/>%s</body></html>", query);
+	if (rc < 0 || afb_create_data_raw(&data, AFB_PREDEFINED_TYPE_STRINGZ, message, 1+(size_t)rc, free, message) < 0)
+		return afb_req_reply(request, AFB_ERRNO_INTERNAL_ERROR, 0, 0);
+
+	afb_itf_req_http_reply(http_itf, request, 200, data, "text/html", 0);
+}
+
 static void any (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	reply_oEI(request, json_object_new_string(afb_req_get_called_verb(request)), NULL, NULL);
@@ -1177,6 +1200,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="opaque",      .callback=opaque},
   { .verb="getfile",     .callback=getfile},
   { .verb="getbin",      .callback=getbin},
+  { .verb="gethttp",     .callback=gethttp},
   { .verb="*",           .callback=any, .glob=1 },
   { .verb=NULL}
 };

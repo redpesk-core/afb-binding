@@ -67,4 +67,3 @@
 
 /** Connection to the service is broken */
 #define AFB_ERRNO_DISCONNECTED       -15
-
