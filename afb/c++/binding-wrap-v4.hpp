@@ -201,7 +201,7 @@ public:
 	data(afb::type type, const data &other);
 	data(afb::type type, const void *pointer, size_t size, void (*dispose)(void*), void *closure);
 	data(afb::type type, const void *pointer, size_t size);
-	data(afb::type type, void *&pointer, size_t size);
+	data(afb::type type, void **pointer, size_t size);
 	~data();
 
 	data &operator=(afb_data_t d);
@@ -715,8 +715,8 @@ inline data::data(afb::type type, const void *pointer, size_t size, void (*dispo
 	{ afb_create_data_raw(&data_, type, pointer, size, dispose, closure); }
 inline data::data(afb::type type, const void *pointer, size_t size)
 	{ afb_create_data_copy(&data_, type, pointer, size); }
-inline data::data(afb::type type, void *&pointer, size_t size)
-	{ afb_create_data_alloc(&data_, type, &pointer, size); }
+inline data::data(afb::type type, void **pointer, size_t size)
+	{ afb_create_data_alloc(&data_, type, pointer, size); }
 inline data::~data() {  }
 
 inline data &data::operator=(afb_data_t d) { data_ = d; return *this; }
