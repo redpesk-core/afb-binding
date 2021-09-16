@@ -13,6 +13,7 @@
 #include <functional>
 #include <utility>
 #include <string>
+#include <vector>
 #include <stdexcept>
 #include <memory>
 
@@ -414,10 +415,17 @@ public:
 	operator bool() const;
 	bool is_valid() const;
 
+	int broadcast() const;
+	int broadcast(afb_data_t data) const;
 	int broadcast(unsigned nparams, afb_data_t const params[]) const;
 	template <unsigned n> int broadcast(const dataset<n> &params) const;
+	int broadcast(const std::vector<afb_data_t> &&params) const;
+
+	int push() const;
+	int push(afb_data_t data) const;
 	int push(unsigned nparams, afb_data_t const params[]) const;
 	template <unsigned n> int push(const dataset<n> &params) const;
+	int push(const std::vector<afb_data_t> &&params) const;
 
 	void unref();
 	void addref();
@@ -444,9 +452,11 @@ public:
 	afb::api api() const;
 
 	void reply(int status = 0) const;
+	void reply(int status, afb_data_t data) const;
 	void reply(int status, unsigned nreplies, afb_data_t const replies[]) const;
 	template <unsigned n> void reply(int status, const dataset<n> &replies) const;
 	void reply(int status, received_data replies) const;
+	void reply(int status, const std::vector<afb_data_t> &&params) const;
 
 	void addref() const;
 
@@ -815,10 +825,17 @@ inline event::operator afb_event_t() const { return event_; }
 inline event::operator bool() const { return is_valid(); }
 inline bool event::is_valid() const { return afb_event_is_valid(event_); }
 
+inline int event::broadcast() const { return afb_event_broadcast(event_, 0, nullptr); }
+inline int event::broadcast(afb_data_t data) const { return afb_event_broadcast(event_, 1, &data); }
 inline int event::broadcast(unsigned nparams, afb_data_t const params[]) const { return afb_event_broadcast(event_, nparams, params); }
-inline int event::push(unsigned nparams, afb_data_t const params[]) const { return afb_event_push(event_, nparams, params); }
 template <unsigned n> int event::broadcast(const dataset<n> &params) const { return broadcast(params.count(), params.data()); }
+inline int event::broadcast(const std::vector<afb_data_t> &&params) const { return broadcast((unsigned)params.size(), params.data()); }
+
+inline int event::push() const { return afb_event_push(event_, 0, nullptr); }
+inline int event::push(afb_data_t data) const { return afb_event_push(event_, 1, &data); }
+inline int event::push(unsigned nparams, afb_data_t const params[]) const { return afb_event_push(event_, nparams, params); }
 template <unsigned n> int event::push(const dataset<n> &params) const { return push(params.count(), params.data()); }
+inline int event::push(const std::vector<afb_data_t> &&params) const { return push((unsigned)params.size(), params.data()); }
 
 inline void event::unref() { if (event_) afb_event_unref(event_); event_ = nullptr; }
 inline void event::addref() { if (event_) afb_event_addref(event_); }
@@ -842,6 +859,9 @@ inline api req::api() const { return afb_req_get_api(req_); }
 
 inline void req::reply(int status) const
 	{ afb_req_reply(req_, status, 0, nullptr); }
+inline void req::reply(int status, afb_data_t data) const
+	{ afb_req_reply(req_, status, 1, &data); }
+
 inline void req::reply(int status, unsigned nreplies, afb_data_t const replies[]) const
 	{ afb_req_reply(req_, status, nreplies, replies); }
 template <unsigned n> void req::reply(int status, const dataset<n> &replies) const
@@ -851,6 +871,9 @@ inline void req::reply(int status, received_data replies) const
 		replies.addref();
 		reply(status, replies.size(), replies.array());
 	}
+
+inline void req::reply(int status, const std::vector<afb_data_t> &&replies) const
+	{ reply(status, (unsigned)replies.size(), replies.data()); }
 
 inline void req::addref() const { afb_req_addref(req_); }
 
