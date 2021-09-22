@@ -882,6 +882,15 @@ static void getfile(afb_req_t request, unsigned nparams, afb_data_t const *param
 	reply_oEI(request, json, NULL, NULL);
 }
 
+static void getbin(afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	afb_data_t data;
+	static const char content[] = "<html><body>hello!!";
+
+	afb_create_data_raw(&data, AFB_PREDEFINED_TYPE_BYTEARRAY, content, sizeof content - 1, 0, 0);
+	afb_req_reply(request, 0, 1, &data);
+}
+
 static void any (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	reply_oEI(request, json_object_new_string(afb_req_get_called_verb(request)), NULL, NULL);
@@ -1167,6 +1176,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="after",       .callback=after},
   { .verb="opaque",      .callback=opaque},
   { .verb="getfile",     .callback=getfile},
+  { .verb="getbin",      .callback=getbin},
   { .verb="*",           .callback=any, .glob=1 },
   { .verb=NULL}
 };
