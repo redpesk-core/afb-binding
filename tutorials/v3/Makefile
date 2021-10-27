@@ -17,12 +17,15 @@ tutos = tuto-1.so tuto-2.so tuto-3.so tuto-4.so tuto-5.so tuto-app1.so
 samples = hello3.so
 
 all: ${tutos} ${samples}
+	$(MAKE) -C tic-tac-toe all
 
 clean:
 	rm *.so 2>/dev/null || true
+	$(MAKE) -C tic-tac-toe clean
 
 %.so: %.c
 	$(CC) $(CFLAGS) -shared -o $@ $<
 
 %.so: %.cpp
 	$(CXX) $(CXXFLAGS) -shared -o $@ $<
+
