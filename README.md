@@ -47,3 +47,9 @@ to reduce the set of exported symbols. To get the path of the
 version script, use the command
 
         pkg-config --variable=version_script afb-binding
+
+## Examples and tutorials
+
+The directory tutorials contains example of bindings written for
+versions 3 and 4 of the API. To run the example, you have to
+install afb-binder.
