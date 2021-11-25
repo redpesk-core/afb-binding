@@ -596,7 +596,7 @@ afb_api_require_class(
  *
  * @returns 0 in case of success or a negative value in case of error.
  *
- * @see afb_api_new_api
+ * @see afb_create_api
  */
 int
 afb_api_delete(
