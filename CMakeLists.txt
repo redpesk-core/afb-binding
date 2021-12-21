@@ -9,7 +9,7 @@ project(afb-binding C)
 set(PROJECT_NAME afb-binding)
 set(PROJECT_DESCRIPTION "Binding headers for Application Framework Binder")
 set(PROJECT_URL "https://github.com/redpesk-core/afb-binding")
-set(PROJECT_VERSION 4.0.3)
+set(PROJECT_VERSION 4.1.0)
 
 include(GNUInstallDirs)
 
