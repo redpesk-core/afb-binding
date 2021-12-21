@@ -15,6 +15,9 @@
 /** Test if the code is a user error */
 #define AFB_USER_ERRNO_BASE           (-1000)
 
+/** The user error number "x", x must be positive */
+#define AFB_USER_ERRNO(x)             (AFB_USER_ERRNO_BASE - (x))
+
 /** Test if the code is a user error */
 #define AFB_IS_USER_ERRNO(code)       ((code) <= AFB_USER_ERRNO_BASE)
 
@@ -67,3 +70,6 @@
 
 /** Connection to the service is broken */
 #define AFB_ERRNO_DISCONNECTED       -15
+
+/** Generic failure for any purpose */
+#define AFB_ERRNO_GENERIC_FAILURE    AFB_USER_ERRNO(0)
