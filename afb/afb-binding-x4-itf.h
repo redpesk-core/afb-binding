@@ -791,7 +791,6 @@ struct afb_binding_x4r1_itf
 	int (*req_cookie_drop)(
 		afb_req_x4_t req);
 
-/*-- END OF VERSION 4r1  REVISION  1 (last version 4.0.1) ----------------------*/
 /*-- BEGIN OF VERSION 4r1  REVISION  2 (first version 4.0.2) --------------------*/
 
 	/** predefined type bytearray */
@@ -804,8 +803,7 @@ struct afb_binding_x4r1_itf
 		afb_type_x4_t type,
 		afb_data_x4_t *result);
 
-/*-- END OF VERSION 4r1  REVISION  2 (last version 4.0.3) ----------------------*/
-/*-- BEGIN OF VERSION 4r1  REVISION  3 (first version 4.0.4) --------------------*/
+/*-- BEGIN OF VERSION 4r1  REVISION  3 (first version 4.0.3) --------------------*/
 
 	/** get a specialized interface for the request req */
 	int (*req_interface_by_id)(
@@ -819,10 +817,20 @@ struct afb_binding_x4r1_itf
 		const char *name,
 		void **result);
 
-/*-- END OF VERSION 4r1  REVISION  3 (last version xxxx) ----------------------*/
+/*-- BEGIN OF VERSION 4r1  REVISION  4 (first version 4.1.0) --------------------*/
+
+	/** get the user data associated to the request req */
+	void *(*req_get_userdata)(
+		afb_req_x4_t req);
+
+	/** set (associate) the user data to the request req */
+	void (*req_set_userdata)(
+		afb_req_x4_t req,
+		void *userdata,
+		void (*freecb)(void*));
 
 /* increment the below value on needed */
-#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  3
+#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  4
 
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };

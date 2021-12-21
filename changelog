@@ -1,6 +1,7 @@
 Version 4.1.0
 -------------
 - improve naming of errors
+- add userdata attached to requests (V4 only)
 
 Version 4.0.3
 -------------

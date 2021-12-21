@@ -1380,6 +1380,37 @@ afb_req_get_interface_by_name(
 	return afbBindingV4r1_itfptr->req_interface_by_name(req, name, result);
 }
 
+/**
+ * Get the user data associated to the request.
+ *
+ * @param req The request
+ *
+ * @return the current user data
+ */
+static inline
+void *
+afb_req_get_userdata(
+	afb_req_t req
+) {
+	return afbBindingV4r1_itfptr->req_get_userdata(req);
+}
+
+/** set (associate) the user data to the request
+ *
+ * @param req The request
+ * @param userdata The userdata to set
+ * @param freecb a function to call when the request is about to be freed (can be NULL)
+ */
+static inline
+void
+afb_req_set_userdata(
+	afb_req_t req,
+	void *userdata,
+	void (*freecb)(void*)
+) {
+	afbBindingV4r1_itfptr->req_set_userdata(req, userdata, freecb);
+}
+
 /** @} */
 
 /** EVENT ***********************************************************/
