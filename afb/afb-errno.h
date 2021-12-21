@@ -13,13 +13,13 @@
 #define AFB_IS_ERRNO(code)            ((code) < 0)
 
 /** Test if the code is a user error */
-#define AFB_USER_ERROR_BASE           (-1000)
+#define AFB_USER_ERRNO_BASE           (-1000)
 
 /** Test if the code is a user error */
-#define AFB_IS_USER_ERROR(code)       ((code) <= AFB_USER_ERROR_BASE)
+#define AFB_IS_USER_ERRNO(code)       ((code) <= AFB_USER_ERRNO_BASE)
 
 /** Test if the code is a binder error */
-#define AFB_IS_BINDER_ERROR(code)     (AFB_IS_ERRNO(code) && !AFB_IS_USER_ERROR(code))
+#define AFB_IS_BINDER_ERRNO(code)     (AFB_IS_ERRNO(code) && !AFB_IS_USER_ERRNO(code))
 
 /********************************************************************************/
 

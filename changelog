@@ -1,6 +1,9 @@
+Version 4.1.0
+-------------
+- improve naming of errors
+
 Version 4.0.3
 -------------
-
 - added specialized interfaces mechanism
 - added tic-tac-toe tutorial v3
 - fixes of c++ issues
