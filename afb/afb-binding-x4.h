@@ -1055,7 +1055,7 @@ afb_req_session_close(
  * @param req the request
  * @param level of assurance from 0 to 7
  *
- * @return 0 on success or -1 if failed.
+ * @return the LOA set or a negative error code
  */
 static inline
 int

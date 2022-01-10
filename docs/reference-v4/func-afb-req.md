@@ -366,7 +366,7 @@ afb_req_session_close(
  * @param req the request
  * @param level of assurance from 0 to 7
  *
- * @return 0 on success or -1 if failed.
+ * @return the LOA set or a negative error code
  */
 int
 afb_req_session_set_LOA(
@@ -698,5 +698,38 @@ afb_req_get_interface_by_name(
 	afb_req_t req,
 	const char *name,
 	void **result
+);
+```
+
+## Function afb\_req\_get\_userdata
+
+```C
+/**
+ * Get the user data associated to the request.
+ *
+ * @param req The request
+ *
+ * @return the current user data
+ */
+void *
+afb_req_get_userdata(
+	afb_req_t req
+);
+```
+
+## Function afb\_req\_set\_userdata
+
+```C
+/** set (associate) the user data to the request
+ *
+ * @param req The request
+ * @param userdata The userdata to set
+ * @param freecb a function to call when the request is about to be freed (can be NULL)
+ */
+void
+afb_req_set_userdata(
+	afb_req_t req,
+	void *userdata,
+	void (*freecb)(void*)
 );
 ```
