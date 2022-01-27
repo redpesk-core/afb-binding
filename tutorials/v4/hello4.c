@@ -228,6 +228,8 @@ struct event
 {
 	struct event *next;
 	afb_event_t event;
+	afb_timer_t timer;
+	unsigned count;
 	char tag[1];
 };
 
@@ -240,6 +242,24 @@ static struct event *event_get(const char *tag)
 	while(e && strcmp(e->tag, tag))
 		e = e->next;
 	return e;
+}
+
+/* stop timed event */
+static void event_stop_timer(struct event *e)
+{
+	if (e->timer) {
+		afb_timer_unref(e->timer);
+		e->timer = 0;
+	}
+}
+
+/* event is valid */
+static int event_is_valid(struct event *e)
+{
+	struct event *i = events;
+	while(i && i != e)
+		i = i->next;
+	return i != 0;
 }
 
 /* deletes the event of tag */
@@ -255,6 +275,9 @@ static int event_del(const char *tag)
 		pthread_mutex_unlock(&mutex);
 		return -1;
 	}
+
+	/* stop timer */
+	event_stop_timer(e);
 
 	/* unlink */
 	p = &events;
@@ -285,7 +308,7 @@ static int event_add(const char *tag, const char *name)
 	}
 
 	/* creation */
-	e = malloc(strlen(tag) + sizeof *e);
+	e = calloc(1, strlen(tag) + sizeof *e);
 	if (!e) {
 		pthread_mutex_unlock(&mutex);
 		return -ENOMEM;
@@ -341,6 +364,59 @@ static int event_push(afb_data_t data, const char *tag)
 	pthread_mutex_lock(&mutex);
 	e = event_get(tag);
 	rc = e ? afb_event_push(e->event, 1, &data) : -1;
+	pthread_mutex_unlock(&mutex);
+
+	return rc;
+}
+
+static int event_stop(const char *tag)
+{
+	struct event *e;
+
+	pthread_mutex_lock(&mutex);
+	e = event_get(tag);
+	if (e)
+		event_stop_timer(e);
+	pthread_mutex_unlock(&mutex);
+
+	return 0;
+}
+
+static void timed_event(afb_timer_t timer, void *closure, int decount)
+{
+	afb_data_t data;
+	afb_event_t event;
+	struct event *e = closure;
+
+	pthread_mutex_lock(&mutex);
+	if (!event_is_valid(e)) {
+		pthread_mutex_unlock(&mutex);
+	}
+	else {
+		e->count++;
+		afb_create_data_copy(&data, AFB_PREDEFINED_TYPE_U32, &e->count, 4);
+		event = afb_event_addref(e->event);
+		pthread_mutex_unlock(&mutex);
+		afb_event_push(event, 1, &data);
+		afb_event_unref(event);
+	}
+}
+
+static int event_start(const char *tag)
+{
+	int rc = -1;
+	struct event *e;
+
+	pthread_mutex_lock(&mutex);
+	e = event_get(tag);
+	if (e) {
+		event_stop_timer(e);
+		e->count = 0;
+		rc = afb_timer_create(&e->timer,
+			/*start:*/  0/*relative*/, 1/*sec*/, 0/*msec*/,
+			/*occur:*/  0/*infinite*/, 1000/*period msec*/, 10/*accuracy msec*/,
+			/*action:*/ timed_event, e, 0/*no unref*/);
+	}
 	pthread_mutex_unlock(&mutex);
 
 	return rc;
@@ -686,6 +762,30 @@ static void eventpush (afb_req_t request, unsigned nparams, afb_data_t const *pa
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else if (0 > event_push(data, tag))
 		reply_oEI(request, NULL, "failed", "push error");
+	else
+		afb_req_reply(request, 0, 0, 0);
+}
+
+static void eventstart (afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	const char *tag;
+
+	if (!parse_event(request, nparams, params, &tag, NULL, NULL))
+		reply_oEI(request, NULL, "failed", "bad arguments");
+	else if (0 > event_start(tag))
+		reply_oEI(request, NULL, "failed", "start error");
+	else
+		afb_req_reply(request, 0, 0, 0);
+}
+
+static void eventstop (afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	const char *tag;
+
+	if (!parse_event(request, nparams, params, &tag, NULL, NULL))
+		reply_oEI(request, NULL, "failed", "bad arguments");
+	else if (0 > event_stop(tag))
+		reply_oEI(request, NULL, "failed", "stop error");
 	else
 		afb_req_reply(request, 0, 0, 0);
 }
@@ -1040,7 +1140,6 @@ end:
 static void after (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	int rc;
-	afb_timer_t timer;
 	json_object *json, *x;
 	const char *ts, *ty;
 	char *te;
@@ -1174,6 +1273,8 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="eventsub",    .callback=eventsub },
   { .verb="eventunsub",  .callback=eventunsub },
   { .verb="eventpush",   .callback=eventpush },
+  { .verb="eventstart",  .callback=eventstart },
+  { .verb="eventstop",   .callback=eventstop },
   { .verb="verbose",     .callback=verbose },
   { .verb="broadcast",   .callback=broadcast },
   { .verb="hasperm",     .callback=hasperm },
