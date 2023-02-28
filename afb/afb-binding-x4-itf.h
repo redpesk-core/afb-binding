@@ -829,8 +829,14 @@ struct afb_binding_x4r1_itf
 		void *userdata,
 		void (*freecb)(void*));
 
+/*-- BEGIN OF VERSION 4r1  REVISION  5 (first version 4.1.2) --------------------*/
+
+	int (*job_abort)(
+		afb_api_x4_t root,
+		int jobid);
+
 /* increment the below value on needed */
-#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  4
+#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  5
 
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };

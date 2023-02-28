@@ -87,7 +87,10 @@ afb_create_api(
  * @param argument the argument to pass to the queued job
  * @param group the group of the job, NULL if no group
  *
- * @return 0 in case of success or -1 in case of error with errno set appropriately.
+ * @return on success, returns the id of the job, a positive number
+ *         but if it fails, returns a negative value in case of error.
+ *
+ * @see afb_job_cancel
  */
 int
 afb_job_post(
@@ -96,6 +99,28 @@ afb_job_post(
 	void (*callback)(int signum, void *arg),
 	void *argument,
 	void *group
+);
+```
+
+## Function afb\_job\_abort
+
+```C
+/**
+* Aborts the job of given id. The job must be posted using 'afb_job_post'
+* that returned its id.
+* Two cases are possible:
+*   - the job has not started: it is cancelled and is called immediately
+*                              with signal = SIGABRT
+*   - the job has started (and was maybe finish): the action has no effect
+*
+* @param jobid the id of the job has returned by 'afb_job_post'
+* @return 0 on success or a negative error code
+*
+* @see afb_job_post
+*/
+int
+afb_job_abort(
+	int jobid
 );
 ```
 
