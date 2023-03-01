@@ -792,6 +792,7 @@ struct afb_binding_x4r1_itf
 		afb_req_x4_t req);
 
 /*-- BEGIN OF VERSION 4r1  REVISION  2 (first version 4.0.2) --------------------*/
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 2
 
 	/** predefined type bytearray */
 	afb_type_x4_t type_bytearray;
@@ -803,7 +804,9 @@ struct afb_binding_x4r1_itf
 		afb_type_x4_t type,
 		afb_data_x4_t *result);
 
+#endif
 /*-- BEGIN OF VERSION 4r1  REVISION  3 (first version 4.0.3) --------------------*/
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 3
 
 	/** get a specialized interface for the request req */
 	int (*req_interface_by_id)(
@@ -817,7 +820,9 @@ struct afb_binding_x4r1_itf
 		const char *name,
 		void **result);
 
+#endif
 /*-- BEGIN OF VERSION 4r1  REVISION  4 (first version 4.1.0) --------------------*/
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 4
 
 	/** get the user data associated to the request req */
 	void *(*req_get_userdata)(
@@ -829,11 +834,15 @@ struct afb_binding_x4r1_itf
 		void *userdata,
 		void (*freecb)(void*));
 
+#endif
 /*-- BEGIN OF VERSION 4r1  REVISION  5 (first version 4.1.2) --------------------*/
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 5
 
 	int (*job_abort)(
 		afb_api_x4_t root,
 		int jobid);
+
+#endif
 
 /* increment the below value on needed */
 #define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  5
