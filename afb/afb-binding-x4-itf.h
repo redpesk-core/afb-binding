@@ -206,7 +206,7 @@ typedef void (*afb_evfd_handler_x4_t)(afb_evfd_x4_t efd, int fd, uint32_t revent
  * @param decount reverse index of the event: zero for infinite timer
  *                or a decreasing value finishing with 1
  */
-typedef void (*afb_timer_handler_x4_t)(afb_timer_x4_t timer, void *closure, int decount);
+typedef void (*afb_timer_handler_x4_t)(afb_timer_x4_t timer, void *closure, unsigned decount);
 
 /******************************************************************************/
 
