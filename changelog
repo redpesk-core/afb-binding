@@ -1,3 +1,8 @@
+Version 4.1.2
+-------------
+- function 'afb_job_abort' added
+- improve effect of AFB_BINDING_X4R1_ITF_REVISION
+
 Version 4.1.1
 -------------
 - improved tutorial
