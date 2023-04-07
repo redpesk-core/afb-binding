@@ -490,6 +490,7 @@ public:
 		static void default_destroyer(T*t) { delete t; }
 
 	public:
+		inline operator bool() const { return bool(get()); }
 		inline operator T *() const { return get(); }
 		inline operator T &() const { return *get(); }
 		inline T* get() const {
