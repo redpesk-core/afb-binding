@@ -382,7 +382,7 @@ static int event_stop(const char *tag)
 	return 0;
 }
 
-static void timed_event(afb_timer_t timer, void *closure, int decount)
+static void timed_event(afb_timer_t timer, void *closure, unsigned decount)
 {
 	afb_data_t data;
 	afb_event_t event;
