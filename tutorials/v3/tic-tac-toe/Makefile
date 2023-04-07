@@ -1,12 +1,18 @@
 .PHONY: run clean all
 
+FLAGS = -g \
+	-fPIC \
+	-shared \
+	$(shell pkg-config --cflags --libs afb-binding) \
+	-Wl,--version-script=$(shell pkg-config --variable=version_script afb-binding)
+
 all: tic-tac-toe.so
 
 clean:
 	rm -f tic-tac-toe.so
 
 tic-tac-toe.so: tic-tac-toe.c
-	$(CC) -o $@ -fPIC -shared $< -ljson-c
+	$(CC) $(FLAGS) -o $@ $<
 
 PORT = 4444
 

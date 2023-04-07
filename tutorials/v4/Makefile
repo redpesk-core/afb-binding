@@ -5,6 +5,7 @@
 
 FLAGS = -g \
 	-fPIC \
+	-shared \
 	$(shell pkg-config --cflags --libs afb-binding) \
 	-Wl,--version-script=$(shell pkg-config --variable=version_script afb-binding)
 
@@ -22,7 +23,7 @@ clean:
 	rm *.so 2>/dev/null || true
 
 %.so: %.c
-	$(CC) $(CFLAGS) -shared -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 %.so: %.cpp
-	$(CXX) $(CXXFLAGS) -shared -o $@ $<
+	$(CXX) $(CXXFLAGS) -o $@ $<

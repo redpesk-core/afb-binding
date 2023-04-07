@@ -5,6 +5,7 @@
 
 FLAGS = -g \
 	-fPIC \
+	-shared \
 	$(shell pkg-config --cflags --libs afb-binding) \
 	-Wl,--version-script=$(shell pkg-config --variable=version_script afb-binding)
 
@@ -24,8 +25,8 @@ clean:
 	$(MAKE) -C tic-tac-toe clean
 
 %.so: %.c
-	$(CC) $(CFLAGS) -shared -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 %.so: %.cpp
-	$(CXX) $(CXXFLAGS) -shared -o $@ $<
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
