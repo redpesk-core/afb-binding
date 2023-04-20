@@ -2403,7 +2403,7 @@ afb_create_api(
  * @return on success, returns the id of the job, a positive number
  *         but if it fails, returns a negative value in case of error.
  *
- * @see afb_job_cancel
+ * @see afb_job_abort
  */
 static inline
 int
