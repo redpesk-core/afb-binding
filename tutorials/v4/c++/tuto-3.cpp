@@ -57,7 +57,7 @@ public:
 };
 
 
-void login(afb::req req, afb::received_data params)
+void login(afb::req req, afb::received_data params) noexcept
 {
 	json_object *args, *user, *passwd;
 	const char *usr;
@@ -85,7 +85,7 @@ void login(afb::req req, afb::received_data params)
 	}
 }
 
-void action(afb::req req, afb::received_data params)
+void action(afb::req req, afb::received_data params) noexcept
 {
 	json_object *args, *val;
 	session &usr = req.context<session>();
@@ -106,7 +106,7 @@ void action(afb::req req, afb::received_data params)
 	req.reply(0, params);
 }
 
-void logout(afb::req req, afb::received_data params)
+void logout(afb::req req, afb::received_data params) noexcept
 {
 	session &usr = req.context<session>();
 	afb::dataset<1> a;
@@ -119,14 +119,12 @@ void logout(afb::req req, afb::received_data params)
 	req.reply();
 }
 
-int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
+int mainctl(afb::api api, afb::ctlid ctlid, const afb::ctlarg ctlarg, void *userdata)
 {
-	afb::api a(api);
-
 	if (ctlid == afb_ctlid_Init) {
 		AFB_NOTICE("init");
-		event_login = a.new_event("login");
-		event_logout = a.new_event("logout");
+		event_login = api.new_event("login");
+		event_logout = api.new_event("logout");
 		if (!event_login || !event_login) {
 			AFB_ERROR("Can't create events");
 			return -1;
@@ -142,5 +140,6 @@ const afb_verb_t verbs[] = {
 	afb::verbend()
 };
 
-const afb_binding_t afbBindingExport = afb::binding("tuto-3", verbs, "third tutorial: C++", mainctl);
+const afb_binding_t afbBindingExport =
+	afb::binding<mainctl>("tuto-3", verbs, "third tutorial: C++");
 

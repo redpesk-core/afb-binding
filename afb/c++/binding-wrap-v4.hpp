@@ -18,7 +18,9 @@
 #include <memory>
 
 /* check the version */
-#if AFB_BINDING_VERSION != 4
+#if !defined(AFB_BINDING_VERSION)
+# define AFB_BINDING_VERSION 4
+#elif AFB_BINDING_VERSION != 4
 # error "AFB_BINDING_VERSION must be 4"
 #endif
 
@@ -96,7 +98,106 @@ inline int add_alias(const char *apiname, const char *aliasname)
 #endif
 
 /*************************************************************************/
-/* effective declaration of classes                                      */
+/* globals facilities                                                    */
+/*************************************************************************/
+static inline int alias(const char *from_name, const char *as_name) noexcept
+	{ return afb_alias_api(from_name, as_name); }
+
+/*************************************************************************/
+/* logging facility                                                      */
+/*************************************************************************/
+
+class log_level {
+	enum afb_syslog_levels level_;
+public:
+	log_level(enum afb_syslog_levels level) : level_{level} {}
+	explicit operator int() const noexcept { return (int)level_; }
+	explicit operator enum afb_syslog_levels() const noexcept { return level_; }
+
+#if LOGLEVEL_OK
+	void operator ()(const char *fmt, va_list args) const noexcept;
+	void operator ()(const char *fmt, ...) const noexcept;
+	void operator ()(req req, const char *fmt, va_list args) const noexcept;
+	void operator ()(req req, const char *fmt, ...) const noexcept;
+	void operator ()(api api, const char *fmt, va_list args) const noexcept;
+	void operator ()(api api, const char *fmt, ...) const noexcept;
+#endif
+};
+
+static const log_level Emergency(AFB_SYSLOG_LEVEL_EMERGENCY);
+static const log_level Alert(AFB_SYSLOG_LEVEL_ALERT);
+static const log_level Critical(AFB_SYSLOG_LEVEL_CRITICAL);
+static const log_level Error(AFB_SYSLOG_LEVEL_ERROR);
+static const log_level Warning(AFB_SYSLOG_LEVEL_WARNING);
+static const log_level Notice(AFB_SYSLOG_LEVEL_NOTICE);
+static const log_level Info(AFB_SYSLOG_LEVEL_INFO);
+static const log_level Debug(AFB_SYSLOG_LEVEL_DEBUG);
+
+class logger {
+public:
+	/* Virtual verbosity functions */
+	virtual int wants_log_level(int level) const noexcept = 0;
+	virtual void vverbose(int level, const char *file, int line, const char *func, const char *fmt, va_list args) const noexcept = 0;
+
+	/* Derived verbosity functions */
+	void verbose(int level, const char *file, int line, const char *func, const char *fmt, ...) const noexcept
+		{
+			va_list args;
+			va_start(args, fmt);
+			vverbose(level, file, line, func, fmt, args);
+			va_end(args);
+		}
+
+	bool wants(const log_level level) const noexcept
+		{ return (bool)wants_log_level(int(level)); }
+	void vverbose(const log_level level, const char *fmt, va_list args) const noexcept
+		{ return vverbose(int(level), nullptr, 0, nullptr, fmt, args); }
+	void verbose(const log_level level, const char *fmt, ...) const noexcept
+		{
+			va_list args;
+			va_start(args, fmt);
+			vverbose(int(level), nullptr, 0, nullptr, fmt, args);
+			va_end(args);
+		}
+};
+
+/*************************************************************************/
+/* binding's exceptions                                                  */
+/*************************************************************************/
+
+// generic afb::error
+class error : public std::runtime_error
+{
+public: error(const char *arg) : std::runtime_error{arg} {}
+};
+
+class type_not_found_error : public error
+{
+public: type_not_found_error(const char *arg) : error{arg} {}
+};
+
+class invalid_type_error : public error
+{
+public: invalid_type_error(const char *arg) : error{arg} {}
+};
+
+class invalid_data_error : public error
+{
+public: invalid_data_error(const char *arg) : error{arg} {}
+};
+
+class convert_data_error : public error
+{
+public: convert_data_error(const char *arg) : error{arg} {}
+};
+
+class create_data_error : public error
+{
+public: create_data_error(const char *arg) : error{arg} {}
+};
+
+/*************************************************************************/
+/* classes for data and data's type                                      */
 /*************************************************************************/
 
 class type;
@@ -110,14 +211,20 @@ class type
 protected:
 	/** wrapped type */
 	afb_type_t type_;
+
+	/** internal lookup */
+	void _lookup_(const char *name)
+		{ if (afb_type_lookup(&type_, name) < 0)
+			throw type_not_found_error("type-not-found"); }
+
 public:
 	/** default constructor */
 	type() noexcept
 		: type_{nullptr} {}
 
 	/** initialisation constructor */
-	type(afb_type_t type) noexcept
-		: type_{type} {}
+	type(afb_type_t a_type) noexcept
+		: type_{a_type} {}
 
 	/** copy constructor */
 	type(const type &other) noexcept
@@ -125,65 +232,61 @@ public:
 
 	/** initialisation constructor */
 	type(const char *name)
-		{ afb_type_lookup(&type_, name); }
-
-	/** initialisation constructor */
+		{ _lookup_(name); }
 	type(const std::string &name)
-		{ afb_type_lookup(&type_, name.c_str()); }
-
-	/** assign */
-	type &operator=(afb_type_t type) noexcept
-		{ type_ = type; return *this; }
-	type &operator=(const type &other) noexcept
-		{ return *this = other.type_; }
-	type &operator=(const char *name)
-		{ afb_type_lookup(&type_, name); return *this; }
-	type &operator=(const std::string &name)
-		{ afb_type_lookup(&type_, name.c_str()); return *this; }
-
-	/** validity */
-	bool is_valid() const noexcept
-		{ return bool(type_); }
-	operator bool() const noexcept
-		{ return is_valid(); }
+		{ _lookup_(name.c_str()); }
 
 	/** unwrap */
 	operator afb_type_t() const noexcept
 		{ return type_; }
 
+	/** assign */
+	type &operator=(afb_type_t type) noexcept
+		{ type_ = type;
+		  return *this; }
+	type &operator=(const type &other) noexcept
+		{ return *this = other.type_; }
+	type &operator=(const char *name)
+		{ _lookup_(name);
+		  return *this; }
+	type &operator=(const std::string &name)
+		{ return *this = name.c_str(); }
+
+	/** validity */
+	operator bool() const noexcept
+		{ return is_valid(); }
+	bool is_valid() const noexcept
+		{ return type_ != nullptr; }
+	void validate() const
+		{ if (!is_valid())
+			throw invalid_type_error("invalid-type"); }
+
+	/** comparison */
+	bool operator ==(const type &other) const noexcept
+		{ return type_ == other.type_; }
+
+	/** name */
+	const char *name() const {
+		validate();
+		return afb_type_name(type_);
+	}
+	operator const char *() const
+		{ return name(); }
+
 	/** creation of data */
-	afb_data_t create_raw(const void *pointer, size_t size, void (*dispose)(void*), void *closure) const {
-		afb_data_t r;
-		int rc = afb_create_data_raw(&r, type_, pointer, size, dispose, closure);
-		if (rc < 0)
-			throw std::bad_alloc();
-		return r;
-	}
-
-	afb_data_t create_alloc(void **pointer, size_t size) const {
-		afb_data_t r;
-		int rc = afb_create_data_alloc(&r, type_, pointer, size);
-		if (rc < 0)
-			throw std::bad_alloc();
-		return r;
-	}
-
-	afb_data_t create_copy(const void *pointer, size_t size) const {
-		afb_data_t r;
-		int rc = afb_create_data_copy(&r, type_, pointer, size);
-		if (rc < 0)
-			throw std::bad_alloc();
-		return r;
-	}
+	data create_raw(const void *pointer, size_t size, void (*dispose)(void*), void *closure) const;
+	data create_alloc(void **pointer, size_t size) const;
+	data create_copy(const void *pointer, size_t size) const;
 
 	/** conversion of data */
-	afb_data_t convert(afb_data_t data) const {
-		afb_data_t r;
-		int rc = afb_data_convert(data, type_, &r);
-		if (rc < 0)
-			throw std::bad_alloc();
-		return r;
-	}
+	data convert(data data) const;
+
+	/** check names */
+	static bool exists(const char *name)
+		{ afb_type_t t;
+		  return afb_type_lookup(&t, name) == 0; }
+	static bool exists(const std::string &name)
+		{ return exists(name.c_str()); }
 };
 
 /**
@@ -191,39 +294,171 @@ public:
  */
 class data
 {
+	friend class req;
 protected:
 	/** wrapped data */
 	afb_data_t data_;
+
+	/** conversion */
+	void _convert_(afb_type_t a_type, afb_data_t a_data)
+		{ if (afb_data_convert(a_data, a_type, &data_) < 0)
+			throw convert_data_error("convert-data-failed"); }
+
+	/** creation */
+	void _create_(int status)
+		{ if (status < 0)
+			throw create_data_error("create-data-failed"); }
+
 public:
-	data() noexcept;
-	data(afb_data_t d) noexcept;
-	data(const data &other) noexcept;
-	data(data &&other) noexcept;
-	data(afb::type type, const data &other);
-	data(afb::type type, const void *pointer, size_t size, void (*dispose)(void*), void *closure);
-	data(afb::type type, const void *pointer, size_t size);
-	data(afb::type type, void **pointer, size_t size);
-	~data();
+	/** default constructor */
+	data() noexcept
+		: data_{nullptr} {}
 
-	data &operator=(afb_data_t d);
-	data &operator=(const data &other);
-	data &operator=(data &&other);
+	/** initialisation constructor */
+	data(afb_data_t a_data) noexcept
+		: data_{a_data} {}
 
-	void unref();
-	void addref();
+	/** copy constructor */
+	data(const data &other) noexcept
+		: data_{other.data_} {}
+	data(data &&other) noexcept
+		: data_{other.data_} { other.data_ = nullptr; }
 
-	operator afb_data_t() const;
+	/** creation constructors */
+	data(afb_type_t a_type, const void *pointer, size_t size, void (*dispose)(void*), void *closure)
+		{ _create_(afb_create_data_raw(&data_, a_type, pointer, size, dispose, closure)); }
+	data(afb_type_t a_type, const void *pointer, size_t size)
+		{ _create_(afb_create_data_copy(&data_, a_type, pointer, size)); }
+	data(afb_type_t a_type, void **pointer, size_t size)
+		{ _create_(afb_create_data_alloc(&data_, a_type, pointer, size)); }
+	data(afb::type type, const void *pointer, size_t size, void (*dispose)(void*), void *closure)
+		{ type.validate();
+		  _create_(afb_create_data_raw(&data_, type, pointer, size, dispose, closure)); }
+	data(afb::type type, const void *pointer, size_t size)
+		{ type.validate();
+		  _create_(afb_create_data_copy(&data_, type, pointer, size)); }
+	data(afb::type type, void **pointer, size_t size)
+		{ type.validate();
+		  _create_(afb_create_data_alloc(&data_, type, pointer, size)); }
 
-	operator bool() const;
-	bool is_valid() const;
+	/** conversion constructors */
+	data(afb_type_t a_type, afb_data_t a_data)
+		{ _convert_(a_type, a_data); }
+	data(afb_type_t a_type, const data &other)
+		{ _convert_(a_type, other.data_); }
+	data(afb::type type, afb_data_t a_data)
+		{ type.validate();
+		  _convert_(type, a_data); }
+	data(afb::type type, const data &other)
+		{ type.validate();
+		  _convert_(type, other.data_); }
 
-	afb::type type() const;
-	const void *pointer() const;
-	const void *operator *() const;
-	size_t size() const;
+	/** destruction */
+	~data()
+		{}
 
-	data convert(afb::type t) const;
+	/** unwrap */
+	operator afb_data_t() const
+		{ return data_; }
+
+	/** assign */
+	data &operator=(afb_data_t a_data)
+		{ data_ = a_data;
+		  return *this; }
+	data &operator=(const data &other)
+		{ return *this = other.data_; }
+	data &operator=(data &&other)
+		{ data_ = other.data_;
+		  other.data_ = nullptr;
+		  return *this; }
+
+	/** validation */
+	bool is_valid() const
+		{ return afb_data_is_valid(data_); }
+	operator bool() const
+		{ return is_valid(); }
+	void validate() const
+		{ if (!is_valid())
+			throw invalid_data_error("invalid-data"); }
+
+	/** comparison */
+	bool operator ==(const data &other) const
+		{ return data_ == other.data_; }
+
+	/** reference count */
+	void unref()
+		{ afb_data_unref(data_); }
+	data &addref()
+		{ afb_data_addref(data_);
+		  return *this; }
+	const data &addref() const
+		{ afb_data_addref(data_);
+		  return *this; }
+
+	/** access components */
+	afb::type type() const
+		{ return afb::type(afb_data_type(data_)); }
+	void *pointer() const
+		{ return afb_data_ro_pointer(data_); }
+	void *operator *() const
+		{ return afb_data_ro_pointer(data_); }
+	size_t size() const
+		{ return afb_data_size(data_); }
+
+	/** conversion */
+	data convert(afb::type t) const
+		{ return data(t, *this); }
 };
+
+/*************************************************************************/
+/* effective members of class afb::type                                  */
+/*************************************************************************/
+
+/** creation of data */
+inline data type::create_raw(const void *pointer, size_t size, void (*dispose)(void*), void *closure) const {
+	return data(*this, pointer, size, dispose, closure);
+}
+
+inline data type::create_alloc(void **pointer, size_t size) const {
+	return data(*this, pointer, size);
+}
+
+inline data type::create_copy(const void *pointer, size_t size) const {
+	return data(*this, pointer, size);
+}
+
+/** conversion of data */
+inline data type::convert(data other_data) const {
+	return data(*this, other_data);
+}
+
+/** predefined types */
+static inline type OPAQUE() { return type(AFB_PREDEFINED_TYPE_OPAQUE); }
+static inline type STRINGZ() { return type(AFB_PREDEFINED_TYPE_STRINGZ); }
+static inline type JSON() { return type(AFB_PREDEFINED_TYPE_JSON); }
+static inline type JSON_C() { return type(AFB_PREDEFINED_TYPE_JSON_C); }
+static inline type BYTEARRAY() { return type(AFB_PREDEFINED_TYPE_BYTEARRAY); }
+static inline type BOOL() { return type(AFB_PREDEFINED_TYPE_BOOL); }
+static inline type I32() { return type(AFB_PREDEFINED_TYPE_I32); }
+static inline type U32() { return type(AFB_PREDEFINED_TYPE_U32); }
+static inline type I64() { return type(AFB_PREDEFINED_TYPE_I64); }
+static inline type U64() { return type(AFB_PREDEFINED_TYPE_U64); }
+static inline type DOUBLE() { return type(AFB_PREDEFINED_TYPE_DOUBLE); }
+
+/** legacy predefined types */
+inline type type_opaque() { return OPAQUE(); }
+inline type type_stringz() { return STRINGZ(); }
+inline type type_json() { return JSON(); }
+inline type type_json_c() { return JSON_C(); }
+
+
+
+
+
+/*************************************************************************/
+/* effective declaration of classes                                      */
+/*************************************************************************/
+
 
 /**
  * class intended to manage received set of data: params,
@@ -246,8 +481,8 @@ public:
 		friend class dataset;
 		ref(afb_data_t *item) : item_{item} {}
 	public:
-		operator data() const { return data(*item_); }
-		data operator=(const data &data) const { *item_ = data; return data; }
+		operator afb::data() const { return data(*item_); }
+		ref operator=(const data &data) const { *item_ = data; return *this; }
 	};
 
 	/* access */
@@ -306,27 +541,27 @@ public:
 		{ afb_data_array_unref(size_, array_); }
 
 	/** access the data */
-	afb::data operator[](unsigned idx) const noexcept
-		{ return afb::data(array_[idx]); }
+	data operator[](unsigned idx) const noexcept
+		{ return data(array_[idx]); }
 
-	afb::data operator[](int idx) const noexcept
-		{ return afb::data(array_[idx]); }
+	data operator[](int idx) const noexcept
+		{ return data(array_[idx]); }
 
-	afb::data at(unsigned idx) const {
+	data at(unsigned idx) const {
 		if (size_ <= idx)
 			throw std::out_of_range("out of range");
-		return afb::data(array_[idx]);
+		return data(array_[idx]);
 	}
 
-	afb::data at(int idx) const {
+	data at(int idx) const {
 		if (idx < 0 || size_ <= idx)
 			throw std::out_of_range("out of range");
-		return afb::data(array_[idx]);
+		return data(array_[idx]);
 	}
 };
 
 /* apis */
-class api
+class api : public logger
 {
 protected:
 	afb_api_t api_;
@@ -339,26 +574,26 @@ public:
 
 	api();
 	api(afb_api_t a);
-	api(const api &other) = delete;
-	api(api &&other);
-	~api();
-	api &operator=(const api &other) = delete;
-	api &operator=(api &&other);
+	api(const api &other);
+	api &operator=(const api &other);
 
 	operator afb_api_t() const;
 	afb_api_t operator->() const;
 
 	/* General functions */
 	const char *name() const;
+	int alias(const char *as_name) noexcept
+		{ return afb::alias(name(), as_name); }
 	void *get_userdata() const;
 	void set_userdata(void *value) const;
 	int require_api(const char *name, int initialized) const;
 	int require_api(const std::string &name, int initialized) const;
 
 	/* Verbosity functions */
-	int wants_log_level(int level) const;
-	void vverbose(int level, const char *file, int line, const char *func, const char *fmt, va_list args) const;
-	void verbose(int level, const char *file, int line, const char *func, const char *fmt, ...) const;
+	int wants_log_level(int level) const noexcept final
+		{ return afb_api_wants_log_level(api_, level); }
+	void vverbose(int level, const char *file, int line, const char *func, const char *fmt, va_list args) const noexcept final
+		{ afb_api_vverbose(api_, level, file, line, func, fmt, args); }
 
 	/* Data retrieval functions */
 	struct json_object *settings() const;
@@ -433,7 +668,7 @@ public:
 };
 
 /* req(uest) */
-class req
+class req : public logger
 {
 	afb_req_t req_;
 
@@ -451,12 +686,12 @@ public:
 
 	afb::api api() const;
 
-	void reply(int status = 0) const;
-	void reply(int status, afb_data_t data) const;
-	void reply(int status, unsigned nreplies, afb_data_t const replies[]) const;
-	template <unsigned n> void reply(int status, const dataset<n> &replies) const;
-	void reply(int status, received_data replies) const;
-	void reply(int status, const std::vector<afb_data_t> &&params) const;
+	void reply(int status = 0) const noexcept;
+	void reply(int status, afb_data_t data) const noexcept;
+	void reply(int status, unsigned nreplies, afb_data_t const replies[]) const noexcept;
+	template <unsigned n> void reply(int status, const dataset<n> &replies) const noexcept;
+	void reply(int status, received_data replies) const noexcept;
+	void reply(int status, const std::vector<afb_data_t> &&params) const noexcept;
 
 	void addref() const;
 
@@ -464,7 +699,9 @@ public:
 
 	void session_close() const;
 
-	bool session_set_LOA(unsigned level) const;
+	bool session_set_LOA(unsigned level) const
+		{ return !afb_req_session_set_LOA(req_, level); }
+
 
 	bool subscribe(const event &event) const;
 
@@ -475,9 +712,12 @@ public:
 
 	int subcallsync(const char *api, const char *verb, unsigned nparams, afb_data_t const params[], int flags, int &status, unsigned &nreplies, afb_data_t replies[]) const;
 
-	void verbose(int level, const char *file, int line, const char * func, const char *fmt, va_list args) const;
 
-	void verbose(int level, const char *file, int line, const char * func, const char *fmt, ...) const;
+	/* Verbosity functions */
+	int wants_log_level(int level) const noexcept final
+		{ return afb_req_wants_log_level(req_, level); }
+	void vverbose(int level, const char *file, int line, const char * func, const char *fmt, va_list args) const noexcept final
+		{ afb_req_vverbose(req_, level, file, line, func, fmt, args); }
 
 	struct json_object *get_client_info() const;
 
@@ -529,7 +769,38 @@ public:
 	};
 
 	template < class T > contextclass<T> context() const { return contextclass<T>(req_); }
+
+	received_data parameters() const noexcept
+		{
+			const afb_data_t *params;
+			unsigned count = afb_req_parameters(req_, &params);
+			return received_data(count, params);
+		}
+
+	bool try_convert(unsigned idx, type type) const noexcept
+		{ return !afb_req_param_convert(req_, idx, afb_type_t(type), nullptr); }
+
+	bool try_convert(int idx, type type) const noexcept
+		{ return try_convert(unsigned(idx), type); }
+
+	bool try_convert(unsigned idx, type type, data &data) const noexcept
+		{ return !afb_req_param_convert(req_, idx, afb_type_t(type), &data.data_); }
+
+	bool try_convert(int idx, type type, data &data) const noexcept
+		{ return try_convert(unsigned(idx), type, data); }
+
+	data convert(unsigned idx, type type) const
+		{
+			int rc = afb_req_param_convert(req_, idx, afb_type_t(type), nullptr);
+			if (rc)
+				throw new convert_data_error("can't convert parameter");
+		}
+
+	data convert(int idx, type type) const
+		{ return convert(unsigned(idx), type); }
 };
+
+
 
 /*************************************************************************/
 /* effective declaration of classes                                      */
@@ -589,59 +860,6 @@ struct vcb_context {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-template <void (*_F_)(afb::req,afb::received_data)>
-void verbcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	_F_(req, afb::received_data(nparams, params));
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
-void verbcb_client(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	client_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
-}
-
-template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
-void verbcb_client(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	client_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
-void verbcb_api(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	api_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
-}
-
-template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
-void verbcb_api(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	api_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
-void verbcb_vcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	vcb_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
-}
-
-template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
-void verbcb_vcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	vcb_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <void (*_F_)(void*,int,afb::received_data,afb::req)>
 void subcallcb(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_req_t req)
@@ -660,7 +878,7 @@ void subcallcb(void *closure, int status, unsigned nreplies, afb_data_t const re
 template <class _C_, void (_C_::*_F_)(void*,int,afb::received_data,afb::req) const>
 void subcallcb(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_req_t req)
 {
-	reinterpret_cast<_C_*>(closure)->_F_(status, afb::received_data(nreplies, replies), req);
+	reinterpret_cast<const _C_*>(closure)->_F_(status, afb::received_data(nreplies, replies), req);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -690,7 +908,7 @@ void callcb(void *closure, int status, unsigned nreplies, afb_data_t const repli
 template <class _C_, void (_C_::*_F_)(int,afb::received_data,afb::api) const>
 void callcb(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_api_t api)
 {
-	reinterpret_cast<_C_*>(closure)->_F_(status, afb::received_data(nreplies, replies), api);
+	reinterpret_cast<const _C_*>(closure)->_F_(status, afb::received_data(nreplies, replies), api);
 }
 
 template <class _C_, void (_C_::*_F_)(int,afb::received_data)>
@@ -702,53 +920,8 @@ void callcb(void *closure, int status, unsigned nreplies, afb_data_t const repli
 template <class _C_, void (_C_::*_F_)(int,afb::received_data) const>
 void callcb(void *closure, int status, unsigned nreplies, afb_data_t const replies[], afb_api_t api)
 {
-	reinterpret_cast<_C_*>(closure)->_F_(status, afb::received_data(nreplies, replies));
+	reinterpret_cast<const _C_*>(closure)->_F_(status, afb::received_data(nreplies, replies));
 }
-
-/*************************************************************************/
-/* effective members of class afb::type                                  */
-/*************************************************************************/
-
-inline type type_opaque() { return type(AFB_PREDEFINED_TYPE_OPAQUE); }
-inline type type_stringz() { return type(AFB_PREDEFINED_TYPE_STRINGZ); }
-inline type type_json() { return type(AFB_PREDEFINED_TYPE_JSON); }
-inline type type_json_c() { return type(AFB_PREDEFINED_TYPE_JSON_C); }
-
-/*************************************************************************/
-/* effective members of class afb::data                                  */
-/*************************************************************************/
-
-inline data::data()  noexcept : data_{nullptr} { }
-inline data::data(afb_data_t d) noexcept : data_{d} { }
-inline data::data(data &&other) noexcept : data_{std::exchange(other.data_, nullptr)} {}
-inline data::data(const data &other) noexcept : data_{other.data_} {}
-inline data::data(afb::type type, const data &other) { afb_data_convert(other, type, &data_); }
-inline data::data(afb::type type, const void *pointer, size_t size, void (*dispose)(void*), void *closure)
-	{ afb_create_data_raw(&data_, type, pointer, size, dispose, closure); }
-inline data::data(afb::type type, const void *pointer, size_t size)
-	{ afb_create_data_copy(&data_, type, pointer, size); }
-inline data::data(afb::type type, void **pointer, size_t size)
-	{ afb_create_data_alloc(&data_, type, pointer, size); }
-inline data::~data() {  }
-
-inline data &data::operator=(afb_data_t d) { data_ = d; return *this; }
-inline data &data::operator=(const data &other) { return *this = other.data_; }
-inline data &data::operator=(data &&other) { return *this = std::exchange(other.data_, nullptr); }
-
-inline void data::unref() { afb_data_unref(std::exchange(data_, nullptr)); }
-inline void data::addref() { afb_data_addref(data_); }
-
-inline data::operator afb_data_t() const { return data_; }
-
-inline data::operator bool() const { return is_valid(); }
-inline bool data::is_valid() const { return afb_data_is_valid(data_); }
-
-inline type data::type() const { return afb_data_type(data_); }
-inline const void *data::pointer() const { return afb_data_ro_pointer(data_); }
-inline const void *data::operator *() const { return afb_data_ro_pointer(data_); }
-inline size_t data::size() const { return afb_data_size(data_); }
-
-inline data data::convert(afb::type t) const { data r(t, *this); return r; }
 
 /*************************************************************************/
 /* effective members of class afb::api                                   */
@@ -756,9 +929,8 @@ inline data data::convert(afb::type t) const { data r(t, *this); return r; }
 
 inline api::api() : api_{nullptr} { }
 inline api::api(afb_api_t a) : api_{a} { }
-inline api::api(api &&other) : api_{other.api_} { other.api_ = nullptr; }
-inline api::~api() { api_ = nullptr; }
-inline api &api::operator=(api &&other) { api_ = other.api_; other.api_ = nullptr; return *this;}
+inline api::api(const api &other) : api_{other.api_} {}
+inline api &api::operator=(const api &other) { api_ = other.api_; return *this;}
 inline api::operator afb_api_t() const { return api_; }
 inline afb_api_t api::operator->() const { return api_; }
 inline const char *api::name() const { return afb_api_name(api_); }
@@ -766,15 +938,6 @@ inline void *api::get_userdata() const { return afb_api_get_userdata(api_); }
 inline void api::set_userdata(void *value) const { afb_api_set_userdata(api_, value); }
 inline int api::require_api(const char *name, int initialized) const { return afb_api_require_api(api_, name, initialized); }
 inline int api::require_api(const std::string& name, int initialized) const { return afb_api_require_api(api_, name.c_str(), initialized); }
-inline int api::wants_log_level(int level) const { return afb_api_wants_log_level(api_, level); }
-inline void api::vverbose(int level, const char *file, int line, const char *func, const char *fmt, va_list args) const { afb_api_vverbose(api_, level, file, line, func, fmt, args); }
-inline void api::verbose(int level, const char *file, int line, const char *func, const char *fmt, ...) const
-{
-	va_list args;
-	va_start(args, fmt);
-	vverbose(level, file, line, func, fmt, args);
-	va_end(args);
-}
 inline struct json_object *api::settings() const { return afb_api_settings(api_); }
 inline void api::call(const char *apiname, const char *verb, unsigned nparams, afb_data_t const params[], api::call_cb callback, void *closure) const { afb_api_call(api_, apiname, verb, nparams, params, callback, closure); }
 inline void api::call(const std::string &apiname, const std::string &verb, unsigned nparams, afb_data_t const params[], api::call_cb callback, void *closure) const { afb_api_call(api_, apiname.c_str(), verb.c_str(), nparams, params, callback, closure); }
@@ -859,22 +1022,22 @@ inline bool req::is_valid() const { return afb_req_is_valid(req_); }
 
 inline api req::api() const { return afb_req_get_api(req_); }
 
-inline void req::reply(int status) const
+inline void req::reply(int status) const noexcept
 	{ afb_req_reply(req_, status, 0, nullptr); }
-inline void req::reply(int status, afb_data_t data) const
+inline void req::reply(int status, afb_data_t data) const noexcept
 	{ afb_req_reply(req_, status, 1, &data); }
 
-inline void req::reply(int status, unsigned nreplies, afb_data_t const replies[]) const
+inline void req::reply(int status, unsigned nreplies, afb_data_t const replies[]) const noexcept
 	{ afb_req_reply(req_, status, nreplies, replies); }
-template <unsigned n> void req::reply(int status, const dataset<n> &replies) const
+template <unsigned n> void req::reply(int status, const dataset<n> &replies) const noexcept
 	{ afb_req_reply(req_, status, replies.count(), replies.data()); }
-inline void req::reply(int status, received_data replies) const
+inline void req::reply(int status, received_data replies) const noexcept
 	{
 		replies.addref();
 		reply(status, replies.size(), replies.array());
 	}
 
-inline void req::reply(int status, const std::vector<afb_data_t> &&replies) const
+inline void req::reply(int status, const std::vector<afb_data_t> &&replies) const noexcept
 	{ reply(status, (unsigned)replies.size(), replies.data()); }
 
 inline void req::addref() const { afb_req_addref(req_); }
@@ -882,8 +1045,6 @@ inline void req::addref() const { afb_req_addref(req_); }
 inline void req::unref() const { afb_req_unref(req_); }
 
 inline void req::session_close() const { afb_req_session_close(req_); }
-
-inline bool req::session_set_LOA(unsigned level) const { return !afb_req_session_set_LOA(req_, level); }
 
 inline bool req::subscribe(const event &event) const { return !afb_req_subscribe(req_, event); }
 
@@ -903,19 +1064,6 @@ inline void req::subcall(const char *api, const char *verb, unsigned nparams, af
 inline int req::subcallsync(const char *api, const char *verb, unsigned nparams, afb_data_t const params[], int flags, int &status, unsigned &nreplies, afb_data_t replies[]) const
 {
 	return afb_req_subcall_sync(req_, api, verb, nparams, params, flags, &status, &nreplies, replies);
-}
-
-inline void req::verbose(int level, const char *file, int line, const char * func, const char *fmt, va_list args) const
-{
-	afb_req_verbose(req_, level, file, line, func, fmt, args);
-}
-
-inline void req::verbose(int level, const char *file, int line, const char * func, const char *fmt, ...) const
-{
-	va_list args;
-	va_start(args, fmt);
-	afb_req_verbose(req_, level, file, line, func, fmt, args);
-	va_end(args);
 }
 
 inline struct json_object *req::get_client_info() const
@@ -974,6 +1122,45 @@ inline int callsync(const char *api, const char *verb, unsigned nparams, afb_dat
 	return root().callsync(api, verb, nparams, params, status, nreplies, replies);
 }
 
+
+
+
+
+#if LOGLEVEL_OK
+inline void log_level::operator ()(const char *fmt, va_list args) const noexcept
+{
+	root().vverbose(*this, fmt, args);
+}
+inline void log_level::operator ()(const char *fmt, ...) const noexcept
+{
+	va_list args;
+	va_start(args, fmt);
+	root().vverbose(*this, fmt, args);
+	va_end(args);
+}
+inline void log_level::operator ()(req req, const char *fmt, va_list args) const noexcept
+{
+	req.vverbose(*this, fmt, args);
+}
+inline void log_level::operator ()(req req, const char *fmt, ...) const noexcept
+{
+	va_list args;
+	va_start(args, fmt);
+	req.vverbose(*this, fmt, args);
+	va_end(args);
+}
+inline void log_level::operator ()(api api, const char *fmt, va_list args) const noexcept
+{
+	api.vverbose(*this, fmt, args);
+}
+inline void log_level::operator ()(api api, const char *fmt, ...) const noexcept
+{
+	va_list args;
+	va_start(args, fmt);
+	api.vverbose(*this, fmt, args);
+	va_end(args);
+}
+#endif
 /*************************************************************************/
 /* declaration of the binding's authorization s                          */
 /*************************************************************************/
@@ -1056,6 +1243,72 @@ constexpr afb_auth auth_and(const afb_auth &first, const afb_auth &next)
 	return auth_and(&first, &next);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Wrappers for verb callbacks
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <void (*_F_)(afb::req,afb::received_data) noexcept>
+void verbcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	_F_(afb::req(req), afb::received_data(nparams, params));
+}
+
+template <void (*_F_)(afb::req,afb::received_data)>
+void verbcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	try {
+		_F_(afb::req(req), afb::received_data(nparams, params));
+	}
+	catch (std::exception &e) {
+		AFB_REQ_ERROR(req, "Exception %s", e.what());
+		afb_req_reply(req, AFB_ERRNO_INTERNAL_ERROR, 0, nullptr);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
+void verbcb_client(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	client_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
+void verbcb_client(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	client_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
+void verbcb_api(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	api_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
+void verbcb_api(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	api_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
+void verbcb_vcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	vcb_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
+template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data) const>
+void verbcb_vcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
+{
+	vcb_context<_C_>::get(req)->_F_(req, afb::received_data(nparams, params));
+}
+
 constexpr afb_verb_t verb(
 	const char *name,
 	afb_req_callback_t callback,
@@ -1067,6 +1320,19 @@ constexpr afb_verb_t verb(
 )
 {
 	return { name, callback, auth, info, vcbdata, session, glob };
+}
+
+template <void (*_F_)(afb_req_t,unsigned,afb_data_t const[])>
+constexpr afb_verb_t verb(
+	const char *name,
+	const char *info = nullptr,
+	uint16_t session = 0,
+	const afb_auth *auth = nullptr,
+	bool glob = false,
+	void *vcbdata = nullptr
+)
+{
+	return { name, _F_, auth, info, vcbdata, session, glob };
 }
 
 template <void (*_F_)(afb::req,afb::received_data)>
@@ -1082,6 +1348,7 @@ constexpr afb_verb_t verb(
 	return { name, verbcb<_F_>, auth, info, vcbdata, session, glob };
 }
 
+/*
 template <class _C_, void (_C_::*_F_)(afb::req,afb::received_data)>
 constexpr afb_verb_t verb_client(
 	const char *name,
@@ -1133,11 +1400,21 @@ constexpr afb_verb_t verb_api(
 {
 	return { name, verbcb_api<_C_, _F_>, auth, info, vcbdata, session, glob };
 }
+*/
 
 constexpr afb_verb_t verbend()
 {
 	return { 0, 0, 0, 0, 0, 0, 0 };
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Wrappers for binding callbacks
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef afb_ctlid_t ctlid;
+typedef afb_ctlarg_t ctlarg;
 
 constexpr afb_binding_t binding(
 	const char *name,
@@ -1151,6 +1428,54 @@ constexpr afb_binding_t binding(
 {
 	return {
 		name, specification, info, verbs, mainctl, userdata,
+		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) };
+};
+
+template <int (*_F_)(afb_api_t, afb_ctlid_t, const afb_ctlarg_t, void *)>
+constexpr afb_binding_t binding(
+	const char *name,
+	const afb_verb_t *verbs,
+	const char *info,
+	const char *specification = nullptr,
+	bool noconcurrency = false,
+	void *userdata = nullptr
+)
+{
+	return {
+		name, specification, info, verbs, _F_, userdata,
+		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) };
+};
+
+template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *) noexcept>
+int bindingcb(afb_api_t api, afb_ctlid_t ctlid, const afb_ctlarg_t ctlarg, void *userdata)
+{
+	return _F_(afb::api(api), ctlid, ctlarg, userdata);
+}
+
+template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *)>
+int bindingcb(afb_api_t api, afb_ctlid_t ctlid, const afb_ctlarg_t ctlarg, void *userdata)
+{
+	try {
+		return _F_(afb::api(api), ctlid, ctlarg, userdata);
+	}
+	catch(std::exception &e) {
+		AFB_API_ERROR(api, "Exception %s", e.what());
+		return AFB_ERRNO_INTERNAL_ERROR;
+	}
+}
+
+template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *)>
+constexpr afb_binding_t binding(
+	const char *name,
+	const afb_verb_t *verbs,
+	const char *info,
+	const char *specification = nullptr,
+	bool noconcurrency = false,
+	void *userdata = nullptr
+)
+{
+	return {
+		name, specification, info, verbs, bindingcb<_F_>, userdata,
 		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) };
 };
 

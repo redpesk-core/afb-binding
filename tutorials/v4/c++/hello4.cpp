@@ -988,41 +988,41 @@ static struct afb_auth auths[] = {
 // NOTE: this sample does not use session to keep test a basic as possible
 //       in real application most APIs should be protected with AFB_SESSION_CHECK
 static const afb_verb_t verbs[] = {
-	afb::verb("ping", afb::verbcb<ping>, nullptr),
-	afb::verb("success", afb::verbcb<success>, nullptr),
-	afb::verb("fail", afb::verbcb<fail>, nullptr),
-	afb::verb("bug", afb::verbcb<bug>, nullptr),
-	afb::verb("subcall", afb::verbcb<subcall>, nullptr),
-	afb::verb("subcallsync", afb::verbcb<subcallsync>, nullptr),
-	afb::verb("call", afb::verbcb<call>, nullptr),
-	afb::verb("callsync", afb::verbcb<callsync>, nullptr),
-	afb::verb("eventadd", afb::verbcb<eventadd>, nullptr),
-	afb::verb("eventdel", afb::verbcb<eventdel>, nullptr),
-	afb::verb("eventsub", afb::verbcb<eventsub>, nullptr),
-	afb::verb("eventunsub", afb::verbcb<eventunsub>, nullptr),
-	afb::verb("eventpush", afb::verbcb<eventpush>, nullptr),
-	afb::verb("verbose", afb::verbcb<verbose>, nullptr),
-	afb::verb("broadcast", afb::verbcb<broadcast>, nullptr),
-	afb::verb("hasperm", afb::verbcb<hasperm>, nullptr),
-	afb::verb("exit", afb::verbcb<exitnow>, nullptr),
-	afb::verb("close", afb::verbcb<closess>, nullptr, AFB_SESSION_CLOSE),
-	afb::verb("set-loa", afb::verbcb<setloa>, nullptr, 0, &auths[0]),
-	afb::verb("has-loa-1", afb::verbcb<ok>, nullptr, AFB_SESSION_LOA_1),
-	afb::verb("has-loa-2", afb::verbcb<ok>, nullptr, AFB_SESSION_LOA_2),
-	afb::verb("has-loa-3", afb::verbcb<ok>, nullptr, AFB_SESSION_LOA_3),
-	afb::verb("setctx", afb::verbcb<setctx>, nullptr),
-	afb::verb("setctxif", afb::verbcb<setctxif>, nullptr),
-	afb::verb("getctx", afb::verbcb<getctx>, nullptr),
-	afb::verb("checktok", afb::verbcb<ok>, nullptr, AFB_SESSION_CHECK),
-	afb::verb("info", afb::verbcb<info>, nullptr),
-	afb::verb("reply-count", afb::verbcb<replycount>, nullptr),
-	afb::verb("ref", afb::verbcb<ref>, nullptr),
-	afb::verb("api", afb::verbcb<manageapi>, nullptr),
-	afb::verb("mute", afb::verbcb<mute>, nullptr),
-	afb::verb("mutebug", afb::verbcb<mutebug>, nullptr),
-	afb::verb("queue", afb::verbcb<queue>, nullptr),
-	afb::verb("settings", afb::verbcb<settings>, nullptr),
-	afb::verb("after", afb::verbcb<after>, nullptr),
+	afb::verb<ping>("ping", nullptr),
+	afb::verb<success>("success", nullptr),
+	afb::verb<fail>("fail", nullptr),
+	afb::verb<bug>("bug", nullptr),
+	afb::verb<subcall>("subcall", nullptr),
+	afb::verb<subcallsync>("subcallsync", nullptr),
+	afb::verb<call>("call", nullptr),
+	afb::verb<callsync>("callsync", nullptr),
+	afb::verb<eventadd>("eventadd", nullptr),
+	afb::verb<eventdel>("eventdel", nullptr),
+	afb::verb<eventsub>("eventsub", nullptr),
+	afb::verb<eventunsub>("eventunsub", nullptr),
+	afb::verb<eventpush>("eventpush", nullptr),
+	afb::verb<verbose>("verbose", nullptr),
+	afb::verb<broadcast>("broadcast", nullptr),
+	afb::verb<hasperm>("hasperm", nullptr),
+	afb::verb<exitnow>("exit", nullptr),
+	afb::verb<closess>("close", nullptr, AFB_SESSION_CLOSE),
+	afb::verb<setloa>("set-loa", nullptr, 0, &auths[0]),
+	afb::verb<ok>("has-loa-1", nullptr, AFB_SESSION_LOA_1),
+	afb::verb<ok>("has-loa-2", nullptr, AFB_SESSION_LOA_2),
+	afb::verb<ok>("has-loa-3", nullptr, AFB_SESSION_LOA_3),
+	afb::verb<setctx>("setctx", nullptr),
+	afb::verb<setctxif>("setctxif", nullptr),
+	afb::verb<getctx>("getctx", nullptr),
+	afb::verb<ok>("checktok", nullptr, AFB_SESSION_CHECK),
+	afb::verb<info>("info", nullptr),
+	afb::verb<replycount>("reply-count", nullptr),
+	afb::verb<ref>("ref", nullptr),
+	afb::verb<manageapi>("api", nullptr),
+	afb::verb<mute>("mute", nullptr),
+	afb::verb<mutebug>("mutebug", nullptr),
+	afb::verb<queue>("queue", nullptr),
+	afb::verb<settings>("settings", nullptr),
+	afb::verb<after>("after", nullptr),
 	afb::verbend()
 };
 
@@ -1171,7 +1171,7 @@ end:
 
 /*************************************************************/
 
-static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
+static int mainctl(afb::api api, afb::ctlid ctlid, afb::ctlarg ctlarg, void *userdata)
 {
 	switch (ctlid) {
 	case afb_ctlid_Root_Entry:
@@ -1181,21 +1181,21 @@ static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *
 	case afb_ctlid_Pre_Init:
 		AFB_NOTICE("hello binding comes to live");
 #if defined(PREINIT_PROVIDE_CLASS)
-		afb_api_provide_class(api, PREINIT_PROVIDE_CLASS);
+		api.provide_class(PREINIT_PROVIDE_CLASS);
 #endif
 #if defined(PREINIT_REQUIRE_CLASS)
-		afb_api_require_class(api, PREINIT_REQUIRE_CLASS);
+		api.require_class(PREINIT_REQUIRE_CLASS);
 #endif
 		break;
 
 	case afb_ctlid_Init:
 		AFB_NOTICE("hello binding starting");
 #if defined(INIT_REQUIRE_API)
-		afb_api_require_api(api, INIT_REQUIRE_API, 1);
+		api.require_api(INIT_REQUIRE_API, 1);
 #endif
 		type_jsonc = "#json_c";
 		type_stringz = "#stringz";
-		afb_alias_api(afb_api_name(api), "fakename");
+		api.alias("fakename");
 		break;
 
 	case afb_ctlid_Class_Ready:
@@ -1216,4 +1216,5 @@ static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *
 	return 0;
 }
 
-const afb_binding_t afbBindingExport = afb::binding(APINAME, verbs, "hello 4 C++", mainctl);
+const afb_binding_t afbBindingExport =
+	afb::binding<mainctl>(APINAME, verbs, "hello 4 C++");

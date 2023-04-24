@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-only
 
-base = ../..
+base = ../../..
 INSRC = $(shell test -e $(base)/afb/afb-export.map && echo true || echo false)
 
 ifeq (${INSRC},true)
@@ -22,7 +22,7 @@ CXXFLAGS += ${FLAGS} -fpermissive
 
 .PHONY: all clean
 
-tutos = tuto-1.so
+tutos = tuto-1.so tuto-3.so
 samples = hello4.so
 
 all: ${tutos} ${samples}
