@@ -19,29 +19,13 @@
 #include <mutex>
 #include <map>
 #include <set>
+#include <cmath>
+#include <cstring>
 
-#include <string.h>
 #include <json-c/json.h>
 
 #define AFB_BINDING_VERSION 4
 #include <afb/afb-binding>
-
-#include <stdio.h>
-#include <string.h>
-#include <pthread.h>
-#include <fcntl.h>
-#include <math.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#include <json-c/json.h>
-
-/*
-#define AFB_BINDING_VERSION 4
-#include <afb/afb-binding.h>
-*/
 
 #if !defined(APINAME)
 #define APINAME "hello"
@@ -189,6 +173,8 @@ json_object *args_to_json(afb::received_data params, json_object **result)
 		for (i = 0 ; rc >= 0 && i < params.size() ; i++)
 			json_object_array_add(r, json_of_data(params[i]));
 	}
+	if (result)
+		*result = r;
 	return r;
 }
 
@@ -495,11 +481,10 @@ static void subcallsync (afb::req request, afb::received_data params)
 	}
 }
 
-static void callcb (void *closure, int status, unsigned nreplies, afb_data_t const *replies, afb_api_t api)
+static void callcb (void *closure, int status, afb::received_data replies)
 {
 	afb::req request(reinterpret_cast<afb_req_t>(closure));
-
-	request.reply(status, nreplies, replies);
+	request.reply(status, replies);
 	request.unref();
 }
 
@@ -508,10 +493,9 @@ static void call (afb::req request, afb::received_data params)
 	callargs args(request, params);
 	if (args) {
 		request.addref();
-		args.call(request.api(), callcb,
-			const_cast<void*>(reinterpret_cast<const void*>(afb_req_t(request))));
+		void *closure = const_cast<void*>(reinterpret_cast<const void*>((afb_req_t)request));
+		args.call(request.api(), afb::callcb<callcb>, closure);
 	}
-
 }
 
 static void callsync (afb::req request, afb::received_data params)
@@ -1209,8 +1193,8 @@ static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *
 #if defined(INIT_REQUIRE_API)
 		afb_api_require_api(api, INIT_REQUIRE_API, 1);
 #endif
-		type_jsonc = "afb:JSON-C";
-		type_stringz = "afb:STRINGZ";
+		type_jsonc = "#json_c";
+		type_stringz = "#stringz";
 		afb_alias_api(afb_api_name(api), "fakename");
 		break;
 
