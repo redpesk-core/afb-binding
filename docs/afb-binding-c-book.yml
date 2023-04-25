@@ -1,0 +1,67 @@
+type: books
+books:
+-
+    id: afb-binding-c
+    title: Application Framework Bindings
+    description: Application Framework Bindings documentation
+    keywords:
+    author: "IotBzh"
+    version: master
+    chapters:
+    - name: Writing bindings in C
+      url: "writing-bindings-c.md"
+    - name: Using the data
+      url: "afb-binding-data.md"
+    - name: How to write a binding version 4
+      url: "afb-binding-tutorial-v4.md"
+    - name: Developping bindings on a desktop
+      url: "afb-desktop-package.md"
+    - name: Bindings Version 4 References
+      children:
+          - name: Types and globals
+            url: "reference-v4/types-and-globals.md"
+          - name: Logging macros
+            url: "reference-v4/macro-log.md"
+          - name: afb_api functions
+            url: "reference-v4/func-afb-api.md"
+          - name: afb_req functions
+            url: "reference-v4/func-afb-req.md"
+          - name: afb_event functions
+            url: "reference-v4/func-afb-event.md"
+          - name: Miscellanous functions
+            url: "reference-v4/func-afb-misc.md"
+          - name: afb_type functions
+            url: "reference-v4/func-afb-type.md"
+          - name: Predefined data types
+            url: "reference-v4/predefined-afb-type.md"
+          - name: afb_data functions
+            url: "reference-v4/func-afb-data.md"
+          - name: afb_data_array functions
+            url: "reference-v4/func-afb-data-array.md"
+          - name: afb_evfd functions
+            url: "reference-v4/func-afb-evfd.md"
+          - name: afb_timer functions
+            url: "reference-v4/func-afb-timer.md"
+          - name: index
+            url: "reference-v4/index.md"
+    - name: How to write a binding version 3
+      url: "afb-binding-tutorial-v3.md"
+    - name: Migration from v3 to v4 guide
+      url: migration-to-binding-v4.md
+    - name: Bindings Version 3 References
+      children:
+          - name: Types and globals
+            url: "reference-v3/types-and-globals.md"
+          - name: Logging macros
+            url: "reference-v3/macro-log.md"
+          - name: afb_api functions
+            url: "reference-v3/func-api.md"
+          - name: afb_req functions
+            url: "reference-v3/func-req.md"
+          - name: afb_event functions
+            url: "reference-v3/func-event.md"
+          - name: afb_daemon functions
+            url: "reference-v3/func-daemon.md"
+          - name: afb_service functions
+            url: "reference-v3/func-service.md"
+
