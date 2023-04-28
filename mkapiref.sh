@@ -60,7 +60,7 @@ $1=="BEGIN-FUNCTION" {
 	print ""
 	print "## Function "esc($2)
 	print ""
-	print "```C"
+	print "```c"
 	next
 }
 $1=="END-FUNCTION" {

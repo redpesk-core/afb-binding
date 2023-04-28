@@ -5,7 +5,7 @@ Functions of class **afb_req**
 
 ### afb_req_is_valid
 
-```C
+```c
 /**
  * Checks whether the request 'req' is valid or not.
  *
@@ -19,7 +19,7 @@ int afb_req_is_valid(
 
 ### afb_req_get_api
 
-```C
+```c
 /**
  * Retrieves the api that serves the request
  *
@@ -33,7 +33,7 @@ afb_api_t afb_req_get_api(
 
 ### afb_req_get_vcbdata
 
-```C
+```c
 /**
  * Retrieves the callback data of the verb. This callback data is set
  * when the verb is created.
@@ -48,7 +48,7 @@ void *afb_req_get_vcbdata(
 
 ### afb_req_get_called_api
 
-```C
+```c
 /**
  * Retrieve the name of the called api.
  *
@@ -65,7 +65,7 @@ const char *afb_req_get_called_api(
 
 ### afb_req_get_called_verb
 
-```C
+```c
 /**
  * Retrieve the name of the called verb
  *
@@ -79,7 +79,7 @@ const char *afb_req_get_called_verb(
 
 ### afb_req_addref
 
-```C
+```c
 /**
  * Increments the count of references of 'req'.
  *
@@ -93,7 +93,7 @@ afb_req_t *afb_req_addref(
 
 ### afb_req_unref
 
-```C
+```c
 /**
  * Decrement the count of references of 'req'.
  *
@@ -108,7 +108,7 @@ void afb_req_unref(
 
 ### afb_req_wants_log_level
 
-```C
+```c
 /**
  * Is the log message of 'level (as defined for syslog) required for the
  * request 'req'?
@@ -136,7 +136,7 @@ int afb_req_wants_log_level(
 
 ### afb_req_vverbose
 
-```C
+```c
 /**
  * Send associated to 'req' a message described by 'fmt' and its 'args'
  * to the journal for the verbosity 'level'.
@@ -176,7 +176,7 @@ void afb_req_vverbose(
 
 ### afb_req_verbose
 
-```C
+```c
 /**
  * Send associated to 'req' a message described by 'fmt' and following parameters
  * to the journal for the verbosity 'level'.
@@ -217,7 +217,7 @@ void afb_req_verbose(
 
 ### afb_req_get
 
-```C
+```c
 /**
  * Gets from the request 'req' the argument of 'name'.
  *
@@ -248,7 +248,7 @@ struct afb_arg afb_req_get(
 
 ### afb_req_value
 
-```C
+```c
 /**
  * Gets from the request 'req' the string value of the argument of 'name'.
  * Returns NULL if when there is no argument of 'name'.
@@ -271,7 +271,7 @@ const char *afb_req_value(
 
 ### afb_req_path
 
-```C
+```c
 /**
  * Gets from the request 'req' the path for file attached to the argument of 'name'.
  * Returns NULL if when there is no argument of 'name' or when there is no file.
@@ -294,7 +294,7 @@ const char *afb_req_path(
 
 ### afb_req_json
 
-```C
+```c
 /**
  * Gets from the request 'req' the json object hashing the arguments.
  *
@@ -317,7 +317,7 @@ struct json_object *afb_req_json(
 The functions **success** and **fail** are still supported.
 These functions are now implemented as the following macros:
 
-```C
+```c
 #define afb_req_success(req,obj,info)		    afb_req_reply(req,obj,NULL,info)
 #define afb_req_success_f(req,obj,...)	        afb_req_reply_f(req,obj,NULL,__VA_ARGS__)
 #define afb_req_success_v(req,obj,fmt,vargs)	afb_req_reply_v(req,obj,NULL,fmt,vargs)
@@ -329,7 +329,7 @@ These functions are now implemented as the following macros:
 
 ### afb_req_reply
 
-```C
+```c
 /**
  * Sends a reply to the request 'req'.
  *
@@ -358,7 +358,7 @@ void afb_req_reply(
 
 ### afb_req_reply_v
 
-```C
+```c
 /**
  * Same as 'afb_req_reply_f' but the arguments to the format 'info'
  * are given as a variable argument list instance.
@@ -387,7 +387,7 @@ void afb_req_reply_v(
 
 ### afb_req_reply_f
 
-```C
+```c
 /**
  * Same as 'afb_req_reply' but the 'info' is a formatting
  * string followed by arguments.
@@ -420,7 +420,7 @@ void afb_req_reply_f(
 
 ### afb_req_subcall
 
-```C
+```c
 /**
  * Calls the 'verb' of the 'api' with the arguments 'args' and 'verb' in the name of the binding.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
@@ -485,7 +485,7 @@ void afb_req_subcall(
 
 ### afb_req_subcall_sync
 
-```C
+```c
 /**
  * Makes a call to the method of name 'api' / 'verb' with the object 'args'.
  * This call is made in the context of the request 'req'.
@@ -526,7 +526,7 @@ int afb_req_subcall_sync(
 
 ### afb_req_subscribe
 
-```C
+```c
 /**
  * Establishes for the client link identified by 'req' a subscription
  * to the 'event'.
@@ -545,7 +545,7 @@ int afb_req_subscribe(
 
 ### afb_req_unsubscribe
 
-```C
+```c
 /**
  * Revokes the subscription established to the 'event' for the client
  * link identified by 'req'.
@@ -567,7 +567,7 @@ int afb_req_unsubscribe(
 
 ### afb_req_context
 
-```C
+```c
 /**
  * Manage the pointer stored by the binding for the client session of 'req'.
  *
@@ -599,7 +599,7 @@ void *afb_req_context(
 
 ### afb_req_context_get
 
-```C
+```c
 /**
  * Gets the pointer stored by the binding for the session of 'req'.
  * When the binding has not yet recorded a pointer, NULL is returned.
@@ -616,7 +616,7 @@ void *afb_req_context_get(
 
 ### afb_req_context_set
 
-```C
+```c
 /**
  * Stores for the binding the pointer 'context' to the session of 'req'.
  * The function 'free_context' will be called when the session is closed
@@ -637,7 +637,7 @@ void afb_req_context_set(
 
 ### afb_req_context_clear
 
-```C
+```c
 /**
  * Frees the pointer stored by the binding for the session of 'req'
  * and sets it to NULL.
@@ -652,7 +652,7 @@ void afb_req_context_clear(
 
 ### afb_req_session_close
 
-```C
+```c
 /**
  * Closes the session associated with 'req'
  * and delete all associated contexts.
@@ -665,7 +665,7 @@ void afb_req_session_close(
 
 ### afb_req_session_set_LOA
 
-```C
+```c
 /**
  * Sets the level of assurance of the session of 'req'
  * to 'level'. The effect of this function is subject of
@@ -685,7 +685,7 @@ int afb_req_session_set_LOA(
 
 ### afb_req_has_permission
 
-```C
+```c
 /**
  * Check whether the 'permission' is granted or not to the client
  * identified by 'req'.
@@ -702,7 +702,7 @@ int afb_req_has_permission(
 
 ### afb_req_get_application_id
 
-```C
+```c
 /**
  * Get the application identifier of the client application for the
  * request 'req'.
@@ -722,7 +722,7 @@ char *afb_req_get_application_id(
 
 ### afb_req_get_uid
 
-```C
+```c
 /**
  * Get the user identifier (UID) of the client for the
  * request 'req'.
@@ -738,7 +738,7 @@ int afb_req_get_uid(
 
 ### afb_req_get_client_info
 
-```C
+```c
 /**
  * Get informations about the client of the
  * request 'req'.
@@ -765,7 +765,7 @@ struct json_object *afb_req_get_client_info(
 
 ### afb_req_subcall_legacy
 
-```C
+```c
 /**
  * @deprecated use @ref afb_req_subcall
  *
@@ -806,7 +806,7 @@ void afb_req_subcall_legacy(
 
 ### afb_req_subcall_sync_legacy
 
-```C
+```c
 /**
  * @deprecated use @ref afb_req_subcall_sync
  *

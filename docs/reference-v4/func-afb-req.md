@@ -4,7 +4,7 @@
 
 ## Function afb\_req\_logmask
 
-```C
+```c
 /**
  * Get the logmask of the 'req'.
  *
@@ -20,7 +20,7 @@ afb_req_logmask(
 
 ## Function afb\_req\_wants\_log\_level
 
-```C
+```c
 /**
  * Is the log message of 'level (as defined for syslog) required for the
  * request 'req'?
@@ -50,7 +50,7 @@ afb_req_wants_log_level(
 
 ## Function afb\_req\_is\_valid
 
-```C
+```c
 /**
  * Checks whether the request 'req' is valid or not.
  *
@@ -66,7 +66,7 @@ afb_req_is_valid(
 
 ## Function afb\_req\_get\_api
 
-```C
+```c
 /**
  * Retrieves the api that serves the request
  *
@@ -82,7 +82,7 @@ afb_req_get_api(
 
 ## Function afb\_req\_get\_vcbdata
 
-```C
+```c
 /**
  * Retrieves the callback data of the verb. This callback data is set
  * when the verb is created.
@@ -99,7 +99,7 @@ afb_req_get_vcbdata(
 
 ## Function afb\_req\_get\_called\_api
 
-```C
+```c
 /**
  * Retrieve the name of the called api.
  *
@@ -117,7 +117,7 @@ afb_req_get_called_api(
 
 ## Function afb\_req\_get\_called\_verb
 
-```C
+```c
 /**
  * Retrieve the name of the called verb
  *
@@ -133,7 +133,7 @@ afb_req_get_called_verb(
 
 ## Function afb\_req\_addref
 
-```C
+```c
 /**
  * Increments the count of references of 'req'.
  *
@@ -149,7 +149,7 @@ afb_req_addref(
 
 ## Function afb\_req\_unref
 
-```C
+```c
 /**
  * Decrement the count of references of 'req'.
  *
@@ -163,7 +163,7 @@ afb_req_unref(
 
 ## Function afb\_req\_vverbose
 
-```C
+```c
 /**
  * Send associated to 'req' a message described by 'fmt' and its 'args'
  * to the journal for the verbosity 'level'.
@@ -205,7 +205,7 @@ afb_req_vverbose(
 
 ## Function afb\_req\_verbose
 
-```C
+```c
 /**
  * Send associated to 'req' a message described by 'fmt' and following parameters
  * to the journal for the verbosity 'level'.
@@ -247,7 +247,7 @@ afb_req_verbose(
 
 ## Function afb\_req\_context
 
-```C
+```c
 /**
  * Manage the pointer stored by the binding for the client session of 'req'.
  *
@@ -282,7 +282,7 @@ afb_req_context(
 
 ## Function afb\_req\_context\_get
 
-```C
+```c
 /**
  * Gets in '*ptrval' the pointer stored by the binding for the session of 'req'.
  * When the binding has not yet recorded a pointer, NULL is returned.
@@ -301,7 +301,7 @@ afb_req_context_get(
 
 ## Function afb\_req\_context\_set
 
-```C
+```c
 /**
  * Stores for the binding the pointer 'value' to the session of 'req'.
  * The function 'freecb' will be called with the given 'freeclo' when the
@@ -325,7 +325,7 @@ afb_req_context_set(
 
 ## Function afb\_req\_context\_drop
 
-```C
+```c
 /**
  * Frees the pointer stored by the binding for the session of 'req'
  * and sets it to NULL.
@@ -342,7 +342,7 @@ afb_req_context_drop(
 
 ## Function afb\_req\_session\_close
 
-```C
+```c
 /**
  * Closes the session associated with 'req'
  * and delete all associated contexts.
@@ -357,7 +357,7 @@ afb_req_session_close(
 
 ## Function afb\_req\_session\_set\_LOA
 
-```C
+```c
 /**
  * Sets the level of assurance of the session of 'req'
  * to 'level'. The effect of this function is subject of
@@ -377,7 +377,7 @@ afb_req_session_set_LOA(
 
 ## Function afb\_req\_session\_get\_LOA
 
-```C
+```c
 /**
  * Gets the current level of assurance of the session of 'req'.
  *
@@ -393,7 +393,7 @@ afb_req_session_get_LOA(
 
 ## Function afb\_req\_subscribe
 
-```C
+```c
 /**
  * Establishes for the client link identified by 'req' a subscription
  * to the 'event'.
@@ -414,7 +414,7 @@ afb_req_subscribe(
 
 ## Function afb\_req\_unsubscribe
 
-```C
+```c
 /**
  * Revokes the subscription established to the 'event' for the client
  * link identified by 'req'.
@@ -436,7 +436,7 @@ afb_req_unsubscribe(
 
 ## Function afb\_req\_check\_permission
 
-```C
+```c
 /**
  * Check whether the 'permission' is granted or not to the client
  * identified by 'req'.
@@ -457,7 +457,7 @@ afb_req_check_permission(
 
 ## Function afb\_req\_get\_client\_info
 
-```C
+```c
 /**
  * Get informations about the client of the
  * request 'req'.
@@ -484,7 +484,7 @@ afb_req_get_client_info(
 
 ## Function afb\_req\_parameters
 
-```C
+```c
 /**
  * Get the parameters of the request
  *
@@ -503,7 +503,7 @@ afb_req_parameters(
 
 ## Function afb\_req\_param\_convert
 
-```C
+```c
 /**
  * Convert the parameter of the request of the given index
  * to a given type and return it.
@@ -533,7 +533,7 @@ afb_req_param_convert(
 
 ## Function afb\_req\_reply
 
-```C
+```c
 /**
  * Reply to the request
  *
@@ -558,7 +558,7 @@ afb_req_reply(
 
 ## Function afb\_req\_subcall
 
-```C
+```c
 /**
  * Calls the 'verb' of the 'api' with the parameters 'params' and 'verb' in the name of the binding.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
@@ -607,7 +607,7 @@ afb_req_subcall(
 
 ## Function afb\_req\_subcall\_sync
 
-```C
+```c
 /**
  * Makes a call to the method of name 'api' / 'verb' with the parameters 'params'.
  * This call is made in the context of the request 'req'.
@@ -661,7 +661,7 @@ afb_req_subcall_sync(
 
 ## Function afb\_req\_get\_interface\_by\_id
 
-```C
+```c
 /**
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'itfid'.
@@ -682,7 +682,7 @@ afb_req_get_interface_by_id(
 
 ## Function afb\_req\_get\_interface\_by\_name
 
-```C
+```c
 /**
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'name'.
@@ -703,7 +703,7 @@ afb_req_get_interface_by_name(
 
 ## Function afb\_req\_get\_userdata
 
-```C
+```c
 /**
  * Get the user data associated to the request.
  *
@@ -719,7 +719,7 @@ afb_req_get_userdata(
 
 ## Function afb\_req\_set\_userdata
 
-```C
+```c
 /** set (associate) the user data to the request
  *
  * @param req The request

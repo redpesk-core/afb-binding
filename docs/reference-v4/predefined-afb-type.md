@@ -62,7 +62,7 @@ No updater
 
 In this example, an internal instance of `context` is wrapped to a data.
 
-```C
+```c
 /**
  * Get the data referencing the context, create it if needed.
  * The returned data has its reference count incremented and the
@@ -138,19 +138,19 @@ No updater
 
 In this first example, the created `data` is a static const C string:
 
-```C
+```c
    status = afb_create_data_raw(&data, AFB_PREDEFINED_TYPE_STRINGZ, "hello", 1+strlen("hello"), 0, 0);
 ```
 
 In this second example, the created `data` is a copy of the other string `value`:
 
-```C
+```c
    status = afb_create_data_copy(&data, AFB_PREDEFINED_TYPE_STRINGZ, value, 1+strlen(value));
 ```
 
 In this third example, the created `data` is a reference to field of `value`:
 
-```C
+```c
    status = afb_create_data_raw(&data, AFB_PREDEFINED_TYPE_STRINGZ, value->name, 1+strlen(value->name), unref_value, value);
 ```
 

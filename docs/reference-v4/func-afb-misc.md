@@ -4,7 +4,7 @@
 
 ## Function afb\_create\_api
 
-```C
+```c
 /** MISC ***********************************************************/
 
 /**
@@ -45,7 +45,7 @@ afb_create_api(
 
 ## Function afb\_job\_post
 
-```C
+```c
 /**
  * Queue the job defined by 'callback' and 'argument' for being executed asynchronously
  * in this thread (later) or in an other thread.
@@ -70,7 +70,7 @@ afb_create_api(
  *
  * A typical implementation of the job callback is:
  *
- * ```C
+ * ```c
  * void my_job_cb(int signum, void *arg)
  * {
  *	struct myarg_t *myarg = arg;
@@ -104,7 +104,7 @@ afb_job_post(
 
 ## Function afb\_job\_abort
 
-```C
+```c
 /**
 * Aborts the job of given id. The job must be posted using 'afb_job_post'
 * that returned its id.
@@ -126,7 +126,7 @@ afb_job_abort(
 
 ## Function afb\_alias\_api
 
-```C
+```c
 /**
  * Create an aliased name 'as_name' for the api 'name'.
  * Calling this function is only allowed within preinit.
@@ -145,7 +145,7 @@ afb_alias_api(
 
 ## Function afb\_setup\_shared\_object
 
-```C
+```c
 /**
  * Setup the given shared object.
  *

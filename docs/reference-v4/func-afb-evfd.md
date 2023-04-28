@@ -4,7 +4,7 @@
 
 ## Function afb\_evfd\_create
 
-```C
+```c
 /**
  * Creates a callback for handling asynchronousely the events associated with
  * the file descriptor 'fd'.
@@ -33,7 +33,7 @@ afb_evfd_create(
 
 ## Function afb\_evfd\_addref
 
-```C
+```c
 /**
  * Add one reference to the evfd object 'efd'
  *
@@ -49,7 +49,7 @@ afb_evfd_addref(
 
 ## Function afb\_evfd\_unref
 
-```C
+```c
 /**
  * Remove one reference to the evfd object 'efd' and
  * destroys the object if not more referenced
@@ -64,7 +64,7 @@ afb_evfd_unref(
 
 ## Function afb\_evfd\_get\_fd
 
-```C
+```c
 /**
  * Retrieve the file descriptor of the evfd object 'efd'
  *
@@ -80,7 +80,7 @@ afb_evfd_get_fd(
 
 ## Function afb\_evfd\_get\_events
 
-```C
+```c
 /**
  * Retrieve the event flags for the evfd object 'efd'
  *
@@ -96,7 +96,7 @@ afb_evfd_get_events(
 
 ## Function afb\_evfd\_set\_events
 
-```C
+```c
 /**
  * Set the event flags for the evfd object 'efd'
  *

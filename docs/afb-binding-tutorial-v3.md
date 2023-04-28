@@ -4,7 +4,7 @@
 
 This is the code of the binding **tutorials/v3/tuto-1.c**:
 
-```C
+```c
   1 #define AFB_BINDING_VERSION 3
   2 #include <afb/afb-binding.h>
   3
@@ -81,7 +81,7 @@ This shows basic things:
 
 The lines 1 and 2 show how to get the include file **afb-binding.h**.
 
-```C
+```c
   1 #define AFB_BINDING_VERSION 3
   2 #include <afb/afb-binding.h>
 ```
@@ -117,7 +117,7 @@ The ***binder*** knows that this is a ***binding*** because
 it finds the exported symbol **afbBindingExport** that is expected to be
 a structure of type **afb_binding_t**.
 
-```C
+```c
  10 const afb_verb_t verbs[] = {
  11         { .verb="hello", .callback=hello },
  12         { .verb=NULL }
@@ -147,7 +147,7 @@ When the ***binder*** receives a request for the verb **hello** of
 of the api **tuto-1**, it invoke the callback **hello** of the **binding**
 with the argument **req** that handles the client request.
 
-```C
+```c
   4 void hello(afb_req_t req)
   5 {
   6         AFB_REQ_DEBUG(req, "hello world");
@@ -179,7 +179,7 @@ commonly be used when writing a ***binding***:
 
 This is the code of the binding **tutorials/v3/tuto-2.c**:
 
-```C
+```c
       1 #include <string.h>
       2 #include <json-c/json.h>
       3

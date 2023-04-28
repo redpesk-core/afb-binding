@@ -5,7 +5,7 @@ Functions of class **afb_event**
 
 ### afb_event_is_valid
 
-```C
+```c
 /**
  * Checks whether the 'event' is valid or not.
  *
@@ -19,7 +19,7 @@ int afb_event_is_valid(
 
 ### afb_event_name
 
-```C
+```c
 /**
  * Gets the name associated to 'event'.
  *
@@ -36,7 +36,7 @@ const char *afb_event_name(
 
 ### afb_event_unref
 
-```C
+```c
 /**
  * Decrease the count of references to 'event'.
  * Call this function when the evenid is no more used.
@@ -50,7 +50,7 @@ void afb_event_unref(
 
 ### afb_event_addref
 
-```C
+```c
 /**
  * Increases the count of references to 'event'
  *
@@ -66,7 +66,7 @@ afb_event_t *afb_event_addref(
 
 ### afb_event_broadcast
 
-```C
+```c
 /**
  * Broadcasts widely an event of 'event' with the data 'object'.
  * 'object' can be NULL.
@@ -87,7 +87,7 @@ int afb_event_broadcast(
 
 ### afb_event_push
 
-```C
+```c
 /**
  * Pushes an event of 'event' with the data 'object' to its observers.
  * 'object' can be NULL.

@@ -4,7 +4,7 @@
 
 ## Function afb\_timer\_create
 
-```C
+```c
 /**
  * Creates a timer handler object
  *
@@ -38,7 +38,7 @@ afb_timer_create(
 
 ## Function afb\_timer\_addref
 
-```C
+```c
 /**
  * Add one reference to the 'timer' object
  *
@@ -54,7 +54,7 @@ afb_timer_addref(
 
 ## Function afb\_timer\_unref
 
-```C
+```c
 /**
  * Remove one reference to the 'timer' object and
  * destroys the object if not more referenced

@@ -69,7 +69,7 @@ Events are created using the ***afb\_api\_make\_event*** function
 that takes the api that creates the event and the name of the event.
 Example:
 
-```C
+```c
     event = afb_api_make_event(api, name);
 ```
 
@@ -83,7 +83,7 @@ that takes the current request object and event and associates them
 together.
 Example:
 
-```C
+```c
     rc = afb_req_subscribe(req, event);
 ```
 
@@ -142,7 +142,7 @@ The ***afb\_req\_unsubscribe*** function tells the framework to
 remove the requesting client from the event's list of subscribers.
 Example:
 
-```C
+```c
     afb_req_unsubscribe(req, event);
 ```
 
@@ -174,7 +174,7 @@ When a data is generated and ready to be pushed, the signaling agent
 should call the function ***afb\_event\_push***.
 Example:
 
-```C
+```c
     rc = afb_event_push(event, JSON);
     if (rc == 0) {
         stop_generating(event);
@@ -225,13 +225,13 @@ An event can be broadcasted using one of the two following methods:
 
 Example 1:
 
-```C
+```c
 afb_api_broadcast_event(api, name, json);
 ```
 
 Example 2:
 
-```C
+```c
 event = afb_api_make_event(api, name);
 . . . .
 afb_event_broadcast(event, json);

@@ -2383,7 +2383,7 @@ afb_create_api(
  *
  * A typical implementation of the job callback is:
  *
- * ```C
+ * ```c
  * void my_job_cb(int signum, void *arg)
  * {
  *	struct myarg_t *myarg = arg;

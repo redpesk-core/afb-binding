@@ -7,7 +7,7 @@ All these function are deprecated, try to use functions of class **afb_api** ins
 
 ## afb_service_call
 
-```C
+```c
 /**
  * @deprecated try to use @ref afb_api_call instead
  *
@@ -51,7 +51,7 @@ void afb_service_call(
 
 ## afb_service_call_sync
 
-```C
+```c
 /**
  * @deprecated try to use @ref afb_api_call_sync instead
  *
@@ -86,7 +86,7 @@ int afb_service_call_sync(
 
 ## afb_service_call_legacy
 
-```C
+```c
 /**
  * @deprecated try to use @ref afb_api_call instead
  *
@@ -130,7 +130,7 @@ void afb_service_call_legacy(
 
 ## afb_service_call_sync_legacy
 
-```C
+```c
 /**
  * @deprecated try to use @ref afb_api_call_sync instead
  *

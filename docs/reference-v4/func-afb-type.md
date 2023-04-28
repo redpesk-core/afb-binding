@@ -4,7 +4,7 @@
 
 ## Function afb\_type\_lookup
 
-```C
+```c
 /**
  * Lookup for an existing type
  *
@@ -22,7 +22,7 @@ afb_type_lookup(
 
 ## Function afb\_type\_register
 
-```C
+```c
 /**
  * Register a type
  *
@@ -48,7 +48,7 @@ afb_type_register(
 
 ## Function afb\_type\_name
 
-```C
+```c
 /**
  * Get the name of a type
  *
@@ -64,7 +64,7 @@ afb_type_name(
 
 ## Function afb\_type\_set\_family
 
-```C
+```c
 /**
  * Set the family of the type. An instance of a type naturally converts
  * to an instance of its family.
@@ -83,7 +83,7 @@ afb_type_set_family(
 
 ## Function afb\_type\_add\_convert\_to
 
-```C
+```c
 /**
  * Add a convertion routine to a given type
  *
@@ -105,7 +105,7 @@ afb_type_add_convert_to(
 
 ## Function afb\_type\_add\_convert\_from
 
-```C
+```c
 /**
  * Add a convertion routine from a given type
  *
@@ -127,7 +127,7 @@ afb_type_add_convert_from(
 
 ## Function afb\_type\_add\_update\_to
 
-```C
+```c
 /**
  * Add an update routine to a given type
  *
@@ -149,7 +149,7 @@ afb_type_add_update_to(
 
 ## Function afb\_type\_add\_update\_from
 
-```C
+```c
 /**
  * Add an update routine from a given type
  *

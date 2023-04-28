@@ -19,7 +19,7 @@ queried with argument string "ME".
 
 This is the code of the binding **tutorials/v4/tuto-1.c**:
 
-```C
+```c
   1 /*
   2  * Copyright (C) 2015-2023 IoT.bzh Company
   3  * Author: José Bollo <jose.bollo@iot.bzh>
@@ -132,7 +132,7 @@ This shows basic things:
 
 The lines 9 and 10 show how to get the include file **afb-binding.h**.
 
-```C
+```c
   9 #define AFB_BINDING_VERSION 4
  10 #include <afb/afb-binding.h>
 ```
@@ -168,7 +168,7 @@ The ***binder*** knows that this is a ***binding*** because
 it finds the exported symbol **afbBindingExport** that is expected to be
 a structure of type **afb_binding_t**.
 
-```C
+```c
  40 const afb_verb_t verbs[] = {
  41     { .verb="hello", .callback=hello },
  42     { .verb=NULL }
@@ -198,7 +198,7 @@ When the ***binder*** receives a request for the verb **hello** of
 of the api **tuto-1**, it invoke the callback **hello** of the **binding**
 with the argument **req** that handles the client request.
 
-```C
+```c
  12 void hello(afb_req_t req, unsigned nparams, afb_data_t const *params)
  13 {
  14     int retcod;

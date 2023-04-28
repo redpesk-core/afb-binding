@@ -4,7 +4,7 @@ Functions of class **afb_daemon**
 All the functions of the class **afb_daemon** use the default api.
 This are internally aliased to the corresponding function of class afb_api_t.
 
-```C
+```c
 /**
  * Retrieves the common systemd's event loop of AFB
  */

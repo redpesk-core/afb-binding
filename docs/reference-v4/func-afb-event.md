@@ -4,7 +4,7 @@
 
 ## Function afb\_event\_is\_valid
 
-```C
+```c
 /**
  * Checks whether the 'event' is valid or not.
  *
@@ -20,7 +20,7 @@ afb_event_is_valid(
 
 ## Function afb\_event\_addref
 
-```C
+```c
 /**
  * Increases the count of references to 'event'
  *
@@ -36,7 +36,7 @@ afb_event_addref(
 
 ## Function afb\_event\_unref
 
-```C
+```c
 /**
  * Decrease the count of references to 'event'.
  * Call this function when the evenid is no more used.
@@ -52,7 +52,7 @@ afb_event_unref(
 
 ## Function afb\_event\_name
 
-```C
+```c
 /**
  * Gets the name associated to 'event'.
  *
@@ -71,7 +71,7 @@ afb_event_name(
 
 ## Function afb\_event\_push
 
-```C
+```c
 /**
  * Pushes an event of 'event' with the 'data' to its observers.
  * 'data' can be NULL.
@@ -99,7 +99,7 @@ afb_event_push(
 
 ## Function afb\_event\_broadcast
 
-```C
+```c
 /**
  * Broadcasts widely an event of 'event' with the 'data.
  * 'data' can be NULL.

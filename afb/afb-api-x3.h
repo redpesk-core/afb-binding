@@ -279,7 +279,7 @@ struct sd_bus *afb_api_x3_get_system_bus(
  *
  * This can be used to get the path of the root directory using:
  *
- * ```C
+ * ```c
  * char buffer[MAX_PATH], proc[100];
  * int dirfd = afb_api_rootdir_get_fd(api);
  * snprintf(proc, sizeof proc, "/proc/self/fd/%d", dirfd);
@@ -356,7 +356,7 @@ int afb_api_x3_rootdir_open_locale(
  *
  * A typical implementation of the job callback is:
  *
- * ```C
+ * ```c
  * void my_job_cb(int signum, void *arg)
  * {
  *	struct myarg_t *myarg = arg;

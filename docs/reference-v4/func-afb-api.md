@@ -4,7 +4,7 @@
 
 ## Function afb\_api\_logmask
 
-```C
+```c
 /**
  * Get the logmask of the 'api'.
  *
@@ -20,7 +20,7 @@ afb_api_logmask(
 
 ## Function afb\_api\_name
 
-```C
+```c
 /**
  * Get the name of the 'api'.
  *
@@ -38,7 +38,7 @@ afb_api_name(
 
 ## Function afb\_api\_get\_userdata
 
-```C
+```c
 /**
  * Get the "userdata" pointer of the 'api'
  *
@@ -56,7 +56,7 @@ afb_api_get_userdata(
 
 ## Function afb\_api\_set\_userdata
 
-```C
+```c
 /**
  * Set the "userdata" pointer of the 'api' to 'value'
  *
@@ -76,7 +76,7 @@ afb_api_set_userdata(
 
 ## Function afb\_api\_wants\_log\_level
 
-```C
+```c
 /**
  * Is the log message of 'level (as defined for syslog) required for the api?
  *
@@ -105,7 +105,7 @@ afb_api_wants_log_level(
 
 ## Function afb\_api\_vverbose
 
-```C
+```c
 /**
  * Send to the journal with the logging 'level' a message described
  * by 'fmt' applied to the va-list 'args'.
@@ -149,7 +149,7 @@ afb_api_vverbose(
 
 ## Function afb\_api\_verbose
 
-```C
+```c
 /**
  * Send to the journal with the log 'level' a message described
  * by 'fmt' and following parameters.
@@ -192,7 +192,7 @@ afb_api_verbose(
 
 ## Function afb\_api\_broadcast\_event
 
-```C
+```c
 /**
  * Broadcasts widely the event of 'name' with the data 'object'.
  * 'object' can be NULL.
@@ -224,7 +224,7 @@ afb_api_broadcast_event(
 
 ## Function afb\_api\_require\_api
 
-```C
+```c
 /**
  * Check that it requires the API of 'name'.
  * If 'initialized' is not zero it request the API to be
@@ -252,7 +252,7 @@ afb_api_require_api(
 
 ## Function afb\_api\_new\_event
 
-```C
+```c
 /**
  * Creates an event of 'name' and returns it.
  *
@@ -281,7 +281,7 @@ afb_api_new_event(
 
 ## Function afb\_api\_add\_verb
 
-```C
+```c
 /**
  * Add one verb to the dynamic set of the api
  *
@@ -316,7 +316,7 @@ afb_api_add_verb(
 
 ## Function afb\_api\_del\_verb
 
-```C
+```c
 /**
  * Delete one verb from the dynamic set of the api
  *
@@ -338,7 +338,7 @@ afb_api_del_verb(
 
 ## Function afb\_api\_seal
 
-```C
+```c
 /**
  * Seal the api. After a call to this function the api can not be modified
  * anymore.
@@ -353,7 +353,7 @@ afb_api_seal(
 
 ## Function afb\_api\_set\_verbs
 
-```C
+```c
 /**
  * Set the verbs of the 'api' using description of verbs of the api v2
  *
@@ -375,7 +375,7 @@ afb_api_set_verbs(
 
 ## Function afb\_api\_event\_handler\_add
 
-```C
+```c
 /**
  * Add a specific event handler for the api
  *
@@ -411,7 +411,7 @@ afb_api_event_handler_add(
 
 ## Function afb\_api\_event\_handler\_del
 
-```C
+```c
 /**
  * Delete a specific event handler for the api
  *
@@ -434,7 +434,7 @@ afb_api_event_handler_del(
 
 ## Function afb\_api\_call
 
-```C
+```c
 /**
  * Calls the 'verb' of the 'api' with the arguments 'args' and 'verb' in the name of the binding.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
@@ -483,7 +483,7 @@ afb_api_call(
 
 ## Function afb\_api\_call\_sync
 
-```C
+```c
 /**
  * Calls the 'verb' of the 'api' with the arguments 'args' and 'verb' in the name of the binding.
  * 'result' will receive the response.
@@ -537,7 +537,7 @@ afb_api_call_sync(
 
 ## Function afb\_api\_provide\_class
 
-```C
+```c
 /**
  * Tells that the api provides a class of features. Classes are intended to
  * allow ordering of initializations: apis that provides a given class are
@@ -561,7 +561,7 @@ afb_api_provide_class(
 
 ## Function afb\_api\_require\_class
 
-```C
+```c
 /**
  * Tells that the api requires a set of class features. Classes are intended to
  * allow ordering of initializations: apis that provides a given class are
@@ -585,7 +585,7 @@ afb_api_require_class(
 
 ## Function afb\_api\_delete
 
-```C
+```c
 /**
  * Delete the given api.
  *
@@ -606,7 +606,7 @@ afb_api_delete(
 
 ## Function afb\_api\_settings
 
-```C
+```c
 /**
  * Settings of the api.
  *

@@ -30,7 +30,7 @@ a new handle is needed to manage apis. These handles are of the type
 
 It is defined as below.
 
-```C
+```c
 typedef struct afb_api_x3 afb_api_t;
 ```
 
@@ -41,13 +41,13 @@ must be exported under the name **afbBindingExport**.
 
 This structure is defined as below.
 
-```C
+```c
 typedef struct afb_binding_v3 afb_binding_t;
 ```
 
 Where:
 
-```C
+```c
 /**
  * Description of the bindings of type version 3
  */
@@ -96,11 +96,11 @@ struct afb_binding_v3
 Each verb is described with a structure of type **afb_verb_t**
 defined below:
 
-```C
+```c
 typedef struct afb_verb_v3 afb_verb_t;
 ```
 
-```C
+```c
 /**
  * Description of one verb as provided for binding API version 3
  */
@@ -152,7 +152,7 @@ The structure **afb_auth_t** is used within verb description to
 set security requirements.
 The interpretation of the structure depends on the value of the field **type**.
 
-```C
+```c
 typedef struct afb_auth afb_auth_t;
 
 /**
@@ -182,7 +182,7 @@ struct afb_auth
 
 The possible values for **type** is defined here:
 
-```C
+```c
 typedef enum afb_auth_type afb_auth_type_t;
 
 /**
@@ -220,7 +220,7 @@ enum afb_auth_type
 
 Example:
 
-```C
+```c
 static const afb_auth_t myauth[] = {
     { .type = afb_auth_Permission, .text = "urn:AGL:permission:me:public:set" },
     { .type = afb_auth_Permission, .text = "urn:AGL:permission:me:public:get" },

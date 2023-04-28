@@ -35,13 +35,13 @@ must be exported under the name **afbBindingExport**.
 
 This structure is defined as below.
 
-```C
+```c
 typedef struct afb_binding_v4 afb_binding_t;
 ```
 
 Where:
 
-```C
+```c
 /**
  * Description of the bindings of type version 4
  */
@@ -84,11 +84,11 @@ struct afb_binding_v4
 Each verb is described with a structure of type **afb\_verb\_t**
 defined below:
 
-```C
+```c
 typedef struct afb_verb_v4 afb_verb_t;
 ```
 
-```C
+```c
 /**
  * Description of one verb as provided for binding API version 4
  */
@@ -142,7 +142,7 @@ The structure **afb\_auth\_t** is used within verb description to
 set security requirements.
 The interpretation of the structure depends on the value of the field **type**.
 
-```C
+```c
 typedef struct afb_auth afb_auth_t;
 
 /**
@@ -172,7 +172,7 @@ struct afb_auth
 
 The possible values for **type** is defined here:
 
-```C
+```c
 typedef enum afb_auth_type afb_auth_type_t;
 
 /**
@@ -210,7 +210,7 @@ enum afb_auth_type
 
 Example:
 
-```C
+```c
 static const afb_auth_t myauth[] = {
     { .type = afb_auth_Permission, .text = "urn:AGL:permission:me:public:set" },
     { .type = afb_auth_Permission, .text = "urn:AGL:permission:me:public:get" },
@@ -237,7 +237,7 @@ APIs to identify control message received.
 
 It's defined as:
 
-```C
+```c
 typedef enum afb_ctlid afb_ctlid_t;
 
 enum afb_ctlid
@@ -268,7 +268,7 @@ The union **afb\_ctlarg\_t** wrap the argument of the control message.
 Its real value depends on a value of type afb\_ctlid\_t. That type is
 used in API's control functions.
 
-```C
+```c
 typedef const union afb_ctlarg *afb_ctlarg_t;
 
 union afb_ctlarg
@@ -309,7 +309,7 @@ union afb_ctlarg
 
 ## The type afb\_api\_callback\_t
 
-```C
+```c
 /**
  * Main api callback function.
  *
@@ -332,7 +332,7 @@ typedef int (*afb_api_callback_t)(
 
 ## The type afb\_req\_callback\_t
 
-```C
+```c
 /**
  * Request handling callback used for verbs.
  *
@@ -348,7 +348,7 @@ typedef void (*afb_req_callback_t)(
 
 ## The type afb\_call\_callback\_t
 
-```C
+```c
 /**
  * Callback for receiving asynchronous results of a call.
  *
@@ -368,7 +368,7 @@ typedef void (*afb_call_callback_t)(
 
 ## The type afb\_subcall\_callback\_t
 
-```C
+```c
 /**
  * Callback for receiving asynchronous results of a subcall.
  *
@@ -388,7 +388,7 @@ typedef void (*afb_subcall_callback_t)(
 
 ## The type afb\_check\_callback\_t
 
-```C
+```c
 /**
  * Callback for receiving result of checking of permissions.
  *
@@ -404,7 +404,7 @@ typedef void (*afb_check_callback_t)(
 
 ## The type afb\_event\_handler\_t
 
-```C
+```c
 /**
  * Callback for handling events.
  *
@@ -424,7 +424,7 @@ typedef void (*afb_event_handler_t)(
 
 ## The type afb\_type\_converter\_t
 
-```C
+```c
 /**
  * The type afb_type_converter_t denote a conversion callback.
  *
@@ -447,7 +447,7 @@ typedef int (*afb_type_converter_t)(
 
 ## The type afb\_type\_updater\_t
 
-```C
+```c
 /**
  * The type afb_type_updater_t denote a conversion callback that is able
  * to update the target instead of creating it.
@@ -471,7 +471,7 @@ typedef int (*afb_type_updater_t)(
 
 ## The type afb\_evfd\_handler\_t
 
-```C
+```c
 /**
  * Callbacks of file event handlers
  *
@@ -492,7 +492,7 @@ typedef void (*afb_evfd_handler_t)(
 
 ## The type afb\_timer\_handler\_t
 
-```C
+```c
 /**
  * Callbacks of timers
  *

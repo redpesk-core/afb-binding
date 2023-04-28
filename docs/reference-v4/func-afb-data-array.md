@@ -4,7 +4,7 @@
 
 ## Function afb\_data\_array\_addref
 
-```C
+```c
 /**
  * Increase the count of references of the array 'array'
  * that has 'count' data.
@@ -21,7 +21,7 @@ afb_data_array_addref(
 
 ## Function afb\_data\_array\_unref
 
-```C
+```c
 /**
  * Decrease the count of references of the array 'array'
  * that has 'count' data.
@@ -41,7 +41,7 @@ afb_data_array_unref(
 
 ## Function afb\_data\_array\_convert
 
-```C
+```c
 /**
  * Get a new instances of items of 'array_data' converted to the
  * corresponding types of 'array_type'

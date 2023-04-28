@@ -21,7 +21,7 @@ before including **<afb/afb-binding.h>**:
 The following macros must be used for logging for an **api** of type
 **afb\_api\_t**.
 
-```C
+```c
 AFB_API_ERROR(api,fmt,...)
 AFB_API_WARNING(api,fmt,...)
 AFB_API_NOTICE(api,fmt,...)
@@ -35,7 +35,7 @@ AFB_API_DEBUG(api,fmt,...)
 The following macros can be used for logging in the context
 of a request **req** of type **afb\_req\_t**:
 
-```C
+```c
 AFB_REQ_ERROR(req,fmt,...)
 AFB_REQ_WARNING(req,fmt,...)
 AFB_REQ_NOTICE(req,fmt,...)
@@ -47,7 +47,7 @@ AFB_REQ_DEBUG(req,fmt,...)
 
 The following macros are provided for logging globally.
 
-```C
+```c
 AFB_ERROR(fmt,...)
 AFB_WARNING(fmt,...)
 AFB_NOTICE(fmt,...)

@@ -4,7 +4,7 @@
 
 ## Function afb\_data\_is\_valid
 
-```C
+```c
 /**
  * Checks whether the 'data' is valid or not.
  *
@@ -20,7 +20,7 @@ afb_data_is_valid(
 
 ## Function afb\_create\_data\_raw
 
-```C
+```c
 /**
  * Creates a new data instance of the given type with the given values of
  * pointer, size, dispose and closure.
@@ -67,7 +67,7 @@ afb_create_data_raw(
 
 ## Function afb\_create\_data\_alloc
 
-```C
+```c
 /**
  * Creates a new data instance of the given type by allocating memory
  * of the given size. The allocated memory filled with zeroes.
@@ -95,7 +95,7 @@ afb_create_data_alloc(
 
 ## Function afb\_create\_data\_copy
 
-```C
+```c
 /**
  * Creates a new data instance of the given type by copying the memory
  * given by pointer and size. The memory where data is copied can eventually
@@ -124,7 +124,7 @@ afb_create_data_copy(
 
 ## Function afb\_data\_addref
 
-```C
+```c
 /**
  * Increases the count of references of 'data'
  *
@@ -140,7 +140,7 @@ afb_data_addref(
 
 ## Function afb\_data\_unref
 
-```C
+```c
 /**
  * Decreases the count of references of 'data'.
  * Call this function when the data is no more used.
@@ -156,7 +156,7 @@ afb_data_unref(
 
 ## Function afb\_data\_convert
 
-```C
+```c
 /**
  * Gets a new instance of the 'data' converted to the 'type'
  *
@@ -182,7 +182,7 @@ afb_data_convert(
 
 ## Function afb\_data\_type
 
-```C
+```c
 /**
  * Gets the type of the data.
  *
@@ -198,7 +198,7 @@ afb_data_type(
 
 ## Function afb\_data\_get\_mutable
 
-```C
+```c
 /**
  * Gets a mutable pointer to the data and also its size
  *
@@ -218,7 +218,7 @@ afb_data_get_mutable(
 
 ## Function afb\_data\_get\_constant
 
-```C
+```c
 /**
  * Gets a mutable pointer to the data.
  * Getting a mutable pointer has the effect of
@@ -238,7 +238,7 @@ afb_data_get_constant(
 
 ## Function afb\_data\_size
 
-```C
+```c
 /**
  * Gets the size of the data
  *
@@ -254,7 +254,7 @@ afb_data_size(
 
 ## Function afb\_data\_ro\_pointer
 
-```C
+```c
 /**
  * Gets a read only pointer to the data
  *
@@ -270,7 +270,7 @@ afb_data_ro_pointer(
 
 ## Function afb\_data\_rw\_pointer
 
-```C
+```c
 /**
  * Gets a read/write pointer to the data.
  * Returns NULL if the data is constant.
@@ -287,7 +287,7 @@ afb_data_rw_pointer(
 
 ## Function afb\_data\_notify\_changed
 
-```C
+```c
 /**
  * Notifies that the data changed and that any of its conversions are not
  * more valid.
@@ -302,7 +302,7 @@ afb_data_notify_changed(
 
 ## Function afb\_data\_is\_volatile
 
-```C
+```c
 /**
  * Tests if the data is volatile. Conversions of volatile data are never cached.
  *
@@ -318,7 +318,7 @@ afb_data_is_volatile(
 
 ## Function afb\_data\_set\_volatile
 
-```C
+```c
 /**
  * Makes the data volatile
  *
@@ -332,7 +332,7 @@ afb_data_set_volatile(
 
 ## Function afb\_data\_set\_not\_volatile
 
-```C
+```c
 /**
  * Makes the data not volatile
  *
@@ -346,7 +346,7 @@ afb_data_set_not_volatile(
 
 ## Function afb\_data\_is\_constant
 
-```C
+```c
 /**
  * Tests if the data is constant.
  *
@@ -362,7 +362,7 @@ afb_data_is_constant(
 
 ## Function afb\_data\_set\_constant
 
-```C
+```c
 /**
  * Makes the data constant
  *
@@ -376,7 +376,7 @@ afb_data_set_constant(
 
 ## Function afb\_data\_set\_not\_constant
 
-```C
+```c
 /**
  * Makes the data not constant
  *
@@ -390,7 +390,7 @@ afb_data_set_not_constant(
 
 ## Function afb\_data\_lock\_read
 
-```C
+```c
 /**
  * Locks the data for read, blocks the current thread
  * until the data is available for reading.
@@ -407,7 +407,7 @@ afb_data_lock_read(
 
 ## Function afb\_data\_try\_lock\_read
 
-```C
+```c
 /**
  * Try to locks the data for read. Always return immediately
  * with a status indicating whether the data has been locked
@@ -428,7 +428,7 @@ afb_data_try_lock_read(
 
 ## Function afb\_data\_lock\_write
 
-```C
+```c
 /**
  * Locks the data for write, blocks the current thread
  * until the data is available for writing.
@@ -445,7 +445,7 @@ afb_data_lock_write(
 
 ## Function afb\_data\_try\_lock\_write
 
-```C
+```c
 /**
  * Try to locks the data for write. Always return immediately
  * with a status indicating whether the data has been locked
@@ -466,7 +466,7 @@ afb_data_try_lock_write(
 
 ## Function afb\_data\_unlock
 
-```C
+```c
 /**
  * Unlock a locked data. It is an error to unlock a data that
  * the current thread doesn't hold locked.
@@ -481,7 +481,7 @@ afb_data_unlock(
 
 ## Function afb\_data\_update
 
-```C
+```c
 /**
  * Update the value of the given data with the given value
  *
@@ -499,7 +499,7 @@ afb_data_update(
 
 ## Function afb\_data\_assign
 
-```C
+```c
 /**
  * Replace 'data' with the given 'value', taking care to unreference
  * the data.
@@ -516,7 +516,7 @@ afb_data_assign(
 
 ## Function afb\_data\_dependency\_add
 
-```C
+```c
 /**
  * Add one dependency from a data to an other. This ensures
  * that pointers of the data @p to_data can be safely referenced
@@ -536,7 +536,7 @@ afb_data_dependency_add(
 
 ## Function afb\_data\_dependency\_sub
 
-```C
+```c
 /**
  * Remove one dependency from a data to an other
  *
@@ -554,7 +554,7 @@ afb_data_dependency_sub(
 
 ## Function afb\_data\_dependency\_drop\_all
 
-```C
+```c
 /**
  * Remove all dependencies of the @p data
  *

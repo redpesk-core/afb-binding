@@ -5,7 +5,7 @@ Functions of class **afb_api**
 
 ### afb_api_name
 
-```C
+```c
 /**
  * Get the name of the 'api'.
  *
@@ -21,7 +21,7 @@ const char *afb_api_name(
 
 ### afb_api_get_userdata
 
-```C
+```c
 /**
  * Get the "userdata" pointer of the 'api'
  *
@@ -37,7 +37,7 @@ void *afb_api_get_userdata(
 
 ### afb_api_set_userdata
 
-```C
+```c
 /**
  * Set the "userdata" pointer of the 'api' to 'value'
  *
@@ -53,7 +53,7 @@ void afb_api_set_userdata(
 
 ### afb_api_require_api
 
-```C
+```c
 /**
  * Check that it requires the API of 'name'.
  * If 'initialized' is not zero it requests the API to be
@@ -82,7 +82,7 @@ int afb_api_require_api(
 
 ### afb_api_wants_log_level
 
-```C
+```c
 /**
  * Is the log message of 'level (as defined for syslog) required for the api?
  *
@@ -109,7 +109,7 @@ int afb_api_wants_log_level(
 
 ### afb_api_vverbose
 
-```C
+```c
 /**
  * Send to the journal with the logging 'level' a message described
  * by 'fmt' applied to the va-list 'args'.
@@ -151,7 +151,7 @@ void afb_api_vverbose(
 
 ### afb_api_verbose
 
-```C
+```c
 /**
  * Send to the journal with the log 'level' a message described
  * by 'fmt' and following parameters.
@@ -194,7 +194,7 @@ void afb_api_verbose(
 
 ### afb_api_rootdir_get_fd
 
-```C
+```c
 /**
  * Get the root directory file descriptor. This file descriptor can
  * be used with functions 'openat', 'fstatat', ...
@@ -224,7 +224,7 @@ int afb_api_rootdir_get_fd(
 
 ### afb_api_rootdir_open_locale
 
-```C
+```c
 /**
  * Opens 'filename' within the root directory with 'flags' (see function openat)
  * using the 'locale' definition (example: "jp,en-US") that can be NULL.
@@ -257,7 +257,7 @@ int afb_api_rootdir_open_locale(
 
 ### afb_api_settings
 
-```C
+```c
 /**
  * Settings of the api.
  *
@@ -277,7 +277,7 @@ struct json_object *afb_api_settings(
 
 ### afb_api_call
 
-```C
+```c
 /**
  * Calls the 'verb' of the 'apiname' with the arguments 'args' and 'verb' in the name of the binding 'api'.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
@@ -324,7 +324,7 @@ void afb_api_call(
 
 ### afb_api_call_sync
 
-```C
+```c
 /**
  * Calls the 'verb' of the 'apiname' with the arguments 'args' and 'verb' in the name of the binding 'api'.
  * 'result' will receive the response.
@@ -359,7 +359,7 @@ int afb_api_call_sync(
 
 ### afb_api_queue_job
 
-```C
+```c
 /**
  * Queue the job defined by 'callback' and 'argument' for being executed asynchronously
  * in this thread (later) or in an other thread.
@@ -410,7 +410,7 @@ int afb_api_queue_job(
 
 ### afb_api_broadcast_event
 
-```C
+```c
 /**
  * Broadcasts widely the event of 'name' with the data 'object'.
  * 'object' can be NULL.
@@ -438,7 +438,7 @@ int afb_api_broadcast_event(
 
 ### afb_api_make_event
 
-```C
+```c
 /**
  * Creates an event of 'name' and returns it.
  *
@@ -464,7 +464,7 @@ afb_event_t afb_api_make_event(
 
 ### afb_api_event_handler_add
 
-```C
+```c
 /**
  * Add a specific event handler for the api
  *
@@ -502,7 +502,7 @@ int afb_api_event_handler_add(
 
 ### afb_api_event_handler_del
 
-```C
+```c
 /**
  * Delete a specific event handler for the api
  *
@@ -526,7 +526,7 @@ int afb_api_event_handler_del(
 
 ### afb_api_get_event_loop
 
-```C
+```c
 /**
  * Retrieves the common systemd's event loop of AFB
  *
@@ -543,7 +543,7 @@ struct sd_event *afb_api_get_event_loop(
 
 ### afb_api_get_user_bus
 
-```C
+```c
 /**
  * Retrieves the common systemd's user/session d-bus of AFB
  *
@@ -560,7 +560,7 @@ struct sd_bus *afb_api_get_user_bus(
 
 ### afb_api_get_system_bus
 
-```C
+```c
 /**
  * Retrieves the common systemd's system d-bus of AFB
  *
@@ -580,7 +580,7 @@ struct sd_bus *afb_api_get_system_bus(
 
 ### afb_api_new_api
 
-```C
+```c
 /**
  * Creates a new api of name 'apiname' briefly described by 'info' (that can
  * be NULL).
@@ -617,7 +617,7 @@ afb_api_t afb_api_new_api(
 
 ### afb_api_set_verbs_v2
 
-```C
+```c
 /**
  * @deprecated use @ref afb_api_set_verbs_v3 instead
  *
@@ -639,7 +639,7 @@ int afb_api_set_verbs_v2(
 
 ### afb_api_set_verbs_v3
 
-```C
+```c
 /**
  * Set the verbs of the 'api' using description of verbs of the api v2
  *
@@ -659,7 +659,7 @@ int afb_api_set_verbs_v3(
 
 ### afb_api_add_verb
 
-```C
+```c
 /**
  * Add one verb to the dynamic set of the api
  *
@@ -692,7 +692,7 @@ int afb_api_add_verb(
 
 ### afb_api_del_verb
 
-```C
+```c
 /**
  * Delete one verb from the dynamic set of the api
  *
@@ -712,7 +712,7 @@ int afb_api_del_verb(
 
 ### afb_api_on_event
 
-```C
+```c
 /**
  * Set the callback 'onevent' to process events in the name of the 'api'.
  *
@@ -748,7 +748,7 @@ int afb_api_on_event(
 
 ### afb_api_on_init
 
-```C
+```c
 /**
  * Set the callback 'oninit' to process initialization of the 'api'.
  *
@@ -777,7 +777,7 @@ int afb_api_on_init(
 
 ### afb_api_provide_class
 
-```C
+```c
 /**
  * Tells that the api provides a class of features. Classes are intended to
  * allow ordering of initializations: apis that provides a given class are
@@ -799,7 +799,7 @@ int afb_api_provide_class(
 
 ### afb_api_require_class
 
-```C
+```c
 /**
  * Tells that the api requires a set of class features. Classes are intended to
  * allow ordering of initializations: apis that provides a given class are
@@ -821,7 +821,7 @@ int afb_api_require_class(
 
 ### afb_api_seal
 
-```C
+```c
 /**
  * Seal the api. After a call to this function the api can not be modified
  * anymore.
@@ -834,7 +834,7 @@ void afb_api_seal(
 
 ### afb_api_delete_api
 
-```C
+```c
 /**
  * Delete the given api.
  *
@@ -853,7 +853,7 @@ int afb_api_delete_api(
 
 ### afb_api_add_alias
 
-```C
+```c
 /**
  * Create an aliased name 'as_name' for the api 'name'.
  * Calling this function is only allowed within preinit.
@@ -879,7 +879,7 @@ of work.
 
 ### afb_api_call_legacy
 
-```C
+```c
 /**
  * @deprecated try to use @ref afb_api_call instead
  *
@@ -925,7 +925,7 @@ void afb_api_call_legacy(
 
 ### afb_api_call_sync_legacy
 
-```C
+```c
 /**
  * @deprecated try to use @ref afb_api_call_sync instead
  *

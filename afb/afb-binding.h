@@ -17,7 +17,7 @@
  *
  * The normal usage is to include only one file as below:
  *
- * ```C
+ * ```c
  * #define AFB_BINDING_VERSION 3
  * #include <afb/afb-binding.h>
  * ```
