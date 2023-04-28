@@ -69,7 +69,7 @@ struct afb_verb_v4
 	/** some info about the verb, can be NULL */
 	const char *info;
 
-	/**< data for the verb callback */
+	/** data for the verb callback */
 	void *vcbdata;
 
 	/** authorization and session requirements of the verb */
