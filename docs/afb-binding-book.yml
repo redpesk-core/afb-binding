@@ -60,6 +60,8 @@ books:
             name: afb_evfd functions
           - url: "reference-v4/func-afb-timer.md"
             name: afb_timer functions
+          - url: "reference-v4/index.md"
+            name: index
     - url: "afb-desktop-package.md"
       name: Developping bindings on a desktop
 
