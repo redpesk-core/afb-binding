@@ -14,6 +14,8 @@ books:
       name: Binding's vocabulary
     - url: "afb-events-guide.md"
       name: Binder events guide
+    - url: "afb-binding-data.md"
+      name: Binder's data guide
     - url: "afb-binding-tutorial-v3.md"
       name: How to write a binding version 3?
     - url: "afb-binding-tutorial-v4.md"

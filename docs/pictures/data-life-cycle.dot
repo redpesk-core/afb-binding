@@ -1,0 +1,20 @@
+strict digraph data_life_cycle {
+	creation -> 1;
+	1 -> destruction [label="unref"];
+	subgraph refs {
+		rank=same;
+		1 -> 2 [label="addref"];
+		2 -> 1 [label="unref"];
+		2 -> 3 [label="addref"];
+		3 -> 2 [label="unref"];
+		3 -> inf [label="addref"];
+		inf -> 3 [label="unref"];
+		1 [label="refcount\n= 1"];
+		2 [label="refcount\n= 2"];
+		3 [label="refcount\n= 3"];
+		inf [shape=plaintext,label="..."];
+	}
+	creation [shape=plaintext];
+	destruction [shape=plaintext];
+}
+

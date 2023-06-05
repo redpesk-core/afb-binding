@@ -1,0 +1,73 @@
+strict digraph types_converts {
+
+LEGEND [shape=note,
+label="Convertion between predefined types
+
+The prefix AFB_PREDEFINED_TYPE_
+is removed for presentation
+
+to: convert to
+to/c: convert to if valid
+to+u: convert to and update to
+from: convert from
+from+u: convert from and update from"]
+
+start=10;
+
+OPAQUE -> STRINGZ [label="to"]
+OPAQUE -> JSON    [label="to"]
+OPAQUE -> JSON_C  [label="to"]
+
+STRINGZ -> BYTEARRAY [label="to"]
+STRINGZ -> OPAQUE    [label="to/c"]
+STRINGZ -> JSON      [label="to/c"]
+STRINGZ -> JSON_C    [label="to/c"]
+
+JSON -> STRINGZ  [label="family"]
+JSON -> OPAQUE   [label="to/c"]
+JSON -> JSON_C   [label="to/c"]
+
+JSON_C -> OPAQUE  [label="to/c"]
+JSON_C -> JSON    [label="to"]
+
+BOOL -> JSON [label="to"]
+BOOL -> JSON [dir=back,label="from+u"]
+BOOL -> JSON_C [label="to"]
+BOOL -> JSON_C [dir=back,label="from+u"]
+BOOL -> I32 [label="to+u"]
+BOOL -> U32 [label="to+u"]
+BOOL -> I64 [label="to+u"]
+BOOL -> U64 [label="to+u"]
+BOOL -> DOUBLE [label="to+u"]
+
+I32 -> JSON [label="to"]
+I32 -> JSON [dir=back,label="from+u"]
+I32 -> JSON_C [label="to"]
+I32 -> JSON_C [dir=back,label="from+u"]
+I32 -> I64 [label="to+u"]
+I32 -> DOUBLE [label="to+u"]
+
+U32 -> JSON [label="to"]
+U32 -> JSON [dir=back,label="from+u"]
+U32 -> JSON_C [label="to"]
+U32 -> JSON_C [dir=back,label="from+u"]
+U32 -> I64 [label="to+u"]
+U32 -> U64 [label="to+u"]
+U32 -> DOUBLE [label="to+u"]
+
+I64 -> JSON [label="to"]
+I64 -> JSON [dir=back,label="from+u"]
+I64 -> JSON_C [label="to"]
+I64 -> JSON_C [dir=back,label="from+u"]
+I64 -> DOUBLE [label="to+u"]
+
+U64 -> JSON [label="to"]
+U64 -> JSON [dir=back,label="from+u"]
+U64 -> DOUBLE [label="to+u"]
+
+DOUBLE -> JSON [label="to"]
+DOUBLE -> JSON [dir=back,label="from+u"]
+DOUBLE -> JSON_C [label="to"]
+DOUBLE -> JSON_C [dir=back,label="from+u"]
+}
+
