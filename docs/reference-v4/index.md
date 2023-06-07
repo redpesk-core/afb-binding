@@ -41,6 +41,8 @@
 
 [afb\_api\_set\_verbs](func-afb-api.html#function-afb_api_set_verbs)
 
+[afb\_api\_unshare\_session](func-afb-api.html#function-afb_api_unshare_session)
+
 [afb\_api\_verbose](func-afb-api.html#function-afb_api_verbose)
 
 [afb\_api\_vverbose](func-afb-api.html#function-afb_api_vverbose)

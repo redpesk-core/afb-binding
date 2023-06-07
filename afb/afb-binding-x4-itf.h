@@ -843,9 +843,17 @@ struct afb_binding_x4r1_itf
 		int jobid);
 
 #endif
+/*-- BEGIN OF VERSION 4r1  REVISION  6 (first version 4.1.4) --------------------*/
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 6
+
+	int (*api_unshare_session)(
+		afb_api_x4_t root);
+
+#endif
+
 
 /* increment the below value on needed */
-#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  5
+#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  6
 
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };

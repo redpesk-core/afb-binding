@@ -2312,6 +2312,25 @@ afb_api_settings(
 	return afbBindingV4r1_itfptr->api_settings(api);
 }
 
+/**
+ * unshare the session
+ *
+ * By default, every API of a same binder are sharing the
+ * same session. This policy can be wrong when API of a same
+ * binder must be seen as independant of their binder. Calling
+ * this verb ensure that the given API run on its own session.
+ *
+ * @param api the api that unshares session
+ *
+ * @returns 0 in case of success or a negative value in case of error.
+ */
+static inline
+int
+afb_api_unshare_session(
+	afb_api_t api
+) {
+	return afbBindingV4r1_itfptr->api_unshare_session(api);
+}
 
 /** MISC ***********************************************************/
 /** @defgroup AFB_MISC
