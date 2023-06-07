@@ -1,3 +1,8 @@
+Version 4.1.4
+-------------
+- function 'afb_api_unshare_session' added
+- improved documentation
+
 Version 4.1.3
 -------------
 - coherent callbacks for timers
