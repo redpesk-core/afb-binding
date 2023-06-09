@@ -546,7 +546,7 @@ afb_data_unlock(
  * Update the value of the given data with the given value
  *
  * @param data the data to be changed, must be mutable
- * @param value the value to set to data, possibly with convertion
+ * @param value the value to set to data, possibly with conversion
  *
  * @return 0 on success or a negative -errno like value
  */
@@ -1618,7 +1618,7 @@ afb_type_set_family(
 }
 
 /**
- * Add a convertion routine to a given type
+ * Add a conversion routine to a given type
  *
  * @param type the reference type
  * @param to_type the type to convert to
@@ -1639,7 +1639,7 @@ afb_type_add_convert_to(
 }
 
 /**
- * Add a convertion routine from a given type
+ * Add a conversion routine from a given type
  *
  * @param type the reference type
  * @param from_type the type to convert from

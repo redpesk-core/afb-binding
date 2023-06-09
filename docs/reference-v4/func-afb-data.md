@@ -486,7 +486,7 @@ afb_data_unlock(
  * Update the value of the given data with the given value
  *
  * @param data the data to be changed, must be mutable
- * @param value the value to set to data, possibly with convertion
+ * @param value the value to set to data, possibly with conversion
  *
  * @return 0 on success or a negative -errno like value
  */

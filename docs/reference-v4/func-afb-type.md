@@ -85,7 +85,7 @@ afb_type_set_family(
 
 ```c
 /**
- * Add a convertion routine to a given type
+ * Add a conversion routine to a given type
  *
  * @param type the reference type
  * @param to_type the type to convert to
@@ -107,7 +107,7 @@ afb_type_add_convert_to(
 
 ```c
 /**
- * Add a convertion routine from a given type
+ * Add a conversion routine from a given type
  *
  * @param type the reference type
  * @param from_type the type to convert from
