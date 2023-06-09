@@ -37,6 +37,10 @@ The opaque type is anything represented by its address.
 
 The length is not used
 
+### flags
+
+- Afb_Type_Flags_Opaque
+
 ### family
 
 No family
@@ -81,6 +85,9 @@ int data_of_context(struct context *context, afb_data_t *data)
 }
 ```
 
+
+
+
 ## AFB\_PREDEFINED\_TYPE\_BYTEARRAY
 
 Type for arrays of bytes
@@ -88,6 +95,11 @@ Type for arrays of bytes
 ### length
 
 The count of byte in the array
+
+### flags
+
+- Afb_Type_Flags_Shareable
+- Afb_Type_Flags_Streamable
 
 ### family
 
@@ -105,6 +117,10 @@ No updater
 
 
 
+
+
+
+
 ## AFB\_PREDEFINED\_TYPE\_STRINGZ
 
 Type of zero terminated string UTF8, ASCII or any encoding compatible with
@@ -115,20 +131,25 @@ zero terminated byte string.
 The length in bytes including the tailing zero.
 A length of zero is compatible with an address of NULL value.
 
+### flags
+
+- Afb_Type_Flags_Streamable
+
 ### family
 
-In the family of AFB\_PREDEFINED\_TYPE\_BYTEARRAY
-
-It means that any data of type AFB\_PREDEFINED\_TYPE\_JSON is also
-naturally of type AFB\_PREDEFINED\_TYPE\_BYTEARRAY.
+No family
 
 ### converters
+
+- to AFB\_PREDEFINED\_TYPE\_BYTEARRAY: produce the string without the trailing zero
 
 - to AFB\_PREDEFINED\_TYPE\_OPAQUE: if the string is a valid opaque representation of
 an opacified data, return that opacified data.
 
 - to AFB\_PREDEFINED\_TYPE\_JSON: translate the string to its JSON representation.
 Example: the string `HELLO` produces `"HELLO"`
+
+- to AFB\_PREDEFINED\_TYPE\_JSON\_C: translate the string to its json-c representation.
 
 ### updaters
 
@@ -157,6 +178,10 @@ In this third example, the created `data` is a reference to field of `value`:
 Here the function `unref_value` is called when the created `data` is no more used,
 meaning that the value `value->name` isn't needed anymore for the created data.
 
+
+
+
+
 ## AFB\_PREDEFINED\_TYPE\_JSON
 
 Type of json string terminated by a zero, UTF8 or ASCII encoded.
@@ -165,6 +190,10 @@ Type of json string terminated by a zero, UTF8 or ASCII encoded.
 
 The length in bytes including the tailing zero.
 A length of zero is compatible with an address of NULL value.
+
+### flags
+
+- Afb_Type_Flags_Streamable
 
 ### family
 
@@ -188,6 +217,9 @@ No updater
 
 
 
+
+
+
 ## AFB\_PREDEFINED\_TYPE\_JSON\_C
 
 Type of json object as handled by libjson-c
@@ -195,6 +227,10 @@ Type of json object as handled by libjson-c
 ### length
 
 The length is not used
+
+### flags
+
+No flags
 
 ### family
 
@@ -213,6 +249,8 @@ No updater
 
 ### examples
 
+
+
 ## AFB\_PREDEFINED\_TYPE\_BOOL
 
 Type of boolean values
@@ -220,6 +258,10 @@ Type of boolean values
 ### length
 
 Must be 1
+
+### flags
+
+- Afb_Type_Flags_Shareable
 
 ### family
 
@@ -257,6 +299,10 @@ Type of signed 32 bit integers
 
 Must be 4
 
+### flags
+
+- Afb_Type_Flags_Shareable
+
 ### family
 
 No family
@@ -286,6 +332,10 @@ Type of unsigned 32 bit integers
 ### length
 
 Must be 4
+
+### flags
+
+- Afb_Type_Flags_Shareable
 
 ### family
 
@@ -319,6 +369,10 @@ Type of signed 64 bit integers
 
 Must be 8
 
+### flags
+
+- Afb_Type_Flags_Shareable
+
 ### family
 
 No family
@@ -347,6 +401,10 @@ Type of unsigned 64 bit integers
 
 Must be 8
 
+### flags
+
+- Afb_Type_Flags_Shareable
+
 ### family
 
 No family
@@ -372,6 +430,10 @@ Type of doubles
 ### length
 
 Must be 8
+
+### flags
+
+- Afb_Type_Flags_Shareable
 
 ### family
 
