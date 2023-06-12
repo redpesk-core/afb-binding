@@ -561,7 +561,13 @@ afb_data_update(
 
 /**
  * Replace 'data' with the given 'value', taking care to unreference
- * the data.
+ * the assigned data. But, caution, it does not increment the reference
+ * count of the assigned value.
+ *
+ * This function does the following actions inline:
+ *
+ *     afb_data_unref(*data);
+ *     *data = value;
  *
  * @param data address of the data to assign
  * @param value value to assign to the data
@@ -572,8 +578,9 @@ afb_data_assign(
 	afb_data_t *data,
 	afb_data_t value
 ) {
-	afb_data_unref(*data);
+	afb_data_t oldval = *data;
 	*data = value;
+	afb_data_unref(oldval);
 }
 
 /**
