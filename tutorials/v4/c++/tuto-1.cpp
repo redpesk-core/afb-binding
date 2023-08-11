@@ -31,7 +31,7 @@ void hello(afb::req req, afb::received_data params)
 	req.reply(0, reply);
 }
 
-int mainctl(afb::api api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata) noexcept
+int mainctl(afb::api api, afb::ctlid ctlid, const afb::ctlarg ctlarg, void *userdata) noexcept
 {
 	if (ctlid == afb_ctlid_Init) {
 		AFB_NOTICE("init");
@@ -44,5 +44,6 @@ const afb_verb_t verbs[] = {
 	afb::verbend()
 };
 
-const afb_binding_t afbBindingExport = afb::binding<mainctl>("tuto-1", verbs, "first C++ tutorial");
+const afb_binding_t afbBindingExport =
+	afb::binding<mainctl>("tuto-1", verbs, "first C++ tutorial");
 

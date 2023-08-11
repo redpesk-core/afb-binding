@@ -1249,12 +1249,6 @@ constexpr afb_auth auth_and(const afb_auth &first, const afb_auth &next)
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <void (*_F_)(afb::req,afb::received_data) noexcept>
-void verbcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
-{
-	_F_(afb::req(req), afb::received_data(nparams, params));
-}
-
 template <void (*_F_)(afb::req,afb::received_data)>
 void verbcb(afb_req_t req, unsigned nparams, afb_data_t const params[])
 {
@@ -1445,12 +1439,6 @@ constexpr afb_binding_t binding(
 		name, specification, info, verbs, _F_, userdata,
 		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) };
 };
-
-template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *) noexcept>
-int bindingcb(afb_api_t api, afb_ctlid_t ctlid, const afb_ctlarg_t ctlarg, void *userdata)
-{
-	return _F_(afb::api(api), ctlid, ctlarg, userdata);
-}
 
 template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *)>
 int bindingcb(afb_api_t api, afb_ctlid_t ctlid, const afb_ctlarg_t ctlarg, void *userdata)
