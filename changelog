@@ -1,3 +1,10 @@
+Version 4.1.5
+-------------
+- improve afb_data_assign
+- improvement of documentation
+- improvement of C++ wrapper for version 4
+- reorganization of tutorials/v4 for C++
+
 Version 4.1.4
 -------------
 - function 'afb_api_unshare_session' added
