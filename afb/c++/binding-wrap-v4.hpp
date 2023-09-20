@@ -1410,21 +1410,6 @@ constexpr afb_verb_t verbend()
 typedef afb_ctlid_t ctlid;
 typedef afb_ctlarg_t ctlarg;
 
-constexpr afb_binding_t binding(
-	const char *name,
-	const afb_verb_t *verbs,
-	const char *info = nullptr,
-	afb_api_callback_t mainctl = nullptr,
-	const char *specification = nullptr,
-	bool noconcurrency = false,
-	void *userdata = nullptr
-)
-{
-	return {
-		name, specification, info, verbs, mainctl, userdata,
-		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) };
-};
-
 template <int (*_F_)(afb_api_t, afb_ctlid_t, const afb_ctlarg_t, void *)>
 constexpr afb_binding_t binding(
 	const char *name,
@@ -1452,20 +1437,125 @@ int bindingcb(afb_api_t api, afb_ctlid_t ctlid, const afb_ctlarg_t ctlarg, void 
 	}
 }
 
-template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *)>
-constexpr afb_binding_t binding(
+struct binding_
+{
+	afb_binding_t value;
+
+	constexpr binding_(
+		const char *api,
+		const char *specification,
+		const char *info,
+		const struct afb_verb_v4 *verbs,
+		afb_api_callback_x4_t mainctl,
+		void *userdata,
+		const char *provide_class,
+		const char *require_class,
+		const char *require_api,
+		unsigned noconcurrency)
+			: value{ api, specification, info, verbs,
+				mainctl, userdata, provide_class,
+				require_class, require_api, noconcurrency }
+			{}
+
+	constexpr binding_(const char *api)
+			: value{ api, nullptr, nullptr, nullptr,
+				nullptr, nullptr, nullptr,
+				nullptr, nullptr, 0 }
+			{}
+
+
+	constexpr operator afb_binding_t () const { return value; }
+
+
+	constexpr binding_ specification(const char *specification) const
+		{ return  binding_(
+				value.api, specification, value.info, value.verbs,
+				value.mainctl, value.userdata, value.provide_class,
+				value.require_class, value.require_api, value.noconcurrency); }
+
+	constexpr binding_ info(const char *info) const
+		{ return  binding_(
+				value.api, value.specification, info, value.verbs,
+				value.mainctl, value.userdata, value.provide_class,
+				value.require_class, value.require_api, value.noconcurrency); }
+
+	constexpr binding_ verbs(const struct afb_verb_v4 *verbs) const
+		{ return  binding_(
+				value.api, value.specification, value.info, verbs,
+				value.mainctl, value.userdata, value.provide_class,
+				value.require_class, value.require_api, value.noconcurrency); }
+
+	constexpr binding_ mainctl(afb_api_callback_x4_t mainctl) const
+		{ return  binding_(
+				value.api, value.specification, value.info, value.verbs,
+				mainctl, value.userdata, value.provide_class,
+				value.require_class, value.require_api, value.noconcurrency); }
+
+	template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *)>
+	constexpr binding_ mainctl() const
+		{ return mainctl(bindingcb<_F_>); }
+
+	constexpr binding_ userdata(void *userdata) const
+		{ return  binding_(
+				value.api, value.specification, value.info, value.verbs,
+				value.mainctl, userdata, value.provide_class,
+				value.require_class, value.require_api, value.noconcurrency); }
+
+	constexpr binding_ provide_class(const char *provide_class) const
+		{ return  binding_(
+				value.api, value.specification, value.info, value.verbs,
+				value.mainctl, value.userdata, provide_class,
+				value.require_class, value.require_api, value.noconcurrency); }
+
+	constexpr binding_ require_class(const char *require_class) const
+		{ return  binding_(
+				value.api, value.specification, value.info, value.verbs,
+				value.mainctl, value.userdata, value.provide_class,
+				require_class, value.require_api, value.noconcurrency); }
+
+	constexpr binding_ require_api(const char *require_api) const
+		{ return  binding_(
+				value.api, value.specification, value.info, value.verbs,
+				value.mainctl, value.userdata, value.provide_class,
+				value.require_class, require_api, value.noconcurrency); }
+
+	constexpr binding_ noconcurency() const
+		{ return  binding_(
+				value.api, value.specification, value.info, value.verbs,
+				value.mainctl, value.userdata, value.provide_class,
+				value.require_class, value.require_api, 1); }
+};
+
+constexpr binding_ binding(
 	const char *name,
-	const afb_verb_t *verbs,
-	const char *info,
+	const afb_verb_t *verbs = nullptr,
+	const char *info = nullptr,
+	afb_api_callback_t mainctl = nullptr,
 	const char *specification = nullptr,
 	bool noconcurrency = false,
 	void *userdata = nullptr
 )
 {
-	return {
-		name, specification, info, verbs, bindingcb<_F_>, userdata,
-		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) };
+	return binding_(
+		name, specification, info, verbs, mainctl, userdata,
+		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) );
 };
+
+template <int (*_F_)(afb::api, afb::ctlid, const afb::ctlarg, void *)>
+constexpr binding_ binding(
+	const char *name,
+	const afb_verb_t *verbs = nullptr,
+	const char *info = nullptr,
+	const char *specification = nullptr,
+	bool noconcurrency = false,
+	void *userdata = nullptr
+)
+{
+	return binding_(
+		name, specification, info, verbs, bindingcb<_F_>, userdata,
+		nullptr, nullptr, nullptr, static_cast<unsigned>(noconcurrency) );
+};
+
 
 /*************************************************************************/
 /***                         E N D                                     ***/
