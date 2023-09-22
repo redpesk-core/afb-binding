@@ -1198,6 +1198,7 @@ afb_req_parameters(
 	return afbBindingV4r1_itfptr->req_parameters(req, params);
 }
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 2
 /**
  * Convert the parameter of the request of the given index
  * to a given type and return it.
@@ -1226,6 +1227,7 @@ afb_req_param_convert(
 ) {
 	return afbBindingV4r1_itfptr->req_param_convert(req, index, type, result);
 }
+#endif
 
 /**
  * Reply to the request
@@ -1352,6 +1354,7 @@ afb_req_subcall_sync(
 	return afbBindingV4r1_itfptr->req_subcall_sync(req, apiname, verbname, nparams, params, flags, status, nreplies, replies);
 }
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 3
 /**
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'itfid'.
@@ -1391,7 +1394,9 @@ afb_req_get_interface_by_name(
 ) {
 	return afbBindingV4r1_itfptr->req_interface_by_name(req, name, result);
 }
+#endif
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 4
 /**
  * Get the user data associated to the request.
  *
@@ -1422,6 +1427,7 @@ afb_req_set_userdata(
 ) {
 	afbBindingV4r1_itfptr->req_set_userdata(req, userdata, freecb);
 }
+#endif
 
 /** @} */
 
@@ -2319,6 +2325,7 @@ afb_api_settings(
 	return afbBindingV4r1_itfptr->api_settings(api);
 }
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 6
 /**
  * unshare the session
  *
@@ -2338,6 +2345,7 @@ afb_api_unshare_session(
 ) {
 	return afbBindingV4r1_itfptr->api_unshare_session(api);
 }
+#endif
 
 /** MISC ***********************************************************/
 /** @defgroup AFB_MISC
@@ -2447,6 +2455,7 @@ afb_job_post(
 #endif
 }
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 5
 /**
 * Aborts the job of given id. The job must be posted using 'afb_job_post'
 * that returned its id.
@@ -2471,6 +2480,7 @@ afb_job_abort(
 	return afbBindingV4r1_itfptr->job_abort(NULL, jobid);
 #endif
 }
+#endif
 
 /**
  * Create an aliased name 'as_name' for the api 'name'.
@@ -2540,10 +2550,12 @@ afb_setup_shared_object(
  */
 #define AFB_PREDEFINED_TYPE_JSON_C  (afbBindingV4r1_itfptr->type_json_c)
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 2
 /**
  * Type of arrays of bytes
  */
 #define AFB_PREDEFINED_TYPE_BYTEARRAY (afbBindingV4r1_itfptr->type_bytearray)
+#endif
 
 /**
  * Type of boolean values

@@ -854,6 +854,9 @@ struct afb_binding_x4r1_itf
 
 /* increment the below value on needed */
 #define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  6
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION)
+#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
+#endif
 
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };
