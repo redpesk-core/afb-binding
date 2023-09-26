@@ -272,12 +272,16 @@ afb_data_type(
 
 /**
  * Gets a mutable pointer to the data and also its size
+ * Getting a mutable pointer has the effect of automatically
+ * notifying that the data changed (is changing).
  *
  * @param data the data
  * @param pointer if not NULL address where to store the pointer
  * @param size if not NULL address where to store the size
  *
  * @return 0 in case of success or -1 in case of error
+ *
+ * @see afb_data_notify_changed
  */
 static inline
 int
@@ -290,11 +294,15 @@ afb_data_get_mutable(
 }
 
 /**
- * Gets a mutable pointer to the data.
- * Getting a mutable pointer has the effect of
- * notifying that the data changed.
+ * Gets a pointer to the data for read only usage.
+ * The returned pointer isn't tagged as const
+ * for simplifying C casting if required.
  *
  * @param data the data
+ * @param pointer if not NULL address where to store the pointer
+ * @param size if not NULL address where to store the size
+ *
+ * @return 0 in case of success or -1 in case of error
  *
  * @return the pointer (can be NULL)
  */
@@ -344,11 +352,13 @@ afb_data_ro_pointer(
 
 /**
  * Gets a read/write pointer to the data.
- * Returns NULL if the data is constant.
+ * Returns NULL if the data is marked as constant.
  *
  * @param data the data
  *
  * @return the buffer (can be NULL)
+ *
+ * @see afb_data_is_constant
  */
 static inline
 void *
@@ -2087,11 +2097,12 @@ afb_api_set_verbs(
  * is received (it is received if broadcasted or after subscription through
  * a call or a subcall).
  *
- * The handler callback receive 4 arguments:
+ * The handler callback receives 5 arguments:
  *
  *  - the closure given here
  *  - the event full name
- *  - the companion JSON object of the event
+ *  - the count of parameter data of the event
+ *  - the array of parameter data of the event
  *  - the api that subscribed the event
  *
  * @param api the api that creates the handler
@@ -2147,7 +2158,7 @@ afb_api_event_handler_del(
  * shall be used on such items before the call.
  *
  * The 'callback' receives 5 arguments:
- *  1. 'closure' the user defined closure pointer 'closure',
+ *  1. 'closure'  the user defined closure pointer 'closure',
  *  2. 'status'   the replied status
  *  3. 'nreplies' the count of replied data
  *  4. 'replies'  the array of replied data

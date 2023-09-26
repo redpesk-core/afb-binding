@@ -201,12 +201,16 @@ afb_data_type(
 ```c
 /**
  * Gets a mutable pointer to the data and also its size
+ * Getting a mutable pointer has the effect of automatically
+ * notifying that the data changed (is changing).
  *
  * @param data the data
  * @param pointer if not NULL address where to store the pointer
  * @param size if not NULL address where to store the size
  *
  * @return 0 in case of success or -1 in case of error
+ *
+ * @see afb_data_notify_changed
  */
 int
 afb_data_get_mutable(
@@ -220,11 +224,15 @@ afb_data_get_mutable(
 
 ```c
 /**
- * Gets a mutable pointer to the data.
- * Getting a mutable pointer has the effect of
- * notifying that the data changed.
+ * Gets a pointer to the data for read only usage.
+ * The returned pointer isn't tagged as const
+ * for simplifying C casting if required.
  *
  * @param data the data
+ * @param pointer if not NULL address where to store the pointer
+ * @param size if not NULL address where to store the size
+ *
+ * @return 0 in case of success or -1 in case of error
  *
  * @return the pointer (can be NULL)
  */
@@ -273,11 +281,13 @@ afb_data_ro_pointer(
 ```c
 /**
  * Gets a read/write pointer to the data.
- * Returns NULL if the data is constant.
+ * Returns NULL if the data is marked as constant.
  *
  * @param data the data
  *
  * @return the buffer (can be NULL)
+ *
+ * @see afb_data_is_constant
  */
 void *
 afb_data_rw_pointer(

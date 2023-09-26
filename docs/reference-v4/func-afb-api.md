@@ -383,11 +383,12 @@ afb_api_set_verbs(
  * is received (it is received if broadcasted or after subscription through
  * a call or a subcall).
  *
- * The handler callback receive 4 arguments:
+ * The handler callback receives 5 arguments:
  *
  *  - the closure given here
  *  - the event full name
- *  - the companion JSON object of the event
+ *  - the count of parameter data of the event
+ *  - the array of parameter data of the event
  *  - the api that subscribed the event
  *
  * @param api the api that creates the handler
@@ -445,7 +446,7 @@ afb_api_event_handler_del(
  * shall be used on such items before the call.
  *
  * The 'callback' receives 5 arguments:
- *  1. 'closure' the user defined closure pointer 'closure',
+ *  1. 'closure'  the user defined closure pointer 'closure',
  *  2. 'status'   the replied status
  *  3. 'nreplies' the count of replied data
  *  4. 'replies'  the array of replied data
