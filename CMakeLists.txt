@@ -5,11 +5,11 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project(afb-binding C)
-set(PROJECT_NAME afb-binding)
-set(PROJECT_DESCRIPTION "Binding headers for Application Framework Binder")
-set(PROJECT_URL "https://github.com/redpesk-core/afb-binding")
-set(PROJECT_VERSION 4.1.5)
+project(afb-binding
+	VERSION 4.1.6
+	DESCRIPTION "Binding headers for Application Framework Binder"
+	HOMEPAGE_URL "https://github.com/redpesk-core/afb-binding"
+	LANGUAGES C)
 
 include(GNUInstallDirs)
 
