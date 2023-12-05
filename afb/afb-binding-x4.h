@@ -1973,20 +1973,19 @@ afb_api_require_api(
 }
 
 /**
- * Creates an event of 'name' and returns it.
+ * Creates an event of 'name'.
  *
- * Calling this function is only forbidden during preinit.
- *
- * See afb_event_is_valid to check if there is an error.
+ * Calling this function is forbidden during preinit.
  *
  * The event created as the name API/name where API is the name of the
  * api.
  *
  * @param api the api that creates the event
  * @param name the event name suffix
+ * @param event pointer for storing created event
  *
- * @return the created event. Use the function afb_event_is_valid to check
- * whether the event is valid (created) or not (error as reported by errno).
+ * @return 0 in case of success or negative value on error.
+ *         On error no event is created.
  *
  * @see afb_event_is_valid
  */
