@@ -791,9 +791,11 @@ public:
 
 	data convert(unsigned idx, type type) const
 		{
-			int rc = afb_req_param_convert(req_, idx, afb_type_t(type), nullptr);
+			afb_data_t dat;
+			int rc = afb_req_param_convert(req_, idx, afb_type_t(type), &dat);
 			if (rc)
 				throw new convert_data_error("can't convert parameter");
+			return data(dat);
 		}
 
 	data convert(int idx, type type) const
