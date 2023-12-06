@@ -686,6 +686,10 @@ public:
 
 	afb::api api() const;
 
+	const char *api_name() const noexcept;
+
+	const char *verb_name() const noexcept;
+
 	void reply(int status = 0) const noexcept;
 	void reply(int status, afb_data_t data) const noexcept;
 	void reply(int status, unsigned nreplies, afb_data_t const replies[]) const noexcept;
@@ -1023,6 +1027,12 @@ inline req::operator bool() const { return is_valid(); }
 inline bool req::is_valid() const { return afb_req_is_valid(req_); }
 
 inline api req::api() const { return afb_req_get_api(req_); }
+
+inline const char *req::api_name() const noexcept
+	{ return afb_req_get_called_api(req_); }
+
+inline const char *req::verb_name() const noexcept
+	{ return afb_req_get_called_verb(req_); }
 
 inline void req::reply(int status) const noexcept
 	{ afb_req_reply(req_, status, 0, nullptr); }
