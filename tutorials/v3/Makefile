@@ -21,7 +21,7 @@ CXXFLAGS += ${FLAGS} -fpermissive
 
 .PHONY: all clean
 
-tutos = tuto-1.so tuto-2.so tuto-3.so tuto-4.so tuto-5.so tuto-app1.so
+tutos = tuto-1.so tuto-2.so tuto-3.so tuto-4.so tuto-5.so tuto-6.so tuto-app1.so
 samples = hello3.so
 
 all: ${tutos} ${samples}
