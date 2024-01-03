@@ -554,7 +554,7 @@ public:
 	}
 
 	data at(int idx) const {
-		if (idx < 0 || size_ <= idx)
+		if (idx < 0 || size_ <= unsigned(idx))
 			throw std::out_of_range("out of range");
 		return data(array_[idx]);
 	}
@@ -1466,7 +1466,7 @@ struct binding_
 		unsigned noconcurrency)
 			: value{ api, specification, info, verbs,
 				mainctl, userdata, provide_class,
-				require_class, require_api, noconcurrency }
+				require_class, require_api, (noconcurrency & 1)}
 			{}
 
 	constexpr binding_(const char *api)
