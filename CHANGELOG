@@ -1,5 +1,6 @@
 Version 4.1.8
 -------------
+- add pkg-config variable for libafb version
 - interface x4r1 revision 7
   - function 'afb_timer_modify_period' added
 

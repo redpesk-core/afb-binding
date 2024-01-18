@@ -13,6 +13,8 @@ project(afb-binding
 
 include(GNUInstallDirs)
 
+set(LIBAFB_VERSION_MIN 5.0.11)
+
 # install headers
 install(DIRECTORY afb
         DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})

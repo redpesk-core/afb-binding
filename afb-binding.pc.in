@@ -10,5 +10,6 @@ Version: @PROJECT_VERSION@
 
 incdir=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb
 version_script=@CMAKE_INSTALL_FULL_INCLUDEDIR@/afb/afb-export.map
+libafb_version_min=@LIBAFB_VERSION_MIN@
 
 Cflags: -I${incdir} -I@CMAKE_INSTALL_FULL_INCLUDEDIR@
