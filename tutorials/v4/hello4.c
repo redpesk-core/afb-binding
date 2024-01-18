@@ -402,7 +402,7 @@ static void timed_event(afb_timer_t timer, void *closure, unsigned decount)
 	}
 }
 
-static int event_start(const char *tag)
+static int event_start(const char *tag, unsigned period)
 {
 	int rc = -1;
 	struct event *e;
@@ -410,12 +410,17 @@ static int event_start(const char *tag)
 	pthread_mutex_lock(&mutex);
 	e = event_get(tag);
 	if (e) {
-		event_stop_timer(e);
-		e->count = 0;
-		rc = afb_timer_create(&e->timer,
-			/*start:*/  0/*relative*/, 1/*sec*/, 0/*msec*/,
-			/*occur:*/  0/*infinite*/, 1000/*period msec*/, 10/*accuracy msec*/,
-			/*action:*/ timed_event, e, 0/*no unref*/);
+		if (e->timer != NULL) {
+			afb_timer_modify_period(e->timer, period);
+			rc = 0;
+		}
+		else {
+			e->count = 0;
+			rc = afb_timer_create(&e->timer,
+				/*start:*/  0/*relative*/, 1/*sec*/, 0/*msec*/,
+				/*occur:*/  0/*infinite*/, period/*period msec*/, 10/*accuracy msec*/,
+				/*action:*/ timed_event, e, 0/*no unref*/);
+		}
 	}
 	pthread_mutex_unlock(&mutex);
 
@@ -672,7 +677,7 @@ static void callsync (afb_req_t request, unsigned nparams, afb_data_t const *par
 
 /**************************************************************************/
 
-static int parse_event(afb_req_t request, unsigned nparams, afb_data_t const *params, const char **tag, const char **name, afb_data_t *data)
+static int parse_event(afb_req_t request, unsigned nparams, afb_data_t const *params, const char **tag, const char **name, afb_data_t *data, unsigned *period)
 {
 	json_object *args;
 	json_object *x;
@@ -697,6 +702,12 @@ static int parse_event(afb_req_t request, unsigned nparams, afb_data_t const *pa
 		if (make_json_object(request, data, json_object_get(x)) < 0)
 			goto error;
 	}
+	if (period) {
+		if (json_object_object_get_ex(args, "period", &x)
+		 && json_object_is_type(x, json_type_int)
+		 && json_object_get_int(x) > 0)
+			*period = json_object_get_int(x);
+	}
 
 	json_object_put(args);
 	return 1;
@@ -709,7 +720,7 @@ static void eventadd (afb_req_t request, unsigned nparams, afb_data_t const *par
 {
 	const char *tag, *name;
 
-	if (!parse_event(request, nparams, params, &tag, &name, NULL))
+	if (!parse_event(request, nparams, params, &tag, &name, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else if (0 != event_add(tag, name))
 		reply_oEI(request, NULL, "failed", "creation error");
@@ -721,7 +732,7 @@ static void eventdel (afb_req_t request, unsigned nparams, afb_data_t const *par
 {
 	const char *tag;
 
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL))
+	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else if (0 != event_del(tag))
 		reply_oEI(request, NULL, "failed", "deletion error");
@@ -733,7 +744,7 @@ static void eventsub (afb_req_t request, unsigned nparams, afb_data_t const *par
 {
 	const char *tag;
 
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL))
+	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else if (0 != event_subscribe(request, tag))
 		reply_oEI(request, NULL, "failed", "subscription error");
@@ -745,7 +756,7 @@ static void eventunsub (afb_req_t request, unsigned nparams, afb_data_t const *p
 {
 	const char *tag;
 
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL))
+	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else if (0 != event_unsubscribe(request, tag))
 		reply_oEI(request, NULL, "failed", "unsubscription error");
@@ -758,7 +769,7 @@ static void eventpush (afb_req_t request, unsigned nparams, afb_data_t const *pa
 	const char *tag;
 	afb_data_t data;
 
-	if (!parse_event(request, nparams, params, &tag, NULL, &data))
+	if (!parse_event(request, nparams, params, &tag, NULL, &data, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else if (0 > event_push(data, tag))
 		reply_oEI(request, NULL, "failed", "push error");
@@ -769,10 +780,11 @@ static void eventpush (afb_req_t request, unsigned nparams, afb_data_t const *pa
 static void eventstart (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag;
+	unsigned period = 1000;
 
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL))
+	if (!parse_event(request, nparams, params, &tag, NULL, NULL, &period))
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 > event_start(tag))
+	else if (0 > event_start(tag, period))
 		reply_oEI(request, NULL, "failed", "start error");
 	else
 		afb_req_reply(request, 0, 0, 0);
@@ -782,7 +794,7 @@ static void eventstop (afb_req_t request, unsigned nparams, afb_data_t const *pa
 {
 	const char *tag;
 
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL))
+	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else if (0 > event_stop(tag))
 		reply_oEI(request, NULL, "failed", "stop error");
@@ -796,12 +808,12 @@ static void broadcast(afb_req_t request, unsigned nparams, afb_data_t const *par
 	const char *tag;
 	afb_data_t data;
 
-	if (parse_event(request, nparams, params, &tag, NULL, &data)) {
+	if (parse_event(request, nparams, params, &tag, NULL, &data, NULL)) {
 		if (0 > event_broadcast(data, tag))
 			reply_oEI(request, NULL, "failed", "broadcast error");
 		else
 			afb_req_reply(request, 0, 0, 0);
-	} else if (parse_event(request, nparams, params, NULL, &name, &data)) {
+	} else if (parse_event(request, nparams, params, NULL, &name, &data, NULL)) {
 		if (0 > afb_api_broadcast_event(afbBindingRoot, name, 1, &data))
 			reply_oEI(request, NULL, "failed", "broadcast error");
 		else

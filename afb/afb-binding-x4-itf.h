@@ -850,10 +850,18 @@ struct afb_binding_x4r1_itf
 		afb_api_x4_t root);
 
 #endif
+/*-- BEGIN OF VERSION 4r1  REVISION  7 (first version 4.1.8) --------------------*/
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 7
+
+	void (*timer_modify_period)(
+		afb_timer_x4_t timer,
+		unsigned period_ms);
+
+#endif
 
 
 /* increment the below value on needed */
-#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  6
+#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  7
 #if !defined(AFB_BINDING_X4R1_ITF_REVISION)
 #  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
 #endif

@@ -24,6 +24,11 @@ hello eventsub {"tag":"tagev1"}
 hello eventpush {"tag":"tagev1","data":true}
 hello eventunsub {"tag":"tagev1"}
 hello eventdel {"tag":"tagev1"}
+hello eventstart {"tag":"tagev1"}
+hello eventstart {"tag":"tagev1","period":2000}
+hello eventstart {"tag":"tagev1","period":200}
+hello eventstop {"tag":"tagev1"}
+
 
 hello exit 0
 

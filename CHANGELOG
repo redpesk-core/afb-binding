@@ -1,3 +1,8 @@
+Version 4.1.8
+-------------
+- interface x4r1 revision 7
+  - function 'afb_timer_modify_period' added
+
 Version 4.1.7
 -------------
 - Improve C++ wrapper
@@ -18,7 +23,8 @@ Version 4.1.5
 
 Version 4.1.4
 -------------
-- function 'afb_api_unshare_session' added
+- interface x4r1 revision 6
+  - function 'afb_api_unshare_session' added
 - improved documentation
 
 Version 4.1.3
@@ -27,7 +33,8 @@ Version 4.1.3
 
 Version 4.1.2
 -------------
-- function 'afb_job_abort' added
+- interface x4r1 revision 5
+  - function 'afb_job_abort' added
 - improve effect of AFB_BINDING_X4R1_ITF_REVISION
 
 Version 4.1.1
