@@ -227,6 +227,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct event
 {
 	struct event *next;
+	afb_api_t api;
 	afb_event_t event;
 	afb_timer_t timer;
 	unsigned count;
@@ -236,10 +237,10 @@ struct event
 static struct event *events = 0;
 
 /* searchs the event of tag */
-static struct event *event_get(const char *tag)
+static struct event *event_get(const char *tag, afb_api_t api)
 {
 	struct event *e = events;
-	while(e && strcmp(e->tag, tag))
+	while(e && (api != e->api || strcmp(e->tag, tag)))
 		e = e->next;
 	return e;
 }
@@ -263,14 +264,14 @@ static int event_is_valid(struct event *e)
 }
 
 /* deletes the event of tag */
-static int event_del(const char *tag)
+static int event_del(const char *tag, afb_api_t api)
 {
 	struct event *e, **p;
 
 	pthread_mutex_lock(&mutex);
 
 	/* check exists */
-	e = event_get(tag);
+	e = event_get(tag, api);
 	if (!e)  {
 		pthread_mutex_unlock(&mutex);
 		return -1;
@@ -293,7 +294,7 @@ static int event_del(const char *tag)
 }
 
 /* creates the event of tag */
-static int event_add(const char *tag, const char *name)
+static int event_add(const char *tag, const char *name, afb_api_t api)
 {
 	int rc;
 	struct event *e;
@@ -301,7 +302,7 @@ static int event_add(const char *tag, const char *name)
 	pthread_mutex_lock(&mutex);
 
 	/* check valid tag */
-	e = event_get(tag);
+	e = event_get(tag, api);
 	if (e) {
 		pthread_mutex_unlock(&mutex);
 		return -EEXIST;
@@ -313,10 +314,11 @@ static int event_add(const char *tag, const char *name)
 		pthread_mutex_unlock(&mutex);
 		return -ENOMEM;
 	}
+	e->api = api;
 	strcpy(e->tag, tag);
 
 	/* make the event */
-	rc = afb_api_new_event(afbBindingRoot, name, &e->event);
+	rc = afb_api_new_event(api, name, &e->event);
 	if (rc < 0) {
 		pthread_mutex_unlock(&mutex);
 		free(e);
@@ -336,7 +338,7 @@ static int event_subscribe(afb_req_t request, const char *tag)
 	struct event *e;
 
 	pthread_mutex_lock(&mutex);
-	e = event_get(tag);
+	e = event_get(tag, afb_req_get_api(request));
 	rc = e ? afb_req_subscribe(request, e->event) : -1;
 	pthread_mutex_unlock(&mutex);
 
@@ -349,32 +351,32 @@ static int event_unsubscribe(afb_req_t request, const char *tag)
 	struct event *e;
 
 	pthread_mutex_lock(&mutex);
-	e = event_get(tag);
+	e = event_get(tag, afb_req_get_api(request));
 	rc = e ? afb_req_unsubscribe(request, e->event) : -1;
 	pthread_mutex_unlock(&mutex);
 
 	return rc;
 }
 
-static int event_push(afb_data_t data, const char *tag)
+static int event_push(afb_data_t data, const char *tag, afb_api_t api)
 {
 	int rc;
 	struct event *e;
 
 	pthread_mutex_lock(&mutex);
-	e = event_get(tag);
+	e = event_get(tag, api);
 	rc = e ? afb_event_push(e->event, 1, &data) : -1;
 	pthread_mutex_unlock(&mutex);
 
 	return rc;
 }
 
-static int event_stop(const char *tag)
+static int event_stop(const char *tag, afb_api_t api)
 {
 	struct event *e;
 
 	pthread_mutex_lock(&mutex);
-	e = event_get(tag);
+	e = event_get(tag, api);
 	if (e)
 		event_stop_timer(e);
 	pthread_mutex_unlock(&mutex);
@@ -402,13 +404,13 @@ static void timed_event(afb_timer_t timer, void *closure, unsigned decount)
 	}
 }
 
-static int event_start(const char *tag, unsigned period)
+static int event_start(const char *tag, unsigned period, afb_api_t api)
 {
 	int rc = -1;
 	struct event *e;
 
 	pthread_mutex_lock(&mutex);
-	e = event_get(tag);
+	e = event_get(tag, api);
 	if (e) {
 		if (e->timer != NULL) {
 			afb_timer_modify_period(e->timer, period);
@@ -427,13 +429,13 @@ static int event_start(const char *tag, unsigned period)
 	return rc;
 }
 
-static int event_broadcast(afb_data_t data, const char *tag)
+static int event_broadcast(afb_data_t data, const char *tag, afb_api_t api)
 {
 	int rc;
 	struct event *e;
 
 	pthread_mutex_lock(&mutex);
-	e = event_get(tag);
+	e = event_get(tag, api);
 	rc = e ? afb_event_broadcast(e->event, 1, &data) : -1;
 	pthread_mutex_unlock(&mutex);
 
@@ -722,7 +724,7 @@ static void eventadd (afb_req_t request, unsigned nparams, afb_data_t const *par
 
 	if (!parse_event(request, nparams, params, &tag, &name, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 != event_add(tag, name))
+	else if (0 != event_add(tag, name, afb_req_get_api(request)))
 		reply_oEI(request, NULL, "failed", "creation error");
 	else
 		afb_req_reply(request, 0, 0, 0);
@@ -734,7 +736,7 @@ static void eventdel (afb_req_t request, unsigned nparams, afb_data_t const *par
 
 	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 != event_del(tag))
+	else if (0 != event_del(tag, afb_req_get_api(request)))
 		reply_oEI(request, NULL, "failed", "deletion error");
 	else
 		afb_req_reply(request, 0, 0, 0);
@@ -771,7 +773,7 @@ static void eventpush (afb_req_t request, unsigned nparams, afb_data_t const *pa
 
 	if (!parse_event(request, nparams, params, &tag, NULL, &data, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 > event_push(data, tag))
+	else if (0 > event_push(data, tag, afb_req_get_api(request)))
 		reply_oEI(request, NULL, "failed", "push error");
 	else
 		afb_req_reply(request, 0, 0, 0);
@@ -784,7 +786,7 @@ static void eventstart (afb_req_t request, unsigned nparams, afb_data_t const *p
 
 	if (!parse_event(request, nparams, params, &tag, NULL, NULL, &period))
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 > event_start(tag, period))
+	else if (0 > event_start(tag, period, afb_req_get_api(request)))
 		reply_oEI(request, NULL, "failed", "start error");
 	else
 		afb_req_reply(request, 0, 0, 0);
@@ -796,7 +798,7 @@ static void eventstop (afb_req_t request, unsigned nparams, afb_data_t const *pa
 
 	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 > event_stop(tag))
+	else if (0 > event_stop(tag, afb_req_get_api(request)))
 		reply_oEI(request, NULL, "failed", "stop error");
 	else
 		afb_req_reply(request, 0, 0, 0);
@@ -809,7 +811,7 @@ static void broadcast(afb_req_t request, unsigned nparams, afb_data_t const *par
 	afb_data_t data;
 
 	if (parse_event(request, nparams, params, &tag, NULL, &data, NULL)) {
-		if (0 > event_broadcast(data, tag))
+		if (0 > event_broadcast(data, tag, afb_req_get_api(request)))
 			reply_oEI(request, NULL, "failed", "broadcast error");
 		else
 			afb_req_reply(request, 0, 0, 0);
