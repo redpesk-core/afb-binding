@@ -1320,8 +1320,35 @@ static const struct afb_verb_v4 verbs[]= {
 
 static int apimainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *userdata)
 {
-	if (ctlid == afb_ctlid_Pre_Init)
+	switch (ctlid) {
+	case afb_ctlid_Root_Entry:
+		AFB_API_NOTICE(api, "unexpected root entry");
+		break;
+
+	case afb_ctlid_Pre_Init:
+		AFB_API_NOTICE(api, "sub API preparing to life (in pre-init)");
 		afb_api_set_verbs(api, verbs);
+		break;
+
+	case afb_ctlid_Init:
+		AFB_API_NOTICE(api, "sub API starting to life (in init)");
+		break;
+
+	case afb_ctlid_Class_Ready:
+		AFB_API_NOTICE(api, "sub API is ready");
+		break;
+
+	case afb_ctlid_Orphan_Event:
+		AFB_API_NOTICE(api, "sub API received orphan event %s", ctlarg->orphan_event.name);
+		break;
+
+	case afb_ctlid_Exiting:
+		AFB_API_NOTICE(api, "exiting code %d", ctlarg->exiting.code);
+		break;
+
+	default:
+		break;
+	}
 	return 0;
 }
 
@@ -1465,14 +1492,14 @@ static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *
 {
 	switch (ctlid) {
 	case afb_ctlid_Root_Entry:
-		AFB_NOTICE("unexpected root entry");
+		AFB_API_NOTICE(api, "unexpected root entry");
 		break;
 
 	case afb_ctlid_Pre_Init:
-		AFB_NOTICE("hello binding comes to live");
-		AFB_NOTICE("hello binding is %s", ctlarg->pre_init.path ?: "<null>");
-		AFB_NOTICE("hello binding's uid is %s", ctlarg->pre_init.uid);
-		AFB_NOTICE("hello binding's config is %s", json_object_get_string(ctlarg->pre_init.config));
+		AFB_API_NOTICE(api, "hello binding comes to live");
+		AFB_API_NOTICE(api, "hello binding is %s", ctlarg->pre_init.path ?: "<null>");
+		AFB_API_NOTICE(api, "hello binding's uid is %s", ctlarg->pre_init.uid);
+		AFB_API_NOTICE(api, "hello binding's config is %s", json_object_get_string(ctlarg->pre_init.config));
 
 #if defined(PREINIT_PROVIDE_CLASS)
 		afb_api_provide_class(api, PREINIT_PROVIDE_CLASS);
@@ -1483,7 +1510,7 @@ static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *
 		break;
 
 	case afb_ctlid_Init:
-		AFB_NOTICE("hello binding starting");
+		AFB_API_NOTICE(api, "hello binding starting");
 #if defined(INIT_REQUIRE_API)
 		afb_api_require_api(api, INIT_REQUIRE_API, 1);
 #endif
@@ -1491,15 +1518,15 @@ static int mainctl(afb_api_t api, afb_ctlid_t ctlid, afb_ctlarg_t ctlarg, void *
 		break;
 
 	case afb_ctlid_Class_Ready:
-		AFB_NOTICE("hello binding has classes ready");
+		AFB_API_NOTICE(api, "hello binding has classes ready");
 		break;
 
 	case afb_ctlid_Orphan_Event:
-		AFB_NOTICE("received orphan event %s", ctlarg->orphan_event.name);
+		AFB_API_NOTICE(api, "received orphan event %s", ctlarg->orphan_event.name);
 		break;
 
 	case afb_ctlid_Exiting:
-		AFB_NOTICE("exiting code %d", ctlarg->exiting.code);
+		AFB_API_NOTICE(api, "exiting code %d", ctlarg->exiting.code);
 		break;
 
 	default:
