@@ -924,6 +924,72 @@ static void verbose (afb_req_t request, unsigned nparams, afb_data_t const *para
 
 /**************************************************************************/
 
+typedef struct event_call
+{
+	const char *pattern;
+	const char *api;
+	const char *verb;
+	json_object *args;
+}
+	event_call_t;
+
+static void oneventcallcb(void *closure, const char *event, unsigned nparams, afb_data_t const *params, afb_api_t api)
+{
+	afb_data_t data;
+	json_object *o, *json;
+	event_call_t *ec = closure;
+
+	json = json_object_new_object();
+	args_to_json(nparams, params, &o);
+	json_object_object_add(json, "event", json_object_new_string(event));
+	json_object_object_add(json, "data", o);
+	json_object_object_add(json, "args", json_object_get(ec->args));
+
+	afb_create_data_raw(&data, AFB_PREDEFINED_TYPE_JSON_C, json, 0, (void*)json_object_put, json);
+	afb_api_call(api, ec->api, ec->verb, 1, &data, NULL, NULL);
+}
+
+static void oneventcall (afb_req_t request, unsigned nparams, afb_data_t const *params)
+{
+	int rc;
+	const char *pattern, *api, *verb;
+	json_object *args;
+	static const char *keys[] = { "s!pattern", "s!api", "s!verb", "j?args", NULL };
+	void *items[] = { &pattern, &api, &verb, &args };
+	json_object *json = get_args(request, nparams, params, keys, items);
+	if (json == NULL)
+		reply_oEI(request, 0, "invalid", NULL);
+	else {
+		event_call_t *ec = malloc(sizeof *ec + 3 + strlen(pattern) + strlen(api) + strlen(verb));
+		if (ec == NULL)
+			reply_oEI(request, 0, "out of memory", NULL);
+		else {
+			char *p = (char*)(ec + 1);
+			ec->pattern = p;
+			p = stpcpy(p, pattern) + 1;
+			ec->api = p;
+			p = stpcpy(p, api) + 1;
+			ec->verb = p;
+			stpcpy(p, verb);
+			ec->args = json_object_get(args);
+			rc = afb_api_event_handler_add(
+				afb_req_get_api(request),
+				ec->pattern,
+				oneventcallcb,
+				ec);
+			if (rc == 0)
+				afb_req_reply(request, 0, 0, 0);
+			else {
+				reply_oEI(request, 0, "failed", NULL);
+				free(ec);
+			}
+		}
+		json_object_put(json);
+	}
+}
+
+/**************************************************************************/
+
 static void exitnow (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	int code = 0;
@@ -1362,6 +1428,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="eventpush",   .callback=eventpush },
   { .verb="eventstart",  .callback=eventstart },
   { .verb="eventstop",   .callback=eventstop },
+  { .verb="oneventcall", .callback=oneventcall },
   { .verb="verbose",     .callback=verbose },
   { .verb="broadcast",   .callback=broadcast },
   { .verb="hasperm",     .callback=hasperm },

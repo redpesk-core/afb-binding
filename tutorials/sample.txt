@@ -30,6 +30,10 @@ hello eventstart {"tag":"tagev1","period":200}
 hello eventstop {"tag":"tagev1"}
 
 
+hello call {"api":"hello","verb":"eventsub","args":{"tag":"tagev1"}}
+hello oneventcall {"pattern":"*","api":"hello","verb":"ping","args":"toto"}
+
+
 hello exit 0
 
 
