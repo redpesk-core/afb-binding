@@ -8,8 +8,6 @@ books:
     author: "IotBzh"
     version: master
     chapters:
-    - name: Writing bindings in C
-      url: "writing-bindings-c.md"
     - name: Using the data
       url: "afb-binding-data.md"
     - name: How to write a binding version 4
