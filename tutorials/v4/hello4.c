@@ -35,6 +35,8 @@
 #define APINAME "hello"
 #endif
 
+/**************************************************************************/
+
 int make_stringz_const_length(afb_req_t request, afb_data_t *data, const char *string, size_t sz)
 {
 	return afb_create_data_raw(data, AFB_PREDEFINED_TYPE_STRINGZ, string, sz, NULL, NULL);
@@ -578,39 +580,82 @@ static void bug (afb_req_t request, unsigned nparams, afb_data_t const *params)
 
 /**************************************************************************/
 
-static int get_call_args(afb_req_t request, unsigned nparams, afb_data_t const *params, const char **api, const char **verb, afb_data_t *arg0)
+static json_object *get_args(afb_req_t request, unsigned nparams, afb_data_t const *params, const char *names[], void *objs[])
 {
-	const char *err;
-	json_object *o, *json, *args;
+	int idx, err, found;
+	json_object *o, *json;
 
 	args_to_json(nparams, params, &json);
-
-	if (!json_object_object_get_ex(json, "api", &o) || !json_object_is_type(o, json_type_string)) {
-		err = "wrong-api";
-		goto error;
+	err = !json_object_is_type(json, json_type_object);
+	for (idx = 0 ; !err && names[idx] != NULL && names[idx][0] ; idx++) {
+		char m = names[idx][1];
+		char t = m == '!' || m =='?' ? names[idx][0] : 's';
+		const char *n = m == '!' || m =='?' ? &names[idx][2] : names[idx];
+		found = json_object_object_get_ex(json, n, &o);
+		if (!found && m != '?')
+			err = 1;
+		else if (found) {
+			switch (t) {
+			case 'i':
+				err = !json_object_is_type(o, json_type_int);
+				break;
+			case 'u':
+				err = !json_object_is_type(o, json_type_int)
+				   || json_object_get_int(o) < 0;
+				break;
+			case 's':
+				err = !json_object_is_type(o, json_type_string);
+				break;
+			case 'j':
+			case 'd':
+				break;
+			}
+		}
 	}
-	*api = json_object_get_string(o);
-
-	if (!json_object_object_get_ex(json, "verb", &o) || !json_object_is_type(o, json_type_string)) {
-		err = "wrong-verb";
-		goto error;
-	}
-	*verb = json_object_get_string(o);
-
-	if (!json_object_object_get_ex(json, "args", &args))
-		args = NULL;
-	if (make_json_object(request, arg0, json_object_get(args)) < 0) {
-		err = "out-of-memory";
-		goto error;
+	if (err) {
+		json_object_put(json);
+		return NULL;
 	}
 
-	json_object_put(json);
-	return 1;
+	for (idx = 0 ; names[idx] != NULL && names[idx][0] ; idx++) {
+		char m = names[idx][1];
+		char t = m == '!' || m =='?' ? names[idx][0] : 's';
+		const char *n = m == '!' || m =='?' ? &names[idx][2] : names[idx];
+		o = NULL;
+		found = json_object_object_get_ex(json, n, &o);
+		if (found || t == 'd')
+			switch (t) {
+			case 'i':
+				*(int*)objs[idx] = (int)json_object_get_int(o);
+				break;
+			case 'u':
+				*(unsigned*)objs[idx] = (unsigned)json_object_get_int(o);
+				break;
+			case 's':
+				*(const char**)objs[idx] = json_object_get_string(o);
+				break;
+			case 'j':
+				*(json_object**)objs[idx] = o;
+				break;
+			case 'd':
+				make_json_object(request, (afb_data_t*)objs[idx], json_object_get(o));
+				break;
+			}
+	}
+	return json;
+}
 
-error:
-	reply_oEI(request, 0, "invalid", err);
-	json_object_put(json);
-	return 0;
+/**************************************************************************/
+
+static json_object *get_call_args(afb_req_t request, unsigned nparams, afb_data_t const *params,
+				  const char **api, const char **verb, afb_data_t *arg0)
+{
+	static const char *keys[] = { "s!api", "s!verb", "d?args", NULL };
+	void *items[] = { api, verb, arg0 };
+	json_object *json = get_args(request, nparams, params, keys, items);
+	if (json == NULL)
+		reply_oEI(request, 0, "invalid", NULL);
+	return json;
 }
 
 static void subcallcb (void *closure, int status, unsigned nreplies, afb_data_t const *replies, afb_req_t request)
@@ -625,9 +670,12 @@ static void subcall (afb_req_t request, unsigned nparams, afb_data_t const *para
 {
 	afb_data_t args;
 	const char *api, *verb;
+	json_object *json = get_call_args(request, nparams, params, &api, &verb, &args);
 
-	if (get_call_args(request, nparams, params, &api, &verb, &args))
+	if (json != NULL) {
 		afb_req_subcall(request, api, verb, 1, &args, 0, subcallcb, NULL);
+		json_object_put(json);
+	}
 }
 
 static void subcallsync (afb_req_t request, unsigned nparams, afb_data_t const *params)
@@ -636,10 +684,12 @@ static void subcallsync (afb_req_t request, unsigned nparams, afb_data_t const *
 	unsigned nreplies = 3;
 	int status;
 	const char *api, *verb;
+	json_object *json = get_call_args(request, nparams, params, &api, &verb, &args);
 
-	if (get_call_args(request, nparams, params, &api, &verb, &args)) {
+	if (json != NULL) {
 		afb_req_subcall_sync(request, api, verb, 1, &args, 0, &status, &nreplies, replies);
 		afb_req_reply(request, status, nreplies, replies);
+		json_object_put(json);
 	}
 }
 
@@ -658,10 +708,13 @@ static void call (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	afb_data_t args;
 	const char *api, *verb;
+	json_object *json = get_call_args(request, nparams, params, &api, &verb, &args);
 
-	if (get_call_args(request, nparams, params, &api, &verb, &args))
+	if (json != NULL) {
 		afb_api_call(afb_req_get_api(request), api, verb,
 			1, &args, callcb, (void*)afb_req_addref(request));
+		json_object_put(json);
+	}
 }
 
 static void callsync (afb_req_t request, unsigned nparams, afb_data_t const *params)
@@ -670,138 +723,150 @@ static void callsync (afb_req_t request, unsigned nparams, afb_data_t const *par
 	unsigned nreplies = 3;
 	int status;
 	const char *api, *verb;
+	json_object *json = get_call_args(request, nparams, params, &api, &verb, &args);
 
-	if (get_call_args(request, nparams, params, &api, &verb, &args)) {
+	if (json != NULL) {
 		afb_api_call_sync(afb_req_get_api(request), api, verb, 1, &args, &status, &nreplies, replies);
 		afb_req_reply(request, status, nreplies, replies);
+		json_object_put(json);
 	}
 }
 
 /**************************************************************************/
 
-static int parse_event(afb_req_t request, unsigned nparams, afb_data_t const *params, const char **tag, const char **name, afb_data_t *data, unsigned *period)
+static json_object *parse_event(afb_req_t request, unsigned nparams, afb_data_t const *params,
+		       const char **tag, const char **name, afb_data_t *data, unsigned *period)
 {
-	json_object *args;
-	json_object *x;
+	const char *keys[5];
+	void *items[4];
+	int idx = 0;
 
-	args_to_json(nparams, params, &args);
 	if (tag) {
-		if (!json_object_object_get_ex(args, "tag", &x)
-		 || !json_object_is_type(x, json_type_string))
-			goto error;
-		*tag = json_object_get_string(x);
+		items[idx] = tag;
+		keys[idx++] = "s!tag";
 	}
 	if (name) {
-		if (!json_object_object_get_ex(args, "name", &x)
-		 || !json_object_is_type(x, json_type_string))
-			goto error;
-		*name = json_object_get_string(x);
+		items[idx] = name;
+		keys[idx++] = "s!name";
 	}
 	if (data) {
-		if (!json_object_object_get_ex(args, "data", &x))
-			x = NULL;
-
-		if (make_json_object(request, data, json_object_get(x)) < 0)
-			goto error;
+		items[idx] = data;
+		keys[idx++] = "d?data";
 	}
 	if (period) {
-		if (json_object_object_get_ex(args, "period", &x)
-		 && json_object_is_type(x, json_type_int)
-		 && json_object_get_int(x) > 0)
-			*period = json_object_get_int(x);
+		items[idx] = period;
+		keys[idx++] = "u?period";
 	}
-
-	json_object_put(args);
-	return 1;
-error:
-	json_object_put(args);
-	return 0;
+	keys[idx] = 0;
+	return get_args(request, nparams, params, keys, items);
 }
 
 static void eventadd (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag, *name;
+	json_object *json = parse_event(request, nparams, params, &tag, &name, NULL, NULL);
 
-	if (!parse_event(request, nparams, params, &tag, &name, NULL, NULL))
+	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 != event_add(tag, name, afb_req_get_api(request)))
-		reply_oEI(request, NULL, "failed", "creation error");
-	else
-		afb_req_reply(request, 0, 0, 0);
+	else {
+		if (0 != event_add(tag, name, afb_req_get_api(request)))
+			reply_oEI(request, NULL, "failed", "creation error");
+		else
+			afb_req_reply(request, 0, 0, 0);
+		json_object_put(json);
+	}
 }
 
 static void eventdel (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag;
-
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
+	json_object *json = parse_event(request, nparams, params, &tag, NULL, NULL, NULL);
+	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 != event_del(tag, afb_req_get_api(request)))
-		reply_oEI(request, NULL, "failed", "deletion error");
-	else
-		afb_req_reply(request, 0, 0, 0);
+	else {
+		if (0 != event_del(tag, afb_req_get_api(request)))
+			reply_oEI(request, NULL, "failed", "deletion error");
+		else
+			afb_req_reply(request, 0, 0, 0);
+		json_object_put(json);
+	}
 }
 
 static void eventsub (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag;
-
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
+	json_object *json = parse_event(request, nparams, params, &tag, NULL, NULL, NULL);
+	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 != event_subscribe(request, tag))
-		reply_oEI(request, NULL, "failed", "subscription error");
-	else
-		afb_req_reply(request, 0, 0, 0);
+	else {
+		if (0 != event_subscribe(request, tag))
+			reply_oEI(request, NULL, "failed", "subscription error");
+		else
+			afb_req_reply(request, 0, 0, 0);
+		json_object_put(json);
+	}
 }
 
 static void eventunsub (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag;
-
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
+	json_object *json = parse_event(request, nparams, params, &tag, NULL, NULL, NULL);
+	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 != event_unsubscribe(request, tag))
-		reply_oEI(request, NULL, "failed", "unsubscription error");
-	else
-		afb_req_reply(request, 0, 0, 0);
+	else {
+		if (0 != event_unsubscribe(request, tag))
+			reply_oEI(request, NULL, "failed", "unsubscription error");
+		else
+			afb_req_reply(request, 0, 0, 0);
+		json_object_put(json);
+	}
 }
 
 static void eventpush (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag;
 	afb_data_t data;
-
-	if (!parse_event(request, nparams, params, &tag, NULL, &data, NULL))
+	json_object *json = parse_event(request, nparams, params, &tag, NULL, &data, NULL);
+	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 > event_push(data, tag, afb_req_get_api(request)))
-		reply_oEI(request, NULL, "failed", "push error");
-	else
-		afb_req_reply(request, 0, 0, 0);
+	else {
+		if (0 > event_push(data, tag, afb_req_get_api(request)))
+			reply_oEI(request, NULL, "failed", "push error");
+		else
+			afb_req_reply(request, 0, 0, 0);
+		json_object_put(json);
+	}
 }
 
 static void eventstart (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag;
 	unsigned period = 1000;
-
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL, &period))
+	json_object *json = parse_event(request, nparams, params, &tag, NULL, NULL, &period);
+	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 > event_start(tag, period, afb_req_get_api(request)))
-		reply_oEI(request, NULL, "failed", "start error");
-	else
-		afb_req_reply(request, 0, 0, 0);
+	else {
+		if (0 > event_start(tag, period, afb_req_get_api(request)))
+			reply_oEI(request, NULL, "failed", "start error");
+		else
+			afb_req_reply(request, 0, 0, 0);
+		json_object_put(json);
+	}
 }
 
 static void eventstop (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	const char *tag;
-
-	if (!parse_event(request, nparams, params, &tag, NULL, NULL, NULL))
+	json_object *json = parse_event(request, nparams, params, &tag, NULL, NULL, NULL);
+	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
-	else if (0 > event_stop(tag, afb_req_get_api(request)))
-		reply_oEI(request, NULL, "failed", "stop error");
-	else
-		afb_req_reply(request, 0, 0, 0);
+	else {
+		if (0 > event_stop(tag, afb_req_get_api(request)))
+			reply_oEI(request, NULL, "failed", "stop error");
+		else
+			afb_req_reply(request, 0, 0, 0);
+		json_object_put(json);
+	}
 }
 
 static void broadcast(afb_req_t request, unsigned nparams, afb_data_t const *params)
@@ -809,20 +874,28 @@ static void broadcast(afb_req_t request, unsigned nparams, afb_data_t const *par
 	const char *name;
 	const char *tag;
 	afb_data_t data;
+	json_object *json;
 
-	if (parse_event(request, nparams, params, &tag, NULL, &data, NULL)) {
+	json = parse_event(request, nparams, params, &tag, NULL, &data, NULL);
+	if (json != NULL) {
 		if (0 > event_broadcast(data, tag, afb_req_get_api(request)))
 			reply_oEI(request, NULL, "failed", "broadcast error");
 		else
 			afb_req_reply(request, 0, 0, 0);
-	} else if (parse_event(request, nparams, params, NULL, &name, &data, NULL)) {
-		if (0 > afb_api_broadcast_event(afbBindingRoot, name, 1, &data))
-			reply_oEI(request, NULL, "failed", "broadcast error");
-		else
-			afb_req_reply(request, 0, 0, 0);
-	} else {
-		reply_oEI(request, NULL, "failed", "bad arguments");
-		afb_data_unref(data);
+		json_object_put(json);
+	}
+	else {
+		json = parse_event(request, nparams, params, NULL, &name, &data, NULL);
+		if (json != NULL) {
+			if (0 > afb_api_broadcast_event(afbBindingRoot, name, 1, &data))
+				reply_oEI(request, NULL, "failed", "broadcast error");
+			else
+				afb_req_reply(request, 0, 0, 0);
+			json_object_put(json);
+		}
+		else {
+			reply_oEI(request, NULL, "failed", "bad arguments");
+		}
 	}
 }
 
