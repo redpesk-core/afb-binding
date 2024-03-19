@@ -1,8 +1,15 @@
+Version 4.1.9
+-------------
+- Improvements of hello4 demo binding in tutorials
+- Fix interface x4r1 revision 7 (https://bugs.redpesk.bzh/issues/102)
+- Split of the doc in two parts
+- Improve documentation
+
 Version 4.1.8
 -------------
-- add pkg-config variable for libafb version
-- interface x4r1 revision 7
-  - function 'afb_timer_modify_period' added
+- Add pkg-config variable for libafb version
+- Interface x4r1 revision 7
+  - Function 'afb_timer_modify_period' added
 
 Version 4.1.7
 -------------

@@ -1242,7 +1242,7 @@ afb_req_param_convert(
 /**
  * Reply to the request
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'replies'. Thus, in the case where some data of 'replies' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -1267,7 +1267,7 @@ afb_req_reply(
  * Calls the 'verb' of the 'api' with the parameters 'params' and 'verb' in the name of the binding.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -1321,7 +1321,7 @@ afb_req_subcall(
  * of the array replies. The values in replies are not used at call and
  * can be anything of anyvalue, the caller does not care or use it.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -1509,10 +1509,10 @@ afb_event_name(
 }
 
 /**
- * Pushes an event of 'event' with the 'data' to its observers.
- * 'data' can be NULL.
+ * Pushes for 'event' the data of the array 'params' to its observers.
+ * It is possible to push an event without params.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for 'params'.
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for 'params'.
  * Thus, in the case where 'params' should remain available after
  * the function returns, the function 'afb_data_addref' shall be used.
  *
@@ -1536,10 +1536,10 @@ afb_event_push(
 }
 
 /**
- * Broadcasts widely an event of 'event' with the 'data.
- * 'data' can be NULL.
+ * Broadcast for 'event' the data of the array 'params' to its observers.
+ * It is possible to broadcast an event without params.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for 'params'.
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for 'params'.
  * Thus, in the case where 'params' should remain available after
  * the function returns, the function 'afb_data_addref' shall be used.
  *
@@ -1915,10 +1915,10 @@ afb_api_verbose(
 }
 
 /**
- * Broadcasts widely the event of 'name' with the data 'object'.
- * 'object' can be NULL.
+ * Broadcast widely for event of name the data of the array 'params'.
+ * It is possible to broadcast an event without params.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for 'params'.
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for 'params'.
  * Thus, in the case where 'params' should remain available after
  * the function returns, the function 'afb_data_addref' shall be used.
  *
@@ -2151,7 +2151,7 @@ afb_api_event_handler_del(
  * Calls the 'verb' of the 'api' with the arguments 'args' and 'verb' in the name of the binding.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -2203,7 +2203,7 @@ afb_api_call(
  * of the array replies. The values in replies are not used at call and
  * can be anything of anyvalue, the caller does not care or use it.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -2775,6 +2775,7 @@ afb_timer_unref(
 	return afbBindingV4r1_itfptr->timer_unref(timer);
 }
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 7
 /**
  * Modify the period of a periodic timer.
  * The method can be used within the timer handler.
@@ -2792,6 +2793,7 @@ afb_timer_modify_period(
 ) {
 	return afbBindingV4r1_itfptr->timer_modify_period(timer, period_ms);
 }
+#endif
 
 /** @} */
 /******************************************************************************/
