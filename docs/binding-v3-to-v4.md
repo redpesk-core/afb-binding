@@ -244,17 +244,8 @@ To see a former document about v4 migration which compares all `afb_*` functions
     ```c
     // get arguments
     json_object *argsJ = afb_req_json(request);
-    // Parse arguments
-    char *args1_str = NULL;
-    char *args2_str = NULL;
-    char *args3_str = NULL;
-    char *args4_str = NULL;
-    int ret = wrap_json_unpack(argsJ, "{ss,ss,ss,ss !}"
-            , "args1" , &args1_str
-            , "args2" , &args2_str
-            , "args3" , &args3_str
-            , "args4" , &args4_str
-        );
+    // Parse arguments from argJ
+    ...
     ```
 
 - **---V4---**
@@ -264,27 +255,18 @@ To see a former document about v4 migration which compares all `afb_*` functions
     ```c
     // Get data
     afb_data_t arg_data;
-    if (afb_data_convert(argv[0], AFB_PREDEFINED_TYPE_JSON_C, &arg_data) < 0) {
-        _error_response(request, __func__, WRONG_ARG_WARNING);
+    if (afb_req_param_convert(request, 0, AFB_PREDEFINED_TYPE_JSON_C, &arg_data) < 0) {
+        afb_req_reply(request, AFB_ERRNO_INVALID_REQUEST, 0, NULL);
         return;
     }
     // Convert data in JSON
     args_json = (json_object *) afb_data_ro_pointer(arg_data);
     if (!args_json) {
-        _error_response(request, __func__, "Failed to convert arguments");
+        afb_req_reply(request, AFB_ERRNO_INVALID_REQUEST, 0, NULL);
         return;
     }
-    // Parse arguments
-    char *args1_str = NULL;
-    char *args2_str = NULL;
-    char *args3_str = NULL;
-    char *args4_str = NULL;
-    int ret = wrap_json_unpack(args_json, "{ss,ss,ss,ss !}"
-            , "args1" , &args1_str
-            , "args2" , &args2_str
-            , "args3" , &args3_str
-            , "args4" , &args4_str
-        );
+    // Parse arguments from args_json
+    ...
     ```
 
 ### c) push response
