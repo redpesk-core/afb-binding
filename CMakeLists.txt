@@ -6,7 +6,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(afb-binding
-	VERSION 4.1.9
+	VERSION 4.1.10
 	DESCRIPTION "Binding headers for Application Framework Binder"
 	HOMEPAGE_URL "https://github.com/redpesk-core/afb-binding"
 	LANGUAGES C)
