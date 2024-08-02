@@ -71,5 +71,8 @@
 /** Connection to the service is broken */
 #define AFB_ERRNO_DISCONNECTED       -15
 
+/** A timeout occured during processing */
+#define AFB_ERRNO_TIMEOUT            -16
+
 /** Generic failure for any purpose */
 #define AFB_ERRNO_GENERIC_FAILURE    AFB_USER_ERRNO(0)
