@@ -367,7 +367,14 @@ static int event_push(afb_data_t data, const char *tag, afb_api_t api)
 
 	pthread_mutex_lock(&mutex);
 	e = event_get(tag, api);
-	rc = e ? afb_event_push(e->event, 1, &data) : -1;
+	if (e) {
+		afb_event_push(e->event, 1, &data);
+		rc = 0;
+	}
+	else {
+		afb_data_unref(data);
+		rc = -1;
+	}
 	pthread_mutex_unlock(&mutex);
 
 	return rc;
@@ -673,7 +680,7 @@ static void subcall (afb_req_t request, unsigned nparams, afb_data_t const *para
 	json_object *json = get_call_args(request, nparams, params, &api, &verb, &args);
 
 	if (json != NULL) {
-		afb_req_subcall(request, api, verb, 1, &args, 0, subcallcb, NULL);
+		afb_req_subcall(request, api, verb, 1, &args, afb_req_subcall_pass_events, subcallcb, NULL);
 		json_object_put(json);
 	}
 }
@@ -687,7 +694,7 @@ static void subcallsync (afb_req_t request, unsigned nparams, afb_data_t const *
 	json_object *json = get_call_args(request, nparams, params, &api, &verb, &args);
 
 	if (json != NULL) {
-		afb_req_subcall_sync(request, api, verb, 1, &args, 0, &status, &nreplies, replies);
+		afb_req_subcall_sync(request, api, verb, 1, &args, afb_req_subcall_pass_events, &status, &nreplies, replies);
 		afb_req_reply(request, status, nreplies, replies);
 		json_object_put(json);
 	}
