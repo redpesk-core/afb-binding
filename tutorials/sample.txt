@@ -29,6 +29,18 @@ hello eventstart {"tag":"tagev1","period":2000}
 hello eventstart {"tag":"tagev1","period":200}
 hello eventstop {"tag":"tagev1"}
 
+hello eventadd {"tag":"tagev1","name":"event-1"}
+hello eventsub {"tag":"tagev1"}
+hello eventpush {"tag":"tagev1","data":"=1="}
+hello eventpush {"tag":"tagev1","data":"=2="}
+hello eventpush {"tag":"tagev1","data":"=3="}
+hello eventpush {"tag":"tagev1","data":"=4="}
+hello eventpush {"tag":"tagev1","data":"=5="}
+hello eventpush {"tag":"tagev1","data":"=6="}
+hello eventpush {"tag":"tagev1","data":"=7="}
+hello eventpush {"tag":"tagev1","data":"=8="}
+hello eventpush {"tag":"tagev1","data":"=9="}
+
 
 hello call {"api":"hello","verb":"eventsub","args":{"tag":"tagev1"}}
 hello oneventcall {"pattern":"*","api":"hello","verb":"ping","args":"toto"}
