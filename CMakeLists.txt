@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-only
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
 project(afb-binding
 	VERSION 4.1.10
