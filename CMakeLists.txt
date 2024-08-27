@@ -11,24 +11,33 @@ project(afb-binding
 	HOMEPAGE_URL "https://github.com/redpesk-core/afb-binding"
 	LANGUAGES C)
 
-include(GNUInstallDirs)
-
 set(LIBAFB_VERSION_MIN 5.0.11)
 
 # install headers
-install(DIRECTORY afb
-        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+# Detect the platform reliably
+if(ZEPHYR_BASE)
+	if (NOT CONFIG_AFB_BINDER)
+		return()
+	endif()
+	set(WITH_ZEPHYR YES)
+        zephyr_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+else()
+	set(WITH_ZEPHYR NO)
+        include(GNUInstallDirs)
+        install(DIRECTORY afb
+                DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
 
-# install configuration file
-configure_file(afb-binding.pc.in afb-binding.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/afb-binding.pc
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+        # install documentation and tutorials
+        install(DIRECTORY docs tutorials
+                DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/afb-binding
+                PATTERN *.odg  EXCLUDE
+                PATTERN *.so   EXCLUDE
+                PATTERN .*.swp EXCLUDE
+                PATTERN .sed   EXCLUDE
+        )
 
-# install documentation and tutorials
-install(DIRECTORY docs tutorials
-        DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/afb-binding
-        PATTERN *.odg  EXCLUDE
-        PATTERN *.so   EXCLUDE
-        PATTERN .*.swp EXCLUDE
-        PATTERN .sed   EXCLUDE
-)
+	# install configuration file
+	configure_file(afb-binding.pc.in afb-binding.pc @ONLY)
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/afb-binding.pc
+		DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+endif()
