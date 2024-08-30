@@ -1,3 +1,14 @@
+Version 4.1.11
+--------------
+- Fix definition of flags Afb_Type_Flags...
+- Refresh cmake required version
+
+Version 4.1.10
+--------------
+- Added error AFB_ERRNO_TIMEOUT
+- Fix leak in hello4.c
+- Added example of use of hello tutorials
+
 Version 4.1.9
 -------------
 - Improvements of hello4 demo binding in tutorials
