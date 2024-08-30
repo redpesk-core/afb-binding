@@ -40,9 +40,9 @@ typedef afb_timer_handler_x4_t    afb_timer_handler_t;
 
 /** constants ***********************************************************/
 
-#define Afb_Type_Flags_Shareable	Afb_Type_Flags_X4_Shareable
-#define Afb_Type_Flags_Streamable	Afb_Type_Flags_X4_Streamable
-#define Afb_Type_Flags_Opaque		Afb_Type_Flags_X4_Opaque
+#define Afb_Type_Flags_Shareable	Afb_Type_Flags_x4_Shareable
+#define Afb_Type_Flags_Streamable	Afb_Type_Flags_x4_Streamable
+#define Afb_Type_Flags_Opaque		Afb_Type_Flags_x4_Opaque
 
 /******************************************************************************/
 
