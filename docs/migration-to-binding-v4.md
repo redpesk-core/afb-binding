@@ -359,7 +359,7 @@ method to check for reply status:
 |:-------------------:|:---------------------:|:---------------------------:|:-----------------------------:|:-------------------|
 | value >= 0          | false                 | false                       | false                         | application status |
 | -1 >= value >= -999 | true                  | false                       | true                          | predefined error   |
-| value >= -1000      | true                  | true                        | false                         | application error  |
+| -1000 >= value      | true                  | true                        | false                         | application error  |
 
 It is allowed by the convention that application use a predefined
 error status when applicable.
