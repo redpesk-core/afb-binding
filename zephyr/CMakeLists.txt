@@ -1,5 +1,4 @@
 if(CONFIG_AFB_BINDER)
-    zephyr_include_directories(../afb)
-    zephyr_include_directories(../afb/c++)
-    zephyr_include_directories(../afb/interfaces)
+    set(WITH_ZEPHYR 1)
+    add_subdirectory(.. afb-binding)
 endif()
