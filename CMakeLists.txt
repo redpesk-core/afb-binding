@@ -11,6 +11,14 @@ project(afb-binding
 	HOMEPAGE_URL "https://github.com/redpesk-core/afb-binding"
 	LANGUAGES C)
 
+# Detect the platform reliably
+if(ZEPHYR_BASE)
+    if (NOT CONFIG_AFB_BINDER)
+      return()
+    endif()
+    SET(WITH_ZEPHYR YES)
+endif()
+
 set(LIBAFB_VERSION_MIN 5.0.11)
 
 # install headers
