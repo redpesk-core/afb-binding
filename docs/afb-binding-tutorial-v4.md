@@ -21,7 +21,7 @@ This is the code of the binding **tutorials/v4/tuto-1.c**:
 
 ```c
   1 /*
-  2  * Copyright (C) 2015-2024 IoT.bzh Company
+  2  * Copyright (C) 2015-2025 IoT.bzh Company
   3  * Author: José Bollo <jose.bollo@iot.bzh>
   4  *
   5  * SPDX-License-Identifier: LGPL-3.0-only

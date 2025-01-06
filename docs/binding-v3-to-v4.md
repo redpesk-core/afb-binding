@@ -1,6 +1,6 @@
 # Binding v3 to v4
 
-> **authors**: Valentin Lefebvre <valentin.lefebvre@iot.bzh>
+> **Author: **: Valentin Lefebvre <valentin.lefebvre@iot.bzh>
 > **date**: 2022, june 8th
 
 This documentations will touch on change to proceed for upgrade a binding written in V3 to a binding written V4.

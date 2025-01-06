@@ -1,4 +1,4 @@
-// Copyright (C) 2015-2024 IoT.bzh Company
+// Copyright (C) 2015-2025 IoT.bzh Company
 // Author: José Bollo <jose.bollo@iot.bzh>
 //
 // SPDX-License-Identifier: LGPL-3.0-only
