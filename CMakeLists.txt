@@ -16,7 +16,7 @@ set(LIBAFB_VERSION_MIN 5.0.11)
 # install headers
 # Detect the platform reliably
 if(ZEPHYR_BASE)
-	if (NOT CONFIG_AFB_BINDER)
+	if (NOT CONFIG_AFB_ZEPHYR)
 		return()
 	endif()
 	set(WITH_ZEPHYR YES)
