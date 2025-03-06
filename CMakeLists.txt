@@ -16,11 +16,11 @@ set(LIBAFB_VERSION_MIN 5.0.11)
 # install headers
 # Detect the platform reliably
 if(ZEPHYR_BASE)
-	if (NOT CONFIG_AFB_ZEPHYR)
+	if (NOT CONFIG_AFB_ZEPHYR AND NOT CONFIG_AFB_LLEXT_BINDING)
 		return()
 	endif()
 	set(WITH_ZEPHYR YES)
-        zephyr_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+        zephyr_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/afb)
 else()
 	set(WITH_ZEPHYR NO)
         include(GNUInstallDirs)
