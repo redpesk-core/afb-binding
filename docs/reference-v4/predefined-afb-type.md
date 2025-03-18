@@ -249,7 +249,32 @@ No updater
 
 ### examples
 
+In this first example, `queryJ` is retrieved as the first `request` parameter:
 
+```c
+status = afb_req_param_convert(request, 0, AFB_PREDEFINED_TYPE_JSON_C, &arg);
+if (status >= 0) {
+   json_object *queryJ = (json_object *)afb_data_ro_pointer(arg);
+   // ...
+}
+else {
+   // ...
+   afb_req_reply_string(request, AFB_ERRNO_INVALID_REQUEST, "Bad data type");
+   return;
+}
+```
+
+In this second example, `object` is created as AFB_PREDEFINED_TYPE_JSON_C object: 
+
+```c
+status = afb_create_data_raw(data, AFB_PREDEFINED_TYPE_JSON_C, object, 0, (void*)json_object_put, object)
+```
+
+In the third example, `baliseObjType` (afb_data_t) is converted using `userToJsonCB` routine:
+
+```c
+status = afb_type_add_convert_to (baliseObjType, AFB_PREDEFINED_TYPE_JSON_C, userToJsonCB, context);
+```
 
 ## AFB\_PREDEFINED\_TYPE\_BOOL
 
