@@ -10,7 +10,7 @@ since version 4.
 | #stringz   | AFB\_PREDEFINED\_TYPE\_STRINGZ   | Type of zero terminated string                         |
 | #json      | AFB\_PREDEFINED\_TYPE\_JSON      | Type of json string terminated by a zero               |
 | #json_c    | AFB\_PREDEFINED\_TYPE\_JSON\_C   | Type of json object as handled by libjson-c            |
-| #bytearray | AFB\_PREDEFINED\_TYPE\_BYTEARRAY | Type for arrays of bytes                               |
+| #bytearray | AFB\_PREDEFINED\_TYPE\_BYTEARRAY | Type for arrays of bytes (since 4.0.2)                 |
 | #bool      | AFB\_PREDEFINED\_TYPE\_BOOL      | Type of boolean values                                 |
 | #i32       | AFB\_PREDEFINED\_TYPE\_I32       | Type of signed 32 bit integers                         |
 | #u32       | AFB\_PREDEFINED\_TYPE\_U32       | Type of unsigned 32 bit integers                       |
@@ -264,7 +264,7 @@ else {
 }
 ```
 
-In this second example, `object` is created as AFB_PREDEFINED_TYPE_JSON_C object: 
+In this second example, `object` is created as AFB_PREDEFINED_TYPE_JSON_C object:
 
 ```c
 status = afb_create_data_raw(data, AFB_PREDEFINED_TYPE_JSON_C, object, 0, (void*)json_object_put, object)

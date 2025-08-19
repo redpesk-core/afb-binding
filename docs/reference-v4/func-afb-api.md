@@ -194,10 +194,10 @@ afb_api_verbose(
 
 ```c
 /**
- * Broadcasts widely the event of 'name' with the data 'object'.
- * 'object' can be NULL.
+ * Broadcast widely for event of name the data of the array 'params'.
+ * It is possible to broadcast an event without params.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for 'params'.
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for 'params'.
  * Thus, in the case where 'params' should remain available after
  * the function returns, the function 'afb_data_addref' shall be used.
  *
@@ -254,20 +254,19 @@ afb_api_require_api(
 
 ```c
 /**
- * Creates an event of 'name' and returns it.
+ * Creates an event of 'name'.
  *
- * Calling this function is only forbidden during preinit.
- *
- * See afb_event_is_valid to check if there is an error.
+ * Calling this function is forbidden during preinit.
  *
  * The event created as the name API/name where API is the name of the
  * api.
  *
  * @param api the api that creates the event
  * @param name the event name suffix
+ * @param event pointer for storing created event
  *
- * @return the created event. Use the function afb_event_is_valid to check
- * whether the event is valid (created) or not (error as reported by errno).
+ * @return 0 in case of success or negative value on error.
+ *         On error no event is created.
  *
  * @see afb_event_is_valid
  */
@@ -440,7 +439,7 @@ afb_api_event_handler_del(
  * Calls the 'verb' of the 'api' with the arguments 'args' and 'verb' in the name of the binding.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -493,7 +492,7 @@ afb_api_call(
  * of the array replies. The values in replies are not used at call and
  * can be anything of anyvalue, the caller does not care or use it.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.

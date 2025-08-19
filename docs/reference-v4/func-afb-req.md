@@ -537,7 +537,7 @@ afb_req_param_convert(
 /**
  * Reply to the request
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'replies'. Thus, in the case where some data of 'replies' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -563,7 +563,7 @@ afb_req_reply(
  * Calls the 'verb' of the 'api' with the parameters 'params' and 'verb' in the name of the binding.
  * The result of the call is delivered to the 'callback' function with the 'callback_closure'.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.
@@ -618,7 +618,7 @@ afb_req_subcall(
  * of the array replies. The values in replies are not used at call and
  * can be anything of anyvalue, the caller does not care or use it.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for items of
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for items of
  * 'params'. Thus, in the case where some data of 'params' should remain
  * available after the function returns, the function 'afb_data_addref'
  * shall be used on such items before the call.

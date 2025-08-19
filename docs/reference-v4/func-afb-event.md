@@ -73,10 +73,10 @@ afb_event_name(
 
 ```c
 /**
- * Pushes an event of 'event' with the 'data' to its observers.
- * 'data' can be NULL.
+ * Pushes for 'event' the data of the array 'params' to its observers.
+ * It is possible to push an event without params.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for 'params'.
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for 'params'.
  * Thus, in the case where 'params' should remain available after
  * the function returns, the function 'afb_data_addref' shall be used.
  *
@@ -101,10 +101,10 @@ afb_event_push(
 
 ```c
 /**
- * Broadcasts widely an event of 'event' with the 'data.
- * 'data' can be NULL.
+ * Broadcast for 'event' the data of the array 'params' to its observers.
+ * It is possible to broadcast an event without params.
  *
- * NOTE: For convenience, the function calls 'afb_data_unref' for 'params'.
+ * NOTE: For convenience, the function calls 'afb_data_array_unref' for 'params'.
  * Thus, in the case where 'params' should remain available after
  * the function returns, the function 'afb_data_addref' shall be used.
  *

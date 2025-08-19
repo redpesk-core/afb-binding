@@ -42,9 +42,9 @@ afb_timer_create(
 /**
  * Add one reference to the 'timer' object
  *
- * @param timer the object to reference
+ * @param timer the timer object to reference
  *
- * @return the referenced object
+ * @return the referenced timer object
  */
 afb_timer_t
 afb_timer_addref(
@@ -59,10 +59,29 @@ afb_timer_addref(
  * Remove one reference to the 'timer' object and
  * destroys the object if not more referenced
  *
- * @param timer the object to unreference
+ * @param timer the timer object to unreference
  */
 void
 afb_timer_unref(
 	afb_timer_t timer
+);
+```
+
+## Function afb\_timer\_modify\_period
+
+```c
+/**
+ * Modify the period of a periodic timer.
+ * The method can be used within the timer handler.
+ * The new period is taken into account immediately.
+ * So after return, the timer triggers after the given period.
+ *
+ * @param timer the timer object whose period is to modify
+ * @param period_ms the new required period for the timer
+ */
+void
+afb_timer_modify_period(
+	afb_timer_t timer,
+	unsigned period_ms
 );
 ```

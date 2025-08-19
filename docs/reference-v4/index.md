@@ -235,6 +235,8 @@
 
 [afb\_timer\_create](func-afb-timer.html#function-afb_timer_create)
 
+[afb\_timer\_modify\_period](func-afb-timer.html#function-afb_timer_modify_period)
+
 [afb\_timer\_unref](func-afb-timer.html#function-afb_timer_unref)
 
 [afb\_type\_add\_convert\_from](func-afb-type.html#function-afb_type_add_convert_from)

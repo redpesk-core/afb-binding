@@ -200,7 +200,7 @@ The predefined types are:
 | #stringz   | AFB\_PREDEFINED\_TYPE\_STRINGZ   | Type of zero terminated string                         |
 | #json      | AFB\_PREDEFINED\_TYPE\_JSON      | Type of json string terminated by a zero               |
 | #json_c    | AFB\_PREDEFINED\_TYPE\_JSON\_C   | Type of json object as handled by libjson-c            |
-| #bytearray | AFB\_PREDEFINED\_TYPE\_BYTEARRAY | Type for arrays of bytes                               |
+| #bytearray | AFB\_PREDEFINED\_TYPE\_BYTEARRAY | Type for arrays of bytes (since 4.0.2)                 |
 | #bool      | AFB\_PREDEFINED\_TYPE\_BOOL      | Type of boolean values                                 |
 | #i32       | AFB\_PREDEFINED\_TYPE\_I32       | Type of signed 32 bit integers                         |
 | #u32       | AFB\_PREDEFINED\_TYPE\_U32       | Type of unsigned 32 bit integers                       |
