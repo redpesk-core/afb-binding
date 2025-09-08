@@ -635,6 +635,9 @@ afb_api_settings(
  * binder must be seen as independant of their binder. Calling
  * this verb ensure that the given API run on its own session.
  *
+ * @since 4.1.4
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 6
+ *
  * @param api the api that unshares session
  *
  * @returns 0 in case of success or a negative value in case of error.

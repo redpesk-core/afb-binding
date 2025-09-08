@@ -106,18 +106,21 @@ afb_job_post(
 
 ```c
 /**
-* Aborts the job of given id. The job must be posted using 'afb_job_post'
-* that returned its id.
-* Two cases are possible:
-*   - the job has not started: it is cancelled and is called immediately
-*                              with signal = SIGABRT
-*   - the job has started (and was maybe finish): the action has no effect
-*
-* @param jobid the id of the job has returned by 'afb_job_post'
-* @return 0 on success or a negative error code
-*
-* @see afb_job_post
-*/
+ * Aborts the job of given id. The job must be posted using 'afb_job_post'
+ * that returned its id.
+ * Two cases are possible:
+ *   - the job has not started: it is cancelled and is called immediately
+ *                              with signal = SIGABRT
+ *   - the job has started (and was maybe finish): the action has no effect
+ *
+ * @since 4.1.2
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 5
+ *
+ * @param jobid the id of the job has returned by 'afb_job_post'
+ * @return 0 on success or a negative error code
+ *
+ * @see afb_job_post
+ */
 int
 afb_job_abort(
 	int jobid

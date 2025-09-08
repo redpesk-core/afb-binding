@@ -76,6 +76,9 @@ afb_timer_unref(
  * The new period is taken into account immediately.
  * So after return, the timer triggers after the given period.
  *
+ * @since 4.1.8
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 7
+ *
  * @param timer the timer object whose period is to modify
  * @param period_ms the new required period for the timer
  */

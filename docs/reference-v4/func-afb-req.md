@@ -515,6 +515,9 @@ afb_req_parameters(
  * Previous value of the parameter is automatically unreferenced.
  * If you want keep it, you have to first reference it using afb_data_addref.
  *
+ * @since 4.0.2
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 2
+ *
  * @param req      the request
  * @param index    index of the parameter to convert
  * @param type     target type of the conversion
@@ -666,6 +669,9 @@ afb_req_subcall_sync(
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'itfid'.
  *
+ * @since 4.0.3
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 3
+ *
  * @param req     The request
  * @param itfid   The id of the interface to return
  * @param result  The returned interface
@@ -687,6 +693,9 @@ afb_req_get_interface_by_id(
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'name'.
  *
+ * @since 4.0.3
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 3
+ *
  * @param req     The request
  * @param name    The name of the interface to return
  * @param result  The returned interface
@@ -707,6 +716,9 @@ afb_req_get_interface_by_name(
 /**
  * Get the user data associated to the request.
  *
+ * @since 4.1.0
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 4
+ *
  * @param req The request
  *
  * @return the current user data
@@ -721,6 +733,9 @@ afb_req_get_userdata(
 
 ```c
 /** set (associate) the user data to the request
+ *
+ * @since 4.1.0
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 4
  *
  * @param req The request
  * @param userdata The userdata to set

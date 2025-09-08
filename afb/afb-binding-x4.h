@@ -1220,6 +1220,9 @@ afb_req_parameters(
  * Previous value of the parameter is automatically unreferenced.
  * If you want keep it, you have to first reference it using afb_data_addref.
  *
+ * @since 4.0.2
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 2
+ *
  * @param req      the request
  * @param index    index of the parameter to convert
  * @param type     target type of the conversion
@@ -1369,6 +1372,9 @@ afb_req_subcall_sync(
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'itfid'.
  *
+ * @since 4.0.3
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 3
+ *
  * @param req     The request
  * @param itfid   The id of the interface to return
  * @param result  The returned interface
@@ -1388,6 +1394,9 @@ afb_req_get_interface_by_id(
 /**
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'name'.
+ *
+ * @since 4.0.3
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 3
  *
  * @param req     The request
  * @param name    The name of the interface to return
@@ -1410,6 +1419,9 @@ afb_req_get_interface_by_name(
 /**
  * Get the user data associated to the request.
  *
+ * @since 4.1.0
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 4
+ *
  * @param req The request
  *
  * @return the current user data
@@ -1423,6 +1435,9 @@ afb_req_get_userdata(
 }
 
 /** set (associate) the user data to the request
+ *
+ * @since 4.1.0
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 4
  *
  * @param req The request
  * @param userdata The userdata to set
@@ -2344,6 +2359,9 @@ afb_api_settings(
  * binder must be seen as independant of their binder. Calling
  * this verb ensure that the given API run on its own session.
  *
+ * @since 4.1.4
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 6
+ *
  * @param api the api that unshares session
  *
  * @returns 0 in case of success or a negative value in case of error.
@@ -2467,18 +2485,21 @@ afb_job_post(
 
 #if AFB_BINDING_X4R1_ITF_REVISION >= 5
 /**
-* Aborts the job of given id. The job must be posted using 'afb_job_post'
-* that returned its id.
-* Two cases are possible:
-*   - the job has not started: it is cancelled and is called immediately
-*                              with signal = SIGABRT
-*   - the job has started (and was maybe finish): the action has no effect
-*
-* @param jobid the id of the job has returned by 'afb_job_post'
-* @return 0 on success or a negative error code
-*
-* @see afb_job_post
-*/
+ * Aborts the job of given id. The job must be posted using 'afb_job_post'
+ * that returned its id.
+ * Two cases are possible:
+ *   - the job has not started: it is cancelled and is called immediately
+ *                              with signal = SIGABRT
+ *   - the job has started (and was maybe finish): the action has no effect
+ *
+ * @since 4.1.2
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 5
+ *
+ * @param jobid the id of the job has returned by 'afb_job_post'
+ * @return 0 on success or a negative error code
+ *
+ * @see afb_job_post
+ */
 static inline
 int
 afb_job_abort(
@@ -2563,6 +2584,9 @@ afb_setup_shared_object(
 #if AFB_BINDING_X4R1_ITF_REVISION >= 2
 /**
  * Type of arrays of bytes
+ *
+ * @since 4.0.2
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 2
  */
 #define AFB_PREDEFINED_TYPE_BYTEARRAY (afbBindingV4r1_itfptr->type_bytearray)
 #endif
@@ -2781,6 +2805,9 @@ afb_timer_unref(
  * The method can be used within the timer handler.
  * The new period is taken into account immediately.
  * So after return, the timer triggers after the given period.
+ *
+ * @since 4.1.8
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 7
  *
  * @param timer the timer object whose period is to modify
  * @param period_ms the new required period for the timer
