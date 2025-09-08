@@ -792,7 +792,7 @@ struct afb_binding_x4r1_itf
 		afb_req_x4_t req);
 
 /*-- BEGIN OF VERSION 4r1  REVISION  2 (first version 4.0.2) --------------------*/
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 2
+#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 2
 
 	/** predefined type bytearray */
 	afb_type_x4_t type_bytearray;
@@ -806,7 +806,7 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  3 (first version 4.0.3) --------------------*/
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 3
+#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 3
 
 	/** get a specialized interface for the request req */
 	int (*req_interface_by_id)(
@@ -822,7 +822,7 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  4 (first version 4.1.0) --------------------*/
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 4
+#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 4
 
 	/** get the user data associated to the request req */
 	void *(*req_get_userdata)(
@@ -836,7 +836,7 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  5 (first version 4.1.2) --------------------*/
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 5
+#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 5
 
 	int (*job_abort)(
 		afb_api_x4_t root,
@@ -844,14 +844,14 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  6 (first version 4.1.4) --------------------*/
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 6
+#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 6
 
 	int (*api_unshare_session)(
 		afb_api_x4_t root);
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  7 (first version 4.1.8) --------------------*/
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION) || AFB_BINDING_X4R1_ITF_REVISION >= 7
+#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 7
 
 	void (*timer_modify_period)(
 		afb_timer_x4_t timer,
@@ -859,13 +859,48 @@ struct afb_binding_x4r1_itf
 
 #endif
 
-
-/* increment the below value on needed */
-#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  7
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION)
-#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
-#endif
-
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };
+
+/*-- ENSURING DEFINITION OF AFB_BINDING_X4R1_ITF_REVISION --------------------*/
+
+/* preparing the next revision
+ * this setting introduced for 4.1.12 acts that moving
+ * from one revision to an other is a two time process
+ */
+#define AFB_BINDING_X4R1_ITF_NEXT_REVISION    8
+
+/*
+ * Increments the current value when afb-libafb (that does not depend on
+ * AFB_BINDING_X4R1_ITF_CURRENT_REVISION) is widely deployed because
+ * otherwise, new compiling of bindings might be rejected as too new.
+ * In that case, defining AFB_BINDING_X4R1_ITF_REVISION before inclusion
+ * of afb-binding.h will solve after recompiling.
+ */
+#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  7
+
+/*
+ * Assign and check the value of AFB_BINDING_X4R1_ITF_REVISION
+ */
+#if !defined(AFB_BINDING_X4R1_ITF_REVISION)
+
+/* when unset, print a warning and set to current value */
+#  if AFB_BINDING_VERSION == 4
+#    warning "The value of AFB_BINDING_X4R1_ITF_REVISION isn't set"
+#  endif
+#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
+
+#elif AFB_BINDING_X4R1_ITF_REVISION == 0
+
+/* when zero, set to current value without warning */
+#  undef AFB_BINDING_X4R1_ITF_REVISION
+#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
+
+#elif AFB_BINDING_X4R1_ITF_REVISION > AFB_BINDING_X4R1_ITF_NEXT_REVISION
+
+/* when bigger than next, set to next value without a warning */
+#  undef AFB_BINDING_X4R1_ITF_REVISION
+#  define AFB_BINDING_X4R1_ITF_REVISION AFB_BINDING_X4R1_ITF_NEXT_REVISION
+
+#endif
 

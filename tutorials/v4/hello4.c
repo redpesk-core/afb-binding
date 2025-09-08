@@ -28,6 +28,8 @@
 #include <json-c/json.h>
 
 #define AFB_BINDING_VERSION 4
+#define AFB_BINDING_X4R1_ITF_REVISION 8
+
 #include <afb/afb-binding.h>
 #include <afb/interfaces/afb-itf-req-http.h>
 
