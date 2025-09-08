@@ -1200,7 +1200,6 @@ afb_req_parameters(
 	return afbBindingV4r1_itfptr->req_parameters(req, params);
 }
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 2
 /**
  * Convert the parameter of the request of the given index
  * to a given type and return it.
@@ -1222,6 +1221,9 @@ afb_req_parameters(
  *
  * @return 0 in case of success, a negative code on error
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 2
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 2")))
+#endif
 static inline
 int
 afb_req_param_convert(
@@ -1230,9 +1232,12 @@ afb_req_param_convert(
 	afb_type_t type,
 	afb_data_t *result
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 2
 	return afbBindingV4r1_itfptr->req_param_convert(req, index, type, result);
-}
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
 #endif
+}
 
 /**
  * Reply to the request
@@ -1359,7 +1364,6 @@ afb_req_subcall_sync(
 	return afbBindingV4r1_itfptr->req_subcall_sync(req, apiname, verbname, nparams, params, flags, status, nreplies, replies);
 }
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 3
 /**
  * Get a specialized interface for the request 'req'. The nature of the
  * interface is givent by its 'itfid'.
@@ -1373,6 +1377,9 @@ afb_req_subcall_sync(
  *
  * @return 0 in case of success or -1 in case of error
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 3
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 3")))
+#endif
 static inline
 int
 afb_req_get_interface_by_id(
@@ -1380,7 +1387,11 @@ afb_req_get_interface_by_id(
 	int itfid,
 	void **result
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 3
 	return afbBindingV4r1_itfptr->req_interface_by_id(req, itfid, result);
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
+#endif
 }
 
 /**
@@ -1396,6 +1407,9 @@ afb_req_get_interface_by_id(
  *
  * @return 0 in case of success or -1 in case of error
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 3
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 3")))
+#endif
 static inline
 int
 afb_req_get_interface_by_name(
@@ -1403,11 +1417,13 @@ afb_req_get_interface_by_name(
 	const char *name,
 	void **result
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 3
 	return afbBindingV4r1_itfptr->req_interface_by_name(req, name, result);
-}
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
 #endif
+}
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 4
 /**
  * Get the user data associated to the request.
  *
@@ -1418,12 +1434,19 @@ afb_req_get_interface_by_name(
  *
  * @return the current user data
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 4
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 4")))
+#endif
 static inline
 void *
 afb_req_get_userdata(
 	afb_req_t req
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 4
 	return afbBindingV4r1_itfptr->req_get_userdata(req);
+#else
+	return NULL;
+#endif
 }
 
 /** set (associate) the user data to the request
@@ -1435,6 +1458,9 @@ afb_req_get_userdata(
  * @param userdata The userdata to set
  * @param freecb a function to call when the request is about to be freed (can be NULL)
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 4
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 4")))
+#endif
 static inline
 void
 afb_req_set_userdata(
@@ -1442,9 +1468,10 @@ afb_req_set_userdata(
 	void *userdata,
 	void (*freecb)(void*)
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 4
 	afbBindingV4r1_itfptr->req_set_userdata(req, userdata, freecb);
-}
 #endif
+}
 
 /** @} */
 
@@ -2342,7 +2369,6 @@ afb_api_settings(
 	return afbBindingV4r1_itfptr->api_settings(api);
 }
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 6
 /**
  * unshare the session
  *
@@ -2358,14 +2384,20 @@ afb_api_settings(
  *
  * @returns 0 in case of success or a negative value in case of error.
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 6
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 6")))
+#endif
 static inline
 int
 afb_api_unshare_session(
 	afb_api_t api
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 6
 	return afbBindingV4r1_itfptr->api_unshare_session(api);
-}
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
 #endif
+}
 
 /** MISC ***********************************************************/
 /** @defgroup AFB_MISC
@@ -2475,7 +2507,6 @@ afb_job_post(
 #endif
 }
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 5
 /**
  * Aborts the job of given id. The job must be posted using 'afb_job_post'
  * that returned its id.
@@ -2492,18 +2523,24 @@ afb_job_post(
  *
  * @see afb_job_post
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 5
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 5")))
+#endif
 static inline
 int
 afb_job_abort(
 	int jobid
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 5
 #if !defined(AFB_BINDING_NO_ROOT)
 	return afbBindingV4r1_itfptr->job_abort(afbBindingV4root, jobid);
 #else
 	return afbBindingV4r1_itfptr->job_abort(NULL, jobid);
 #endif
-}
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
 #endif
+}
 
 /**
  * Create an aliased name 'as_name' for the api 'name'.
@@ -2573,14 +2610,18 @@ afb_setup_shared_object(
  */
 #define AFB_PREDEFINED_TYPE_JSON_C  (afbBindingV4r1_itfptr->type_json_c)
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 2
 /**
  * Type of arrays of bytes
  *
  * @since 4.0.2
  * @since AFB_BINDING_X4R1_ITF_REVISION == 2
  */
+#if AFB_BINDING_X4R1_ITF_REVISION >= 2
 #define AFB_PREDEFINED_TYPE_BYTEARRAY (afbBindingV4r1_itfptr->type_bytearray)
+#else
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 2")))
+afb_type_t _AFB_PREDEFINED_TYPE_BYTEARRAY_() { return NULL; }
+#define AFB_PREDEFINED_TYPE_BYTEARRAY _AFB_PREDEFINED_TYPE_BYTEARRAY_()
 #endif
 
 /**
@@ -2613,14 +2654,18 @@ afb_setup_shared_object(
  */
 #define AFB_PREDEFINED_TYPE_DOUBLE  (afbBindingV4r1_itfptr->type_double)
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 8
 /**
  * Type of UUID
  *
  * @since 4.1.12
  * @since AFB_BINDING_X4R1_ITF_REVISION == 8
  */
+#if AFB_BINDING_X4R1_ITF_REVISION >= 8
 #define AFB_PREDEFINED_TYPE_UUID  (afbBindingV4r1_itfptr->type_UUID)
+#else
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 8")))
+afb_type_t _AFB_PREDEFINED_TYPE_UUID_() { return NULL; }
+#define AFB_PREDEFINED_TYPE_UUID _AFB_PREDEFINED_TYPE_UUID_()
 #endif
 
 /** @} */
@@ -2801,7 +2846,6 @@ afb_timer_unref(
 	return afbBindingV4r1_itfptr->timer_unref(timer);
 }
 
-#if AFB_BINDING_X4R1_ITF_REVISION >= 7
 /**
  * Modify the period of a periodic timer.
  * The method can be used within the timer handler.
@@ -2814,15 +2858,19 @@ afb_timer_unref(
  * @param timer the timer object whose period is to modify
  * @param period_ms the new required period for the timer
  */
+#if AFB_BINDING_X4R1_ITF_REVISION < 7
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 7")))
+#endif
 static inline
 void
 afb_timer_modify_period(
 	afb_timer_t timer,
 	unsigned period_ms
 ) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 7
 	return afbBindingV4r1_itfptr->timer_modify_period(timer, period_ms);
-}
 #endif
+}
 
 /** @} */
 /******************************************************************************/

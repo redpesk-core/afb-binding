@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #define AFB_BINDING_VERSION 4
+#define AFB_BINDING_X4R1_ITF_REVISION 2
 #include <afb/afb-binding.h>
 
 void hello(afb_req_t req, unsigned nparams, afb_data_t const *params)

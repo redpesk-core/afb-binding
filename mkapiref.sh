@@ -3,7 +3,9 @@
 # remove unexpected lines
 clean-h-file() {
    sed /static.inline/d |
-   sed /^__attribute__/d
+   sed /^__attribute__/d |
+   sed '/^#if/d' |
+   sed '/^#endif/d'
 }
 
 # extract groups, functions, predefined-types
