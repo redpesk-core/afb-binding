@@ -859,6 +859,14 @@ struct afb_binding_x4r1_itf
 
 #endif
 
+/*-- BEGIN OF VERSION 4r1  REVISION  8 (first version 4.2.0) -------------------*/
+#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 8
+
+	/** predefined type UUID */
+	afb_type_x4_t type_UUID;
+
+#endif
+
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };
 

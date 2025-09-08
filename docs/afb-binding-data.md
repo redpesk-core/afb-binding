@@ -207,17 +207,26 @@ The predefined types are:
 | #i64       | AFB\_PREDEFINED\_TYPE\_I64       | Type of signed 64 bit integers                         |
 | #u64       | AFB\_PREDEFINED\_TYPE\_U64       | Type of unsigned 64 bit integers                       |
 | #double    | AFB\_PREDEFINED\_TYPE\_DOUBLE    | Type of doubles                                        |
+| #UUID      | AFB\_PREDEFINED\_TYPE\_UUID      | Type of UUID (since 4.2.0)                            |
 
 For more details, check the specific documentation about predefined types.
 
 ### type family
 
-A type can be a kind of an other type. In the predefined type, the only example
-is given by *AFB\_PREDEFINED\_TYPE\_JSON* that is of the family *AFB\_PREDEFINED\_TYPE\_STRINGZ*.
+A type can be a kind of an other type. It defines families
+
+In predefined types, there are two examples:
+
+- *AFB\_PREDEFINED\_TYPE\_JSON* is of the family *AFB\_PREDEFINED\_TYPE\_STRINGZ*
+
+- *AFB\_PREDEFINED\_TYPE\_UUID* is of the family *AFB\_PREDEFINED\_TYPE\_BYTEARRAY*
 
 It means that any instance of *AFB\_PREDEFINED\_TYPE\_JSON* is also an instance of
 *AFB\_PREDEFINED\_TYPE\_STRINGZ*. The opposite is not true because not any string
 is a valid JSON string.
+
+In the same way, it means that any instance of *AFB\_PREDEFINED\_TYPE\_UUID* is also
+an instance of *AFB\_PREDEFINED\_TYPE\_BYTEARRAY*. The opposite is not always true.
 
 It is possible to set the family of a type using the function *afb_type_set_family*.
 

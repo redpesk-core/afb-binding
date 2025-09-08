@@ -167,6 +167,8 @@
 
 [AFB\_PREDEFINED\_TYPE\_U64](predefined-afb-type.html#afb_predefined_type_u64)
 
+[AFB\_PREDEFINED\_TYPE\_UUID](predefined-afb-type.html#afb_predefined_type_uuid)
+
 [afb\_req\_addref](func-afb-req.html#function-afb_req_addref)
 
 [afb\_req\_check\_permission](func-afb-req.html#function-afb_req_check_permission)

@@ -2613,6 +2613,16 @@ afb_setup_shared_object(
  */
 #define AFB_PREDEFINED_TYPE_DOUBLE  (afbBindingV4r1_itfptr->type_double)
 
+#if AFB_BINDING_X4R1_ITF_REVISION >= 8
+/**
+ * Type of UUID
+ *
+ * @since 4.1.12
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 8
+ */
+#define AFB_PREDEFINED_TYPE_UUID  (afbBindingV4r1_itfptr->type_UUID)
+#endif
+
 /** @} */
 /** FD's EVENT HANDLING ***********************************************************/
 /** @defgroup AFB_EVFD

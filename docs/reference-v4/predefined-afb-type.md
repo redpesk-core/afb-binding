@@ -17,6 +17,7 @@ since version 4.
 | #i64       | AFB\_PREDEFINED\_TYPE\_I64       | Type of signed 64 bit integers                         |
 | #u64       | AFB\_PREDEFINED\_TYPE\_U64       | Type of unsigned 64 bit integers                       |
 | #double    | AFB\_PREDEFINED\_TYPE\_DOUBLE    | Type of doubles                                        |
+| #UUID      | AFB\_PREDEFINED\_TYPE\_UUID      | Type of UUID (since 4.2.0)                            |
 
 Below section describes the predefined types. For each of them,
 the following items are explained:
@@ -473,6 +474,38 @@ No family
 
 - from AFB\_PREDEFINED\_TYPE\_JSON
 - from AFB\_PREDEFINED\_TYPE\_JSON\_C
+
+### examples
+
+
+
+## AFB\_PREDEFINED\_TYPE\_UUID
+
+Type of UUIDs
+
+### length
+
+Must be 16
+
+### flags
+
+- Afb_Type_Flags_Shareable
+- Afb_Type_Flags_Streamable
+
+### family
+
+In the family of AFB\_PREDEFINED\_TYPE\_BYTEARRAY.
+
+It means that any data of type AFB\_PREDEFINED\_TYPE\_UUID is also
+naturally of type AFB\_PREDEFINED\_TYPE\_BYTEARRAY.
+
+### converters
+
+- to AFB\_PREDEFINED\_TYPE\_STRINGZ
+- from AFB\_PREDEFINED\_TYPE\_STRINGZ if valid UUID string
+- from AFB\_PREDEFINED\_TYPE\_BYTEARRAY
+
+### updaters
 
 ### examples
 
