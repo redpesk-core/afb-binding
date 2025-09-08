@@ -14,6 +14,59 @@
 
 #include "afb-ctlid.h"
 
+/*-- ENSURING DEFINITION OF AFB_BINDING_X4R1_ITF_REVISION --------------------*/
+
+/*
+ * The interface structure "struct afb_binding_x4r1_itf" is managed
+ * in revision. It is extended at its end.
+ *
+ * Two revision are defined:
+ *
+ * - AFB_BINDING_X4R1_ITF_FULL_REVISION the revision defining the full
+ *   known structure that is used when building libafb.
+ *
+ * - AFB_BINDING_X4R1_ITF_CURRENT_REVISION the revision that bindings
+ *   can use by default.
+ *
+ * libafb is able to run any binding compiled with a lower revision that
+ * the one it was compiled with.
+ *
+ * The goal using these two definitions is that defining a new interface
+ * don't enforce to reinstall libafb. To achieves this process, libafb
+ * is compiled with the full structure definition. Then when libafb
+ * is widely spread on equiment, bindings can be compiled with newer features.
+ */
+#define AFB_BINDING_X4R1_ITF_FULL_REVISION     8
+#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  7
+
+/*
+ * Check the value of AFB_BINDING_X4R1_ITF_REVISION
+ */
+#if AFB_BINDING_VERSION != 4
+
+/* not for binding version 4, define the fulkl interface */
+#  undef AFB_BINDING_X4R1_ITF_REVISION
+#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_FULL_REVISION
+
+#elif !defined(AFB_BINDING_X4R1_ITF_REVISION)
+
+/* set current version */
+#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
+
+#elif AFB_BINDING_X4R1_ITF_REVISION == 0
+
+/* set the current version as expected */
+#  undef AFB_BINDING_X4R1_ITF_REVISION
+#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
+
+#elif AFB_BINDING_X4R1_ITF_REVISION > AFB_BINDING_X4R1_ITF_FULL_REVISION
+
+/* set to the highest known version */
+#  undef AFB_BINDING_X4R1_ITF_REVISION
+#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_FULL_REVISION
+
+#endif
+
 /******************************************************************************/
 /* declaration of types */
 
@@ -792,7 +845,7 @@ struct afb_binding_x4r1_itf
 		afb_req_x4_t req);
 
 /*-- BEGIN OF VERSION 4r1  REVISION  2 (first version 4.0.2) --------------------*/
-#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 2
+#if AFB_BINDING_X4R1_ITF_REVISION >= 2
 
 	/** predefined type bytearray */
 	afb_type_x4_t type_bytearray;
@@ -806,7 +859,7 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  3 (first version 4.0.3) --------------------*/
-#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 3
+#if AFB_BINDING_X4R1_ITF_REVISION >= 3
 
 	/** get a specialized interface for the request req */
 	int (*req_interface_by_id)(
@@ -822,7 +875,7 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  4 (first version 4.1.0) --------------------*/
-#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 4
+#if AFB_BINDING_X4R1_ITF_REVISION >= 4
 
 	/** get the user data associated to the request req */
 	void *(*req_get_userdata)(
@@ -836,7 +889,7 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  5 (first version 4.1.2) --------------------*/
-#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 5
+#if AFB_BINDING_X4R1_ITF_REVISION >= 5
 
 	int (*job_abort)(
 		afb_api_x4_t root,
@@ -844,14 +897,14 @@ struct afb_binding_x4r1_itf
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  6 (first version 4.1.4) --------------------*/
-#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 6
+#if AFB_BINDING_X4R1_ITF_REVISION >= 6
 
 	int (*api_unshare_session)(
 		afb_api_x4_t root);
 
 #endif
 /*-- BEGIN OF VERSION 4r1  REVISION  7 (first version 4.1.8) --------------------*/
-#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 7
+#if AFB_BINDING_X4R1_ITF_REVISION >= 7
 
 	void (*timer_modify_period)(
 		afb_timer_x4_t timer,
@@ -860,7 +913,7 @@ struct afb_binding_x4r1_itf
 #endif
 
 /*-- BEGIN OF VERSION 4r1  REVISION  8 (first version 4.2.0) -------------------*/
-#if !AFB_BINDING_X4R1_ITF_REVISION || AFB_BINDING_X4R1_ITF_REVISION >= 8
+#if AFB_BINDING_X4R1_ITF_REVISION >= 8
 
 	/** predefined type UUID */
 	afb_type_x4_t type_UUID;
@@ -869,46 +922,4 @@ struct afb_binding_x4r1_itf
 
 /*-- END OF VERSION 4r1 -----------------------------------*/
 };
-
-/*-- ENSURING DEFINITION OF AFB_BINDING_X4R1_ITF_REVISION --------------------*/
-
-/* preparing the next revision
- * this setting introduced for 4.1.12 acts that moving
- * from one revision to an other is a two time process
- */
-#define AFB_BINDING_X4R1_ITF_NEXT_REVISION    8
-
-/*
- * Increments the current value when afb-libafb (that does not depend on
- * AFB_BINDING_X4R1_ITF_CURRENT_REVISION) is widely deployed because
- * otherwise, new compiling of bindings might be rejected as too new.
- * In that case, defining AFB_BINDING_X4R1_ITF_REVISION before inclusion
- * of afb-binding.h will solve after recompiling.
- */
-#define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  7
-
-/*
- * Assign and check the value of AFB_BINDING_X4R1_ITF_REVISION
- */
-#if !defined(AFB_BINDING_X4R1_ITF_REVISION)
-
-/* when unset, print a warning and set to current value */
-#  if AFB_BINDING_VERSION == 4
-#    warning "The value of AFB_BINDING_X4R1_ITF_REVISION isn't set"
-#  endif
-#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
-
-#elif AFB_BINDING_X4R1_ITF_REVISION == 0
-
-/* when zero, set to current value without warning */
-#  undef AFB_BINDING_X4R1_ITF_REVISION
-#  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_CURRENT_REVISION
-
-#elif AFB_BINDING_X4R1_ITF_REVISION > AFB_BINDING_X4R1_ITF_NEXT_REVISION
-
-/* when bigger than next, set to next value without a warning */
-#  undef AFB_BINDING_X4R1_ITF_REVISION
-#  define AFB_BINDING_X4R1_ITF_REVISION AFB_BINDING_X4R1_ITF_NEXT_REVISION
-
-#endif
 
