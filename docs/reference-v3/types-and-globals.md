@@ -222,8 +222,8 @@ Example:
 
 ```c
 static const afb_auth_t myauth[] = {
-    { .type = afb_auth_Permission, .text = "urn:AGL:permission:me:public:set" },
-    { .type = afb_auth_Permission, .text = "urn:AGL:permission:me:public:get" },
+    { .type = afb_auth_Permission, .text = "urn:redpesk:permission:me:public:set" },
+    { .type = afb_auth_Permission, .text = "urn:redpesk:permission:me:public:get" },
     { .type = afb_auth_Or, .first = &myauth[1], .next = &myauth[0] }
 };
 ```
