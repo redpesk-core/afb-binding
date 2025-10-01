@@ -1176,7 +1176,7 @@ static void gethttp(afb_req_t request, unsigned nparams, afb_data_t const *param
 	afb_itf_req_http_reply(http_itf, request, 200, data, "text/html", 0);
 }
 
-static void any (afb_req_t request, unsigned nparams, afb_data_t const *params)
+static void xany (afb_req_t request, unsigned nparams, afb_data_t const *params)
 {
 	reply_oEI(request, json_object_new_string(afb_req_get_called_verb(request)), NULL, NULL);
 }
@@ -1465,7 +1465,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="getfile",     .callback=getfile},
   { .verb="getbin",      .callback=getbin},
   { .verb="gethttp",     .callback=gethttp},
-  { .verb="*",           .callback=any, .glob=1 },
+  { .verb="x-*",         .callback=xany, .glob=1 },
   { .verb=NULL}
 };
 
