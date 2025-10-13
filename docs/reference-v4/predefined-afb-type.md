@@ -93,6 +93,8 @@ int data_of_context(struct context *context, afb_data_t *data)
 
 Type for arrays of bytes
 
+Since AFB_BINDING_X4R1_ITF_REVISION == 2
+
 ### length
 
 The count of byte in the array
@@ -482,6 +484,8 @@ No family
 ## AFB\_PREDEFINED\_TYPE\_UUID
 
 Type of UUIDs
+
+Since AFB_BINDING_X4R1_ITF_REVISION == 8
 
 ### length
 
