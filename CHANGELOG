@@ -1,3 +1,7 @@
+Version 4.2.1
+-------------
+- Fix multiple definitions of _AFB_PREDEFINED_TYPE_UUID_
+
 Version 4.2.0
 -------------
 - Add UUID predefined type but don't activate it by default

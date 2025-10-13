@@ -2620,6 +2620,7 @@ afb_setup_shared_object(
 #define AFB_PREDEFINED_TYPE_BYTEARRAY (afbBindingV4r1_itfptr->type_bytearray)
 #else
 __attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 2")))
+static inline
 afb_type_t _AFB_PREDEFINED_TYPE_BYTEARRAY_() { return NULL; }
 #define AFB_PREDEFINED_TYPE_BYTEARRAY _AFB_PREDEFINED_TYPE_BYTEARRAY_()
 #endif
@@ -2664,6 +2665,7 @@ afb_type_t _AFB_PREDEFINED_TYPE_BYTEARRAY_() { return NULL; }
 #define AFB_PREDEFINED_TYPE_UUID  (afbBindingV4r1_itfptr->type_UUID)
 #else
 __attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 8")))
+static inline
 afb_type_t _AFB_PREDEFINED_TYPE_UUID_() { return NULL; }
 #define AFB_PREDEFINED_TYPE_UUID _AFB_PREDEFINED_TYPE_UUID_()
 #endif

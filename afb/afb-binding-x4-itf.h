@@ -44,7 +44,7 @@
  */
 #if AFB_BINDING_VERSION != 4
 
-/* not for binding version 4, define the fulkl interface */
+/* not for binding version 4, define the full interface */
 #  undef AFB_BINDING_X4R1_ITF_REVISION
 #  define AFB_BINDING_X4R1_ITF_REVISION  AFB_BINDING_X4R1_ITF_FULL_REVISION
 
