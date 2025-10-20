@@ -43,8 +43,9 @@
  * The symbol @ref afbBindingV4entry if defined will be called during
  * pre-initialization.
  *
- * If @ref afbBindingV4entry and @ref afbBindingV4 are both defined, it is an
- * error to fill the field @ref preinit of @ref afbBindingV4.
+ * If @ref afbBindingV4entry and @ref afbBindingV4 are both defined,
+ * the value of @ref afbBindingV4.mainctl must either be NULL or equal to
+ * @ref afbBindingV4entry.
  *
  * @see afb_binding_v4
  * @see afbBindingV4root
