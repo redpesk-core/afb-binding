@@ -36,7 +36,7 @@
  * is compiled with the full structure definition. Then when libafb
  * is widely spread on equiment, bindings can be compiled with newer features.
  */
-#define AFB_BINDING_X4R1_ITF_FULL_REVISION     8
+#define AFB_BINDING_X4R1_ITF_FULL_REVISION     9
 #define AFB_BINDING_X4R1_ITF_CURRENT_REVISION  7
 
 /*
@@ -917,6 +917,16 @@ struct afb_binding_x4r1_itf
 
 	/** predefined type UUID */
 	afb_type_x4_t type_UUID;
+
+#endif
+
+/*-- BEGIN OF VERSION 4r1  REVISION  9 (first version 4.3.0) -------------------*/
+#if AFB_BINDING_X4R1_ITF_REVISION >= 9
+
+	/** set the specification of the api */
+	int (*api_set_specification)(
+		afb_api_x4_t api,
+		const char *specification);
 
 #endif
 

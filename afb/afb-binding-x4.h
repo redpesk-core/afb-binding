@@ -2370,7 +2370,7 @@ afb_api_settings(
 }
 
 /**
- * unshare the session
+ * Unshare the session
  *
  * By default, every API of a same binder are sharing the
  * same session. This policy can be wrong when API of a same
@@ -2394,6 +2394,35 @@ afb_api_unshare_session(
 ) {
 #if AFB_BINDING_X4R1_ITF_REVISION >= 6
 	return afbBindingV4r1_itfptr->api_unshare_session(api);
+#else
+	return AFB_ERRNO_NOT_AVAILABLE;
+#endif
+}
+
+/**
+ * Set the specification returned by info verb.
+ *
+ * The given specification string if not NULL is not copied and not freeed.
+ *
+ * @since 4.3.0
+ * @since AFB_BINDING_X4R1_ITF_REVISION == 9
+ *
+ * @param api            the api to be set
+ * @param specification  the specification or NULL to unset
+ *
+ * @returns 0 in case of success or a negative value in case of error.
+ */
+#if AFB_BINDING_X4R1_ITF_REVISION < 9
+__attribute__((error("Requires AFB_BINDING_X4R1_ITF_REVISION >= 9")))
+#endif
+static inline
+int
+afb_api_set_specification(
+	afb_api_t api,
+	const char *specification
+) {
+#if AFB_BINDING_X4R1_ITF_REVISION >= 9
+	return afbBindingV4r1_itfptr->api_set_specification(api, specification);
 #else
 	return AFB_ERRNO_NOT_AVAILABLE;
 #endif
