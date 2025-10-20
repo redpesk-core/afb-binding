@@ -1452,7 +1452,7 @@ static const struct afb_verb_v4 verbs[]= {
   { .verb="setctxif",    .callback=setctxif },
   { .verb="getctx",      .callback=getctx },
   { .verb="checktok",    .callback=ok, .session=AFB_SESSION_CHECK },
-  { .verb="info",        .callback=info },
+  { .verb="my-info",     .callback=info },
   { .verb="reply-count", .callback=replycount },
   { .verb="ref",         .callback=ref},
   { .verb="api",         .callback=api},

@@ -1014,7 +1014,7 @@ static const afb_verb_t verbs[] = {
 	afb::verb<setctxif>("setctxif", nullptr),
 	afb::verb<getctx>("getctx", nullptr),
 	afb::verb<ok>("checktok", nullptr, AFB_SESSION_CHECK),
-	afb::verb<info>("info", nullptr),
+	afb::verb<info>("my-info", nullptr),
 	afb::verb<replycount>("reply-count", nullptr),
 	afb::verb<ref>("ref", nullptr),
 	afb::verb<manageapi>("api", nullptr),

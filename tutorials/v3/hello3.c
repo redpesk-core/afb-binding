@@ -953,7 +953,7 @@ static const struct afb_verb_v3 verbs[]= {
   { .verb="getctx",      .callback=getctx },
   { .verb="checktok",    .callback=ok, .session=AFB_SESSION_CHECK },
   { .verb="reftok",      .callback=ok, .session=AFB_SESSION_CHECK | AFB_SESSION_REFRESH },
-  { .verb="info",        .callback=info },
+  { .verb="my-info",     .callback=info },
   { .verb="eventloop",   .callback=eventloop },
   { .verb="dbus",        .callback=dbus },
   { .verb="reply-count", .callback=replycount },
