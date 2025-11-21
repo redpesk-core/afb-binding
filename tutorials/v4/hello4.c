@@ -185,11 +185,11 @@ int data_2_json(afb_data_t data, struct json_object **result)
 	struct json_object *r;
 	afb_data_t item;
 
-	rc = afb_data_convert(data, AFB_PREDEFINED_TYPE_JSON_C, &item);
+	rc = afb_data_convert(data, AFB_PREDEFINED_TYPE_JSON, &item);
 	if (rc < 0)
 		r = NULL;
 	else {
-		r = json_object_get((struct json_object*)afb_data_ro_pointer(item));
+		r = json_tokener_parse((const char*)afb_data_ro_pointer(item));
 		afb_data_unref(item);
 	}
 	*result = r;
@@ -647,7 +647,8 @@ static json_object *get_args(afb_req_t request, unsigned nparams, afb_data_t con
 				*(json_object**)objs[idx] = o;
 				break;
 			case 'd':
-				make_json_object(request, (afb_data_t*)objs[idx], json_object_get(o));
+				o = json_tokener_parse(json_object_to_json_string(o)); /* make a copy */
+				make_json_object(request, (afb_data_t*)objs[idx], o);
 				break;
 			}
 	}
