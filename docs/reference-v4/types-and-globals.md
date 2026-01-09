@@ -279,6 +279,12 @@ union afb_ctlarg
 	struct {
 		/** path of the binding */
 		const char *path;
+
+		/** uid attached to the binding if any (can be NULL) */
+		const char *uid;
+
+		/** configuration attached to the binding if any (can be NULL) */
+		struct json_object *config;
 	} root_entry;
 
 	/**
@@ -287,6 +293,12 @@ union afb_ctlarg
 	struct {
 		/** path of the binding */
 		const char *path;
+
+		/** uid attached to the binding if any (can be NULL) */
+		const char *uid;
+
+		/** configuration attached to the binding if any (can be NULL) */
+		struct json_object *config;
 	} pre_init;
 
 	/**
