@@ -1,0 +1,14 @@
+{
+  "binding": [
+    {
+      "path": "./empty.so",
+      "uid": "x",
+      "item": [3,1]
+    }
+  ],
+  "set": {
+    "empty.so": {
+      "toto": "xyz"
+    }
+  }
+}

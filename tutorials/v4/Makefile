@@ -23,7 +23,7 @@ CXXFLAGS += ${FLAGS} -fpermissive
 .PHONY: all clean
 
 tutos = tuto-1.so
-samples = hello4.so
+samples = hello4.so empty.so
 
 all: ${tutos} ${samples}
 
