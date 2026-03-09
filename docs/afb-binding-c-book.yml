@@ -42,6 +42,8 @@ books:
             url: "reference-v4/func-afb-timer.md"
           - name: index
             url: "reference-v4/index.md"
+    - name: Description of verb info
+      url: "afb-binding-info.md"
     - name: How to write a binding version 3
       url: "afb-binding-tutorial-v3.md"
     - name: Migration from v3 to v4 guide

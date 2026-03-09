@@ -1,0 +1,82 @@
+
+
+
+ <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+        <node name="/com/example/sample_object0">
+          <interface name="com.example.SampleInterface0">
+            <method name="Frobate">
+              <arg name="foo" type="i" direction="in"/>
+              <arg name="bar" type="s" direction="out"/>
+              <arg name="baz" type="a{us}" direction="out"/>
+              <annotation name="org.freedesktop.DBus.Deprecated" value="true"/>
+            </method>
+            <method name="Bazify">
+              <arg name="bar" type="(iiu)" direction="in"/>
+              <arg name="bar" type="v" direction="out"/>
+            </method>
+            <method name="Mogrify">
+              <arg name="bar" type="(iiav)" direction="in"/>
+            </method>
+            <signal name="Changed">
+              <arg name="new_value" type="b"/>
+            </signal>
+            <property name="Bar" type="y" access="readwrite"/>
+          </interface>
+          <node name="child_of_sample_object"/>
+          <node name="another_child_of_sample_object"/>
+       </node>
+
+{
+    "metadata": {
+      "uid": "helloworld", // string => api name
+      "info": "A simple Helloworld binding", // string => api description/info
+      "status": {"online": true}, // object where to store additional infos such as uri, online, ...
+      "version": "1.0"
+    },
+    "groups": [ // array of objects => list of groups
+      {
+        "uid":  "general", // string => group name
+        "info": "verbs related to general tests on this binding",// string => group description/info
+        "status": {"slaveid": 1}, // object where to store additional infos such as uri, online, ...
+        "verbs": [ // array of objects => list of verbs belonging to this group
+          {
+            "uid": "ping", // string => verb name
+            "info": "sends ping", // string => verb description
+            "verb": "ping", // string => raw verb to be sent to the API
+            "usage": { // object => query format will appear as a placeholder in the textarea to enter query
+                "action": ["get","subscribe","unsubscribe"], // array of strings => list of actions such as Subscribe, Get, ...
+                "data":{"data":"parameter"}, // object => hints on other parameter to add to the query can also be verbose, arg...
+            },
+            "sample":  [ // array of objects => list of samples
+                {"foo":"bar"},
+                {"cezam":"tada"},
+                {"cezam":"open"}
+            ]
+          },
+        ]
+      },
+    ]
+}
+
+{
+	"$schema": "urn:redpesk:schema:desc-api:1",
+	"name": STRING,           mandatory
+	"info": STRING,           optional
+	"version": STRING,        optional
+	"description": STRING,    optional
+	"uuid": STRING,           optional
+	"types": [
+	],
+	"verbs": [
+		{
+			"name": STRING,           mandatory
+			"info": STRING,           optional
+			"version": STRING,        optional
+			"description": STRING,    optional
+			"uuid": STRING,           optional
+		}
+...
+	]
+}
+
