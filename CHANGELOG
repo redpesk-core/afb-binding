@@ -1,3 +1,10 @@
+Version next
+------------
+- Add of description of verb 'info'
+- Add V4 function 'afb_api_set_specification'
+  (AFB_BINDING_X4R1_ITF_FULL_REVISION 9)
+- Update of V4 tutorial 'hello'
+
 Version 4.2.1
 -------------
 - Fix multiple definitions of _AFB_PREDEFINED_TYPE_UUID_
