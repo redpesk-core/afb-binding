@@ -31,7 +31,7 @@ clean:
 	rm *.so 2>/dev/null || true
 
 %.so: %.c ${AFBDEP}
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $< -ljson-c
 
 %.so: %.cpp ${AFBDEP}
-	$(CXX) $(CXXFLAGS) -o $@ $<
+	$(CXX) $(CXXFLAGS) -o $@ $< -ljson-c
