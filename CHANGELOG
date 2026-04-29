@@ -1,3 +1,8 @@
+Version xxxxx
+-------------
+- Improved comment of afb-req-unsubscribe
+- Added linking to libjson-c in tutorials
+
 Version 4.3.0
 -------------
 - Add of description of verb 'info'
