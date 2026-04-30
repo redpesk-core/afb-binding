@@ -1,6 +1,7 @@
 Version xxxxx
 -------------
-- Improved comment of afb-req-unsubscribe
+- Update of hello4.c for unsubscribe results
+- Improved comment of afb_req_unsubscribe
 - Added linking to libjson-c in tutorials
 
 Version 4.3.0

@@ -824,10 +824,11 @@ static void eventunsub (afb_req_t request, unsigned nparams, afb_data_t const *p
 	if (json == NULL)
 		reply_oEI(request, NULL, "failed", "bad arguments");
 	else {
-		if (0 != event_unsubscribe(request, tag))
+		int rc = event_unsubscribe(request, tag);
+		if (0 > rc)
 			reply_oEI(request, NULL, "failed", "unsubscription error");
 		else
-			afb_req_reply(request, 0, 0, 0);
+			afb_req_reply(request, rc, 0, 0);
 		json_object_put(json);
 	}
 }
