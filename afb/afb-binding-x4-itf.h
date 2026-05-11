@@ -173,7 +173,8 @@ typedef void (*afb_subcall_callback_x4_t)(
  * Callback for receiving result of checking of permissions.
  *
  * @param closure  the closure value given at check
- * @param status   the status of the check, negative when rejected
+ * @param status   the status of the check, positive if granted,
+ *                 zero or negative when rejected
  * @param req      the req that made the check
  */
 typedef void (*afb_check_callback_x4_t)(

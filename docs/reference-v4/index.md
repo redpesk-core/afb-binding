@@ -37,6 +37,8 @@
 
 [afb\_api\_settings](func-afb-api.html#function-afb_api_settings)
 
+[afb\_api\_set\_specification](func-afb-api.html#function-afb_api_set_specification)
+
 [afb\_api\_set\_userdata](func-afb-api.html#function-afb_api_set_userdata)
 
 [afb\_api\_set\_verbs](func-afb-api.html#function-afb_api_set_verbs)

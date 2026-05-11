@@ -418,14 +418,15 @@ afb_req_subscribe(
 /**
  * Revokes the subscription established to the 'event' for the client
  * link identified by 'req'.
- * Returns 0 in case of successful subscription or -1 in case of error.
  *
  * Revoking subscription MUST be called BEFORE replying to the request.
  *
  * @param req the request
  * @param event the event to revoke
  *
- * @return 0 in case of successful subscription or -1 in case of error.
+ * @return a negative value is returned in case of error,
+ *         1 is returned is the subscription existed,
+ *         0 is returned if no subscription to the event existed.
  */
 int
 afb_req_unsubscribe(
