@@ -1,6 +1,7 @@
 # Description of verb info
 
-Since afb-libafb version 5.7.0, every API provides implicitely or explicitely the verb `info`.
+Since afb-libafb version 5.7.0, every API provides implicitely or explicitely
+the verb `info`.
 
 This verb takes no argument and returns a JSON string describing the API.
 
@@ -19,12 +20,12 @@ When the verb info is queried by a client, libafb follows the below search:
    This mode is explicit and it is the responsability of the implemeter to
    return a valid description.
 
-2. If the API provided a value for its specification (structure `afb\_binding\_t`,
+2. If the API provided a value for its specification (structure `afb_binding_t`,
    field `specification`, this specification is supposed to be the JSON description
    and is returned. It is the responsability of the implementer to provide a valid
    description in that field (see below for tooling).
 
-   The specification can also be set using function `afb\_api\_set\_specification`
+   The specification can also be set using function `afb_api_set_specification`
    since version 4.3.0 (need to set AFB\_BINDING\_X4R1\_ITF\_REVISION to 9 or upper).
 
 3. If none of the previous steps has produced an answer, a description is automatically
@@ -134,7 +135,6 @@ Decription of verbs are objects looking like:
    "info": "return the counts",
    "loa": 1,
    "auth": "urn:redpesk:permission::partner:counts",
-   "signature": { "
    "group": [ "getter", "protected" ]
 }
 ```
@@ -163,7 +163,7 @@ The fields are:
 - **`groups`**, OPTIONAL, string or array of strings, list of groups
   where the verb belongs.
 
-- **`samples`**, OPTIONAL, any or array of any, list of samples of usage.
+- **`samples`**, OPTIONAL, array of any, list of samples of usage.
 
 
 ## Description legacy format
