@@ -122,7 +122,7 @@ afb_data_is_valid(
  * @param dispose  a callback for releasing resources
  * @param closure  a closure for re the callback dispose
  *
- * @return 0 in case of successful subscription or negative value in case of error.
+ * @return 0 in case of successful creation or negative value in case of error.
  */
 static inline
 int
@@ -151,7 +151,7 @@ afb_create_data_raw(
  * @param pointer  pointer of the data to create
  * @param size     size of the data to create
  *
- * @return 0 in case of successful subscription or negative value in case of error.
+ * @return 0 in case of successful creation or negative value in case of error.
  */
 static inline
 int
@@ -179,7 +179,7 @@ afb_create_data_alloc(
  * @param pointer  pointer of the data to create
  * @param size     size of the data to create
  *
- * @return 0 in case of successful subscription or negative value in case of error.
+ * @return 0 in case of successful creation or negative value in case of error.
  */
 static inline
 int
