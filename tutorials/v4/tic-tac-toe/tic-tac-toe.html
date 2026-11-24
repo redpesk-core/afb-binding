@@ -1,0 +1,109 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>tic tac toe</title>
+    <style>
+   td {
+      border: 1px solid black;
+      width: 3em;
+      height: 3em;
+      font-weight: bolder;
+      text-align: center;
+      align-content: center;
+   }
+   .button {
+      display: inline-block;
+      border: 1px solid black;
+      border-radius: 5px;
+      padding: 3px;
+      margin: 2px;
+   }
+   .button:hover {
+      border-width: 2px;
+      font-weight: bolder;
+      margin: 1px;
+      cursor: pointer;
+   }
+    </style>
+    <!--
+    <script type="text/javascript" src="AFB2.js"></script>
+    -->
+    <script type="text/javascript">
+       var aws;
+
+       function $(x) { return document.getElementById(x); }
+
+       function call(verb, arg) {
+          let args = typeof arg == "undefined" ? [] : [arg];
+          return aws.callPromise('tictactoe', verb, args);
+       }
+
+       function replyok(val) {
+          let [ rc, [ obj,  ] ] = val;
+          $("id").innerHTML = obj.boardid;
+          $("bid").value = obj.boardid;
+          var i;
+          for (var i = 0 ; i < 9 ; i++)
+             $("cell-" + i).innerHTML = obj.board[i];
+       }
+
+       function replyerr(val) {
+       }
+
+       function gotevent(obj) {
+          call("board").then(replyok, replyerr);
+       }
+
+       function onopen(ws) {
+          aws = ws;
+          $("main").style.visibility = "visible";
+          $("connected").innerHTML = "Connected to WebSocket server";
+          aws.addEvent("tictactoe/board", gotevent);
+          call("new").then(gotevent, replyerr);
+       }
+
+       function onabort(reason) {
+          $("main").style.visibility = "hidden";
+          $("connected").innerHTML = "Connected Closed " + reason;
+          aws = undefined;
+       }
+
+       function init() {
+          import('./AFB2.js').then((afb) =>
+             afb.afbWsConnect({onopen: onopen, onabort: onabort}));
+       }
+    </script>
+
+<body onload="init();">
+    <h1>Tic Tac Toe</h1>
+    <div id="connected">Not Connected</div>
+    <div id="main" style="visibility:hidden">
+       <div>board id <span id="id"></span></div>
+       <div>
+          <table>
+             <tr>
+                <td id="cell-0" onclick="javascript: call('move',0)"> </td>
+                <td id="cell-1" onclick="javascript: call('move',1)"> </td>
+                <td id="cell-2" onclick="javascript: call('move',2)"> </td>
+             </tr>
+             <tr>
+                <td id="cell-3" onclick="javascript: call('move',3)"> </td>
+                <td id="cell-4" onclick="javascript: call('move',4)"> </td>
+                <td id="cell-5" onclick="javascript: call('move',5)"> </td>
+             </tr>
+             <tr>
+                <td id="cell-6" onclick="javascript: call('move',6)"> </td>
+                <td id="cell-7" onclick="javascript: call('move',7)"> </td>
+                <td id="cell-8" onclick="javascript: call('move',8)"> </td>
+             </tr>
+          </table>
+       </div>
+       <div><span class="button" id="play" onclick="javascript: call('play')">play</span></div>
+       <div><span class="button" id="undo" onclick="javascript: call('undo')">undo</span></div>
+       <div><span class="button" id="new"  onclick="javascript: call('new')" >new</span></div>
+       <div>
+          <span class="button" id="join" onclick="javascript: call('join',$('bid').value)">join</span>
+          <input type="number" id="bid" min="0" max="999">
+       </div>
+    </div>
+
